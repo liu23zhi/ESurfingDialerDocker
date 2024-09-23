@@ -79,3 +79,13 @@ jobs:
         cd ./PC/
         pip3 install requests beautifulsoup4 lxml
         python3 ./Get_ESurfingDialerClient.py
+
+    - name: 下载Java21
+      run: |
+        chmod +x ./Phone/Download_jdk21.sh
+        cd ./Phone/
+        ./Download_jdk21.sh
+
+    - name: 查看当前目录下点文件
+      run: |
+        ls -l
