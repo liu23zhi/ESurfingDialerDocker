@@ -60,3 +60,10 @@ jobs:
       run: |
         chmod +x ./OracleJava.sh
         ./OracleJava.sh
+
+
+    - name: 编译ESurfingDockerPhone镜像
+      run: |
+        cd Phone
+        chmod +x ./build.sh
+        ./build.sh
