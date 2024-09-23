@@ -73,3 +73,11 @@ jobs:
       with:
         name: ESurfingDocker的Docker镜像（占用手机上网名额）
         path: './Phone/ESurfingDockerPhone.tar.gz'
+
+    - name: 编译ESurfingDockerPhone镜像
+      run: |
+        cd Phone
+        chmod +x ./PC/Get_ESurfingDialerClient.py
+        cd ./PC/
+        pip3 install requests beautifulsoup4 lxml
+        python3 ./PC/Get_ESurfingDialerClient.py
