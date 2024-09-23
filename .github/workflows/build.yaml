@@ -67,3 +67,9 @@ jobs:
         cd Phone
         chmod +x ./build.sh
         ./build.sh
+
+    - name: 上传构建产物
+      uses: actions/upload-artifact@v3
+      with:
+        name: ESurfingDockerPhone.tar.gz
+        path: './ESurfingDialer/ESurfingDockerPhone.tar.gz'
