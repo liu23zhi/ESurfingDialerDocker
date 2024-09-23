@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
     steps:
-    - name: 检出代码到 根目录
+    - name: 检出代码
       uses: actions/checkout@v3
 
-    - name: 检出代码到 ESurfingDialer 目录
+    - name: 检出ESurfingDialer代码
       uses: actions/checkout@v3
       with:
-        repository: 'Rsplwe/ESurfingDialer'  # 指定需要检出的公开仓库
-        path: './ESurfingDialer'  # 指定检出到的目录
+        repository: 'Rsplwe/ESurfingDialer'
+        path: './ESurfingDialer'
 
     - name: 设置 JDK 20
       uses: actions/setup-java@v3
@@ -29,34 +29,34 @@ jobs:
       run: |
         ls -l
 
-    - name: 进入 gradlew 文件所在的目录并执行构建
+    - name: 进入ESurfingDialer目录并执行构建
       run: |
-        cd ./ESurfingDialer  # 进入 gradlew 文件所在的目录
-        ./gradlew shadowJar  # 执行 Gradle 构建脚本
+        cd ./ESurfingDialer
+        ./gradlew shadowJar
 
     - name: 上传构建产物
       uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialer_Jar_Latest_build
-        path: './ESurfingDialer/build/libs/*'  # 指定构建产物路径
+        path: './ESurfingDialer/build/libs/*'
 
     - name: 查找最新构建的Jar文件并复制
       run: |
-        chmod +x ./FindLasterBuildJar.sh  # 确保脚本具有执行权限
-        ./FindLasterBuildJar.sh  # 执行查找脚本
+        chmod +x ./FindLasterBuildJar.sh
+        ./FindLasterBuildJar.sh
 
-    - name: 检出代码到 Oracle-Docker-images 目录
+    - name: 检出Oracle-Docker-images代码
       uses: actions/checkout@v3
       with:
-        repository: 'oracle/docker-images'  # 指定需要检出的公开仓库
-        path: './Oracle-Docker-images'  # 指定检出到的目录
+        repository: 'oracle/docker-images'
+        path: './Oracle-Docker-images'
 
     - name: 安装Docker
       run: |
-        sudo apt-get update
-        sudo apt-get install -y docker.io
+        apt-get update
+        apt-get install -y docker.io
 
     - name: 编译OracleJava镜像
       run: |
-        chmod +x ./Oracle-Docker-images/OracleJava/21/build.sh  # 确保脚本具有执行权限
-		./Oracle-Docker-images/OracleJava/21/build.sh 9  #执行编译脚本
+        chmod +x ./Oracle-Docker-images/OracleJava/21/build.sh
+        ./Oracle-Docker-images/OracleJava/21/build.sh 9
