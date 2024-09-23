@@ -59,4 +59,5 @@ jobs:
     - name: 编译OracleJava镜像
       run: |
         chmod +x ./Oracle-Docker-images/OracleJava/21/build.sh
+        cd ./Oracle-Docker-images/OracleJava/21/
         ./Oracle-Docker-images/OracleJava/21/build.sh 9
