@@ -72,4 +72,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ESurfingDockerPhone.tar.gz
-        path: './ESurfingDialer/ESurfingDockerPhone.tar.gz'
+        path: './ESurfingDialer/Phone/ESurfingDockerPhone.tar.gz'
