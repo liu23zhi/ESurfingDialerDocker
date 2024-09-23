@@ -42,5 +42,5 @@ jobs:
 
     - name: 查找最新构建的Jar文件并复制
       run: |
-        chmod +x ~/Phone/FindLasterBuildJar.sh  # 确保脚本具有执行权限
-        ~/Phone/FindLasterBuildJar.sh  # 执行查找脚本
+        chmod +x ./Phone/FindLasterBuildJar.sh  # 确保脚本具有执行权限
+        ./Phone/FindLasterBuildJar.sh  # 执行查找脚本
