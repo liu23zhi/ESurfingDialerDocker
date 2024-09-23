@@ -51,10 +51,10 @@ jobs:
         repository: 'oracle/docker-images'
         path: './Oracle-Docker-images'
 
-    - name: 安装Docker
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker.io
+#    - name: 安装Docker
+#      run: |
+#        sudo apt-get update
+#        sudo apt-get install -y docker.io
 
     - name: 编译OracleJava镜像
       run: |
