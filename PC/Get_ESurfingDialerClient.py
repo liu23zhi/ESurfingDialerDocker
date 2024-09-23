@@ -146,8 +146,7 @@ def check_and_move_files(target_dir, extract_path, files_to_find):
         sys.exit(1)
 
 def main():
-    # url = 'http://zsteduapp.10000.gd.cn/More/linuxDownLoad/linuxDownLoad.html'
-    url = 'http://14.146.226.81/More/linuxDownLoad/linuxDownLoad.html'
+    url = 'http://zsteduapp.10000.gd.cn/More/linuxDownLoad/linuxDownLoad.html'
     file_name = 'ESurfingDialerClient.tar.gz'
     folder_name = './ESurfingDialerClient'
 
