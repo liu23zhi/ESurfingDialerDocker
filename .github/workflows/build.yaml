@@ -84,7 +84,7 @@ jobs:
     - name: 解压天翼校园网官网Linux客户端V2.4.03.23101901
       run: |
         cd ./PC/
-        tar -zxvf ESurfingDialerClient.tar.gz -C ./ESurfingDialerClient
+        tar -zxvf ESurfingDialerClient.tar.gz -C .
 
     - name: 下载Java21
       run: |
