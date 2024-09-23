@@ -64,12 +64,11 @@ jobs:
 
     - name: 编译ESurfingDockerPhone镜像
       run: |
-        cd Phone
-        chmod +x ./build.sh
-        ./build.sh
+        chmod +x ./Phone/build.sh
+        ./Phone/build.sh
 
     - name: 上传构建产物
       uses: actions/upload-artifact@v3
       with:
         name: ESurfingDockerPhone.tar.gz
-        path: './ESurfingDialer/Phone/ESurfingDockerPhone.tar.gz'
+        path: './Phone/ESurfingDockerPhone.tar.gz'
