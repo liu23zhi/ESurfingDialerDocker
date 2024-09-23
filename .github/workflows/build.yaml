@@ -37,10 +37,26 @@ jobs:
     - name: 上传构建产物
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDialer_Latest_build
+        name: ESurfingDialer_Jar_Latest_build
         path: './ESurfingDialer/build/libs/*'  # 指定构建产物路径
 
     - name: 查找最新构建的Jar文件并复制
       run: |
         chmod +x ./FindLasterBuildJar.sh  # 确保脚本具有执行权限
         ./FindLasterBuildJar.sh  # 执行查找脚本
+
+    - name: 检出代码到 Oracle-Docker-images 目录
+      uses: actions/checkout@v3
+      with:
+        repository: 'oracle/docker-images'  # 指定需要检出的公开仓库
+        path: './Oracle-Docker-images'  # 指定检出到的目录
+
+    - name: 安装Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+
+    - name: 编译OracleJava镜像
+      run: |
+        chmod +x ./Oracle-Docker-images/OracleJava/21/build.sh  # 确保脚本具有执行权限
+		./Oracle-Docker-images/OracleJava/21/build.sh 9  #执行编译脚本
