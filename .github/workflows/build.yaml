@@ -60,4 +60,4 @@ jobs:
       run: |
         chmod +x ./Oracle-Docker-images/OracleJava/21/build.sh
         cd ./Oracle-Docker-images/OracleJava/21/
-        ./Oracle-Docker-images/OracleJava/21/build.sh 9
+        ./build.sh 9
