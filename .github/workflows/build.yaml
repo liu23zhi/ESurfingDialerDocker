@@ -37,7 +37,7 @@ jobs:
     - name: 上传构建产物
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDialer_Jar_Latest_build
+        name: ESurfingDialer的最新编译JAR（占用手机上网名额）
         path: './ESurfingDialer/build/libs/*'
 
     - name: 查找最新构建的Jar文件并复制
@@ -71,5 +71,5 @@ jobs:
     - name: 上传构建产物
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDockerPhone.tar.gz
+        name: ESurfingDocker的Docker镜像（占用手机上网名额）
         path: './Phone/ESurfingDockerPhone.tar.gz'
