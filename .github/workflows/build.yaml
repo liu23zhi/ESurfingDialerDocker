@@ -64,8 +64,9 @@ jobs:
 
     - name: 编译ESurfingDockerPhone镜像
       run: |
-        chmod +x ./Phone/build.sh
-        ./Phone/build.sh
+        cd Phone
+        chmod +x ./build.sh
+        ./build.sh
 
     - name: 上传构建产物
       uses: actions/upload-artifact@v3
