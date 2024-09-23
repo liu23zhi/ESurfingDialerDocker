@@ -1,4 +1,4 @@
 #!/bin/sh
-cd./Phone
+#cd./Phone
 docker build -t esurfingdockerphone .
 docker save esurfingdockerphone -o./ESurfingDockerPhone.tar.gz
