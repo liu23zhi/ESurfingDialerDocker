@@ -15,6 +15,10 @@ jobs:
       with:
         repository: 'Rsplwe/ESurfingDialer'  # 指定需要检出的公开仓库
 
+    - name: 查看当前目录下点文件
+      run: |
+        ls -l
+
     - name: 设置 JDK 20
       uses: actions/setup-java@v3
       with:
