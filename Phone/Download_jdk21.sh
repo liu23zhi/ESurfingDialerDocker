@@ -1,13 +1,16 @@
 #!/bin/bash
 
 # 设置下载链接
-URL="https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz"
+URL_LINUX="https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz"
+URL_WINDOWS="https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.zip"
 
 # 设置本地文件名
-FILE_NAME="jdk-21_linux-x64_bin.tar.gz"
+FILE_NAME_LINUX="jdk-21_linux-x64_bin.tar.gz"
+FILE_NAME_WINDOWS="jdk-21_windows-x64_bin.zip"
 
 # 设置目标文件夹
-TARGET_FOLDER="./Direct/jdk-21_linux-x64"
+TARGET_FOLDER_LINUX="./Direct/jdk-21_linux-x64"
+TARGET_FOLDER_WINDOWS="./Direct/jdk-21_windows-x64"
 
 # 设置下载文件夹
 DOWNLOAD_FOLDER="./Direct"
@@ -18,37 +21,66 @@ if [ ! -d "$DOWNLOAD_FOLDER" ]; then
     mkdir -p "$DOWNLOAD_FOLDER"
 fi
 
-# 检查文件是否已存在
-if [ -f "$DOWNLOAD_FOLDER/$FILE_NAME" ]; then
-    echo "文件 $DOWNLOAD_FOLDER/$FILE_NAME 已存在，跳过下载。"
+# 下载并解压Linux版本的JDK
+if [ -f "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX" ]; then
+    echo "文件 $DOWNLOAD_FOLDER/$FILE_NAME_LINUX 已存在，跳过下载。"
 else
-    # 下载文件
-    echo "开始下载文件..."
-    wget -c $URL -O "$DOWNLOAD_FOLDER/$FILE_NAME"
+    echo "开始下载Linux版本的JDK..."
+    wget -c $URL_LINUX -O "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX"
     if [ $? -eq 0 ]; then
-        echo "下载完成。"
+        echo "Linux版本的JDK下载完成。"
     else
-        echo "下载失败。"
+        echo "Linux版本的JDK下载失败。"
         exit 1
     fi
 fi
 
-# 创建目标文件夹
-if [ ! -d "$TARGET_FOLDER" ]; then
-    echo "创建目标文件夹：$TARGET_FOLDER"
-    mkdir -p "$TARGET_FOLDER"
+if [ ! -d "$TARGET_FOLDER_LINUX" ]; then
+    echo "创建Linux目标文件夹：$TARGET_FOLDER_LINUX"
+    mkdir -p "$TARGET_FOLDER_LINUX"
 fi
 
-# 解压文件
-if [ -d "$TARGET_FOLDER" ]; then
-    echo "文件夹 $TARGET_FOLDER 已存在，跳过解压。"
+if [ -d "$TARGET_FOLDER_LINUX" ]; then
+    echo "文件夹 $TARGET_FOLDER_LINUX 已存在，跳过解压。"
 else
-    echo "开始解压文件..."
-    tar -zxvf "$DOWNLOAD_FOLDER/$FILE_NAME" -C "$TARGET_FOLDER"
+    echo "开始解压Linux版本的JDK..."
+    tar -zxvf "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX" -C "$TARGET_FOLDER_LINUX"
     if [ $? -eq 0 ]; then
-        echo "解压完成。"
+        echo "Linux版本的JDK解压完成。"
     else
-        echo "解压失败。"
+        echo "Linux版本的JDK解压失败。"
+        exit 1
+    fi
+fi
+
+# 下载并解压Windows版本的JDK
+if [ -f "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS" ]; then
+    echo "文件 $DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS 已存在，跳过下载。"
+else
+    echo "开始下载Windows版本的JDK..."
+    wget -c $URL_WINDOWS -O "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS"
+    if [ $? -eq 0 ]; then
+        echo "Windows版本的JDK下载完成。"
+    else
+        echo "Windows版本的JDK下载失败。"
+        exit 1
+    fi
+fi
+
+if [ ! -d "$TARGET_FOLDER_WINDOWS" ]; then
+    echo "创建Windows目标文件夹：$TARGET_FOLDER_WINDOWS"
+    mkdir -p "$TARGET_FOLDER_WINDOWS"
+fi
+
+if [ -d "$TARGET_FOLDER_WINDOWS" ]; then
+    echo "文件夹 $TARGET_FOLDER_WINDOWS 已存在，跳过解压。"
+else
+    echo "开始解压Windows版本的JDK..."
+    unzip "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS" -d "$TARGET_FOLDER_WINDOWS"
+    if [ $? -eq 0 ]; then
+        echo "Windows版本的JDK解压完成。"
+    else
+        echo "Windows版本的JDK解压失败。"
         exit 1
     fi
 fi
