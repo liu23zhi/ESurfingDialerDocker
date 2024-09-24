@@ -45,16 +45,14 @@ def download_file(url, local_filename):
                 print(f"文件已下载到：{local_filename}")
         except requests.exceptions.HTTPError as errh:
             print(f"HTTP错误：{errh}")
-            sys.exit(1)
         except requests.exceptions.ConnectionError as errc:
             print(f"连接错误：{errc}")
-            sys.exit(1)
         except requests.exceptions.Timeout as errt:
             print(f"超时错误：{errt}")
-            sys.exit(1)
         except requests.exceptions.RequestException as err:
             print(f"发生了其他错误：{err}")
-            sys.exit(1)
+        except Exception as e:
+            print(f"发生了未知错误：{e}")
     else:
         print(f"文件 {local_filename} 已存在，跳过下载。")
 
@@ -77,7 +75,7 @@ def get_linux_64_download_link(url):
         links = soup.find_all('a', string=re.compile(r'linux 64', re.IGNORECASE))
         if not links:
             print("没有找到包含'linux 64'的下载链接。")
-            sys.exit(1)
+            return None
 
         for link in links:
             download_url = link.get('href')
@@ -85,21 +83,22 @@ def get_linux_64_download_link(url):
                 print(f"找到下载链接：{download_url}")
                 local_filename = 'ESurfingDialerClient.tar.gz'
                 download_file(download_url, local_filename)
-                return download_url
+                if os.path.exists(local_filename):
+                    return download_url
         print("没有找到有效的下载链接。")
-        sys.exit(1)
+        return None
     except requests.exceptions.HTTPError as errh:
         print(f"HTTP错误：{errh}")
-        sys.exit(1)
+        return None
     except requests.exceptions.ConnectionError as errc:
         print(f"连接错误：{errc}")
-        sys.exit(1)
+        return None
     except requests.exceptions.Timeout as errt:
         print(f"超时错误：{errt}")
-        sys.exit(1)
+        return None
     except requests.exceptions.RequestException as err:
         print(f"发生了其他错误：{err}")
-        sys.exit(1)
+        return None
 
 def extract_tar_gz(tar_path, extract_path):
     print(f"解压文件：{tar_path} 到路径：{extract_path}")
@@ -149,24 +148,31 @@ def main():
     url = 'http://zsteduapp.10000.gd.cn/More/linuxDownLoad/linuxDownLoad.html'
     file_name = 'ESurfingDialerClient.tar.gz'
     folder_name = './ESurfingDialerClient'
+    backup_file_name = 'ESurfingDialerClient.Old.tar.gz'  # 预下载文件名
 
     # 删除同名文件和文件夹
     delete_existing_files_and_folders(file_name, folder_name)
 
     # 获取下载链接
     download_url = get_linux_64_download_link(url)
-    if download_url:
+    if download_url and os.path.exists(file_name):
         # 下载文件
-        local_filename = 'ESurfingDialerClient.tar.gz'
-        download_file(download_url, local_filename)
+        local_filename = file_name
+    else:
+        # 使用预下载文件
+        local_filename = backup_file_name
+        print(f"无法下载文件，使用预下载文件：{local_filename}")
 
-        # 解压文件
-        extract_path = './ESurfingDialerClient'
+    # 解压文件
+    extract_path = './ESurfingDialerClient'
+    if os.path.exists(local_filename):
         extract_tar_gz(local_filename, extract_path)
-
         # 检查并移动文件夹内的所有内容
         files_to_find = ['client', 'ESurfingSvr', 'tyxy']
         check_and_move_files(folder_name, extract_path, files_to_find)
+    else:
+        print(f"预下载文件 {local_filename} 不存在，请检查文件路径。")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
