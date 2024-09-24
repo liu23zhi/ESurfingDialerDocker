@@ -74,6 +74,18 @@ jobs:
         name: ESurfingDocker的Docker镜像（占用手机上网名额）
         path: './Phone/ESurfingDockerPhone.tar.gz'
 
+    - name: 下载Java21
+      run: |
+        chmod +x ./Phone/Download_jdk21.sh
+        cd ./Phone/
+        ./Download_jdk21.sh
+
+    - name: 查看PC目录下点文件
+      run: |
+        cd ./Phone/
+        ls -l ./Direct/jdk-21_windows-x64
+        ls -l ./Direct/jdk-21_linux-x64
+
     - name: 获取天翼校园网官方Linux版本下载地址并下载，不能获取则使用预下载文件
       run: |
         cd ./PC/
@@ -84,12 +96,6 @@ jobs:
 #      run: |
 #        cd ./PC/
 #        tar -zxvf ESurfingDialerClient.tar.gz -C .
-
-    - name: 下载Java21
-      run: |
-        chmod +x ./Phone/Download_jdk21.sh
-        cd ./Phone/
-        ./Download_jdk21.sh
 
     - name: 查看PC目录下点文件
       run: |
