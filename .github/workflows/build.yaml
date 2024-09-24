@@ -92,6 +92,6 @@ jobs:
         cd ./Phone/
         ./Download_jdk21.sh
 
-    - name: 查看当前目录下点文件
+    - name: 查看PC目录下点文件
       run: |
-        ls -l
+        ls -l./PC/
