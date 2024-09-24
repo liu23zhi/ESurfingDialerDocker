@@ -35,14 +35,18 @@ else
     fi
 fi
 
-if [ ! -d "$TARGET_FOLDER_LINUX" ]; then
-    echo "创建Linux目标文件夹：$TARGET_FOLDER_LINUX"
-    mkdir -p "$TARGET_FOLDER_LINUX"
+# 检查Linux版本的JDK是否已解压
+if [ -d "$TARGET_FOLDER_LINUX/bin" ]; then
+    IS_EXTRACTED_LINUX=true
+else
+    IS_EXTRACTED_LINUX=false
 fi
 
-if [ -d "$TARGET_FOLDER_LINUX" ]; then
-    echo "文件夹 $TARGET_FOLDER_LINUX 已存在，跳过解压。"
-else
+if [ "$IS_EXTRACTED_LINUX" = false ]; then
+    if [ ! -d "$TARGET_FOLDER_LINUX" ]; then
+        echo "创建Linux目标文件夹：$TARGET_FOLDER_LINUX"
+        mkdir -p "$TARGET_FOLDER_LINUX"
+    fi
     echo "开始解压Linux版本的JDK..."
     tar -zxvf "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX" -C "$TARGET_FOLDER_LINUX"
     if [ $? -eq 0 ]; then
@@ -67,14 +71,18 @@ else
     fi
 fi
 
-if [ ! -d "$TARGET_FOLDER_WINDOWS" ]; then
-    echo "创建Windows目标文件夹：$TARGET_FOLDER_WINDOWS"
-    mkdir -p "$TARGET_FOLDER_WINDOWS"
+# 检查Windows版本的JDK是否已解压
+if [ -d "$TARGET_FOLDER_WINDOWS/bin" ]; then
+    IS_EXTRACTED_WINDOWS=true
+else
+    IS_EXTRACTED_WINDOWS=false
 fi
 
-if [ -d "$TARGET_FOLDER_WINDOWS" ]; then
-    echo "文件夹 $TARGET_FOLDER_WINDOWS 已存在，跳过解压。"
-else
+if [ "$IS_EXTRACTED_WINDOWS" = false ]; then
+    if [ ! -d "$TARGET_FOLDER_WINDOWS" ]; then
+        echo "创建Windows目标文件夹：$TARGET_FOLDER_WINDOWS"
+        mkdir -p "$TARGET_FOLDER_WINDOWS"
+    fi
     echo "开始解压Windows版本的JDK..."
     unzip "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS" -d "$TARGET_FOLDER_WINDOWS"
     if [ $? -eq 0 ]; then
