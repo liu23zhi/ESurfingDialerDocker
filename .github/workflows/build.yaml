@@ -94,4 +94,4 @@ jobs:
 
     - name: 查看PC目录下点文件
       run: |
-        ls -l./PC/
+        ls -l ./PC/
