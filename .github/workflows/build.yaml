@@ -80,7 +80,7 @@ jobs:
         cd ./Phone/
         ./Download_jdk21.sh
 
-    - name: 查看PC目录下点文件
+    - name: 查看Phone目录下Java目录下的文件
       run: |
         cd ./Phone/
         ls -l ./Direct/jdk-21_windows-x64
