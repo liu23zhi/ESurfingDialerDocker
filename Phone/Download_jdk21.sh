@@ -51,6 +51,8 @@ if [ "$IS_EXTRACTED_LINUX" = false ]; then
     tar -zxvf "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX" -C "$TARGET_FOLDER_LINUX"
     if [ $? -eq 0 ]; then
         echo "Linux版本的JDK解压完成。"
+        # 删除原文件
+        rm "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX"
     else
         echo "Linux版本的JDK解压失败。"
         exit 1
@@ -87,6 +89,8 @@ if [ "$IS_EXTRACTED_WINDOWS" = false ]; then
     unzip "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS" -d "$TARGET_FOLDER_WINDOWS"
     if [ $? -eq 0 ]; then
         echo "Windows版本的JDK解压完成。"
+        # 删除原文件
+        rm "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS"
     else
         echo "Windows版本的JDK解压失败。"
         exit 1
