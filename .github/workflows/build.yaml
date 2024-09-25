@@ -149,7 +149,7 @@ jobs:
         asset_content_type: application/zip
 
     - name: 创建发布
-      uses: actions/create-release@v3
+      uses: actions/create-release@v1
       with:
         tag_name: V$(date +"%Y.%m.%d.%H.%M.%S.%N")  # 使用当前日期和时间作为版本号
         release_name: ESurfingDialer Release $(date +"%Y.%m.%d.%H.%M.%S.%N")
