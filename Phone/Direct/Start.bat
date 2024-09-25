@@ -48,8 +48,9 @@ if not exist "%JAR_FILE%" (
 if "%COMPLETENESS%"=="false" (
     echo 文件不完整，无法继续执行。
     %TIMEOUT_Print_Command%
+    goto END
 )
-:: exit /b
+
 
 
 :: 设置Java环境变量
@@ -229,12 +230,12 @@ if "%NEW_USERNAME%"=="""" (
 			) else (
 				echo 没有账号，脚本无法继续执行。
                 %TIMEOUT_Print_Command%
-				exit 1
+				goto END
 			)
 		) else (
 			echo 没有账号，脚本无法继续执行。
             %TIMEOUT_Print_Command%
-			exit 1
+			goto END
 		)
 	) else (
 		set "USERNAME=%NEW_USERNAME%"
@@ -300,12 +301,12 @@ if "%NEW_PASSWORD%"=="""" (
 			) else (
 				echo 没有密码，脚本无法继续执行。
                 %TIMEOUT_Print_Command%
-				exit 1
+				goto END
 			)
 		) else (
 			echo 没有密码，脚本无法继续执行。
             %TIMEOUT_Print_Command%
-			exit 1
+			goto END
 		)
 	) else (
 		set "PASSWORD=%NEW_PASSWORD%"
@@ -452,4 +453,5 @@ if "%DEBUG%"=="true" (
     echo Java程序执行完毕。
 )
 
+:END
 endlocal
