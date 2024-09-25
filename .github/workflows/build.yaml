@@ -116,12 +116,6 @@ jobs:
       run: |
         ls -l ./PC/
 
-    - name: 上传免Docker版本构建产物到发布
-      uses: actions/upload-release-asset@v3
-      with:
-        upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: ./Phone/ESurfingDialer/*
-        asset_name: SurfingDialer的免Docke直接运行版本（占用手机上网名额）
         asset_content_type: application/zip
     - name: 创建发布
       uses: actions/create-release@v1
