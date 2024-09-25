@@ -1,5 +1,8 @@
 name: 每日构建
 
+permissions:
+  contents: write
+  
 on:
   schedule:
     - cron:  '0 0 * * *'  # 每天凌晨 00:00 UTC 触发
