@@ -19,6 +19,7 @@ find_latest_jar() {
     if [[ -n "$latest_jar" ]]; then
         echo "找到的最新JAR文件路径为：$latest_jar"
         cp "$latest_jar" "$SCRIPT_DIR/Phone/client.jar"
+        cp "$SCRIPT_DIR/Phone/client.jar" "$SCRIPT_DIR/Phone/Direct/client.jar"
     else
         echo "没有找到包含关键词的JAR文件，脚本将退出。"
         exit 1
