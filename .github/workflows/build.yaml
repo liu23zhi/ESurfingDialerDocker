@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
+    permissions:
+      contents: read
+      packages: write  # 允许写入包
 
     steps:
     - name: 检出代码
@@ -52,16 +55,10 @@ jobs:
         repository: 'oracle/docker-images'
         path: './Oracle-Docker-images'
 
-#    - name: 安装Docker
-#      run: |
-#        sudo apt update   #没有sudo缺少权限
-#        sudo apt install -y docker.io   #没有sudo缺少权限
-
     - name: 编译OracleJava镜像
       run: |
         chmod +x ./OracleJava.sh
         ./OracleJava.sh
-
 
     - name: 编译ESurfingDockerPhone镜像
       run: |
@@ -75,7 +72,7 @@ jobs:
         name: ESurfingDialer的Docker镜像（占用手机上网名额）
         path: './Phone/ESurfingDockerPhone.tar.gz'
         compression-level: 9
- 
+
     - name: 下载Java21
       run: |
         chmod +x ./Phone/Download_jdk21.sh
@@ -106,11 +103,27 @@ jobs:
         pip3 install requests beautifulsoup4 lxml
         python3 ./Get_ESurfingDialerClient.py
 
-#    - name: 解压天翼校园网官网Linux客户端V2.4.03.23101901
-#      run: |
-#        cd ./PC/
-#        tar -zxvf ESurfingDialerClient.tar.gz -C .
-
     - name: 查看PC目录下点文件
       run: |
         ls -l ./PC/
+
+    - name: 创建Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.sha }}
+        release_name: Daily Build ${{ github.sha }}
+        draft: false
+        prerelease: false
+
+    - name: 上传Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Phone/ESurfingDialer.tar.gz
+        asset_name: ESurfingDialer.tar.gz
+        asset_content_type: application/gzip
