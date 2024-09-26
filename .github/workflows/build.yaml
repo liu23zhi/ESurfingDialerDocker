@@ -39,7 +39,7 @@ jobs:
         ./gradlew shadowJar
 
     - name: 上传构建产物
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialer的最新编译JAR
         path: './ESurfingDialer/build/libs/*'
@@ -67,7 +67,7 @@ jobs:
         ./build.sh
 
     - name: 上传构建产物
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialer的Docker镜像
         path: './Phone/ESurfingDockerPhone.tar.gz'
@@ -90,7 +90,7 @@ jobs:
         mv ./Direct ./ESurfingDialer
 
     - name: 上传构建产物
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialer的免Docke直接运行版本
         path: './Phone/ESurfingDialer/'
@@ -121,4 +121,4 @@ jobs:
         files: |
           ./ESurfingDialer/build/libs/*
           ./Phone/ESurfingDockerPhone.tar.gz
-          ./Phone/ESurfingDialer/*
+          ./Phone/ESurfingDialer/
