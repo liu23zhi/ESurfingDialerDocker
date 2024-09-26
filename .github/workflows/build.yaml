@@ -119,7 +119,7 @@ jobs:
       with:
         body_path: ${{ github.workspace }}-CHANGELOG.txt
         tag_name: V${{ github.run_number }}
-        token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+        token: ${{ GITHUB_TOKEN }}
         files: |
           ./ESurfingDialer/build/libs/*
           ./Phone/ESurfingDockerPhone.tar.gz
