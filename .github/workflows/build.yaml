@@ -120,7 +120,7 @@ jobs:
         # note you'll typically need to create a personal access token
         # with permissions to create releases in the other repo
         token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-          files: |
+        files: |
           ./ESurfingDialer/build/libs/*
           ./Phone/ESurfingDockerPhone.tar.gz
           ./Phone/ESurfingDialer/*
