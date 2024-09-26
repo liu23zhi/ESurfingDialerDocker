@@ -17,11 +17,19 @@ jobs:
     - name: 检出代码
       uses: actions/checkout@v4
 
+    - name: 检查当前目录
+      run: |
+        ls -l
+
     - name: 检出ESurfingDialer代码
       uses: actions/checkout@v4
       with:
         repository: 'Rsplwe/ESurfingDialer'
         path: './ESurfingDialer'
+
+    - name: 检查ESurfingDialer目录
+      run: |
+        ls -l ./ESurfingDialer
 
     - name: 设置 JDK 20
       uses: actions/setup-java@v4
@@ -29,14 +37,18 @@ jobs:
         java-version: '20'
         distribution: 'zulu'
 
-    - name: 查看当前目录下点文件
+    - name: 检查JDK设置
       run: |
-        ls -l
+        java -version
 
     - name: 进入ESurfingDialer目录并执行构建
       run: |
         cd ./ESurfingDialer
         ./gradlew shadowJar
+
+    - name: 检查ESurfingDialer构建产物
+      run: |
+        ls -l ./ESurfingDialer/build/libs
 
     - name: 上传ESurfingDialer的JAR构建产物
       uses: actions/upload-artifact@v3
@@ -49,22 +61,38 @@ jobs:
         chmod +x ./FindLasterBuildJar.sh
         ./FindLasterBuildJar.sh
 
+    - name: 检查Jar文件复制结果
+      run: |
+        ls -l
+
     - name: 检出Oracle-Docker-images代码
       uses: actions/checkout@v4
       with:
         repository: 'oracle/docker-images'
         path: './Oracle-Docker-images'
 
+    - name: 检查Oracle-Docker-images目录
+      run: |
+        ls -l ./Oracle-Docker-images
+
     - name: 编译OracleJava镜像
       run: |
         chmod +x ./OracleJava.sh
         ./OracleJava.sh
+
+    - name: 检查OracleJava镜像编译结果
+      run: |
+        ls -l
 
     - name: 编译ESurfingDockerPhone镜像
       run: |
         cd Phone
         chmod +x ./build.sh
         ./build.sh
+
+    - name: 检查ESurfingDockerPhone镜像编译结果
+      run: |
+        ls -l ./Phone
 
     - name: 上传ESurfingDockerPhone的Docker镜像
       uses: actions/upload-artifact@v3
@@ -78,22 +106,33 @@ jobs:
         cd ./Phone/
         ./Download_jdk21.sh
 
-    - name: 查看Phone目录下Java目录下的文件
+    - name: 检查Java21下载结果
       run: |
-        cd ./Phone/
-        ls -l ./Direct/jdk-21_windows-x64
-        ls -l ./Direct/jdk-21_linux-x64
+        ls -l ./Phone/Direct
 
     - name: 修改Phone下的Direct文件夹为ESurfingDialer
       run: |
         cd ./Phone/
         mv ./Direct ./ESurfingDialer
 
+    - name: 检查修改后的文件夹
+      run: |
+        ls -l ./Phone/ESurfingDialer
+
+    - name: 压缩ESurfingDialer文件夹
+      run: |
+        cd ./Phone/
+        tar -czf ESurfingDialer.tar.gz ESurfingDialer
+
+    - name: 检查压缩文件
+      run: |
+        ls -l ./Phone/ESurfingDialer.tar.gz
+
     - name: 上传ESurfingDialer的免Docke直接运行版本
       uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialer的免Docke直接运行版本
-        path: './Phone/ESurfingDialer/'
+        path: './Phone/ESurfingDialer/''
 
     - name: 获取天翼校园网官方Linux版本下载地址并下载，不能获取则使用预下载文件
       run: |
@@ -101,9 +140,9 @@ jobs:
         pip3 install requests beautifulsoup4 lxml
         python3 ./Get_ESurfingDialerClient.py
 
-    - name: 查看PC目录下点文件
+    - name: 检查天翼校园网官方Linux版本下载结果
       run: |
-        ls -l ./PC/
+        ls -l ./PC
 
     - name: 生成更新日志
       run: echo "# 好的更新已经到来" > ${{ github.workspace }}-CHANGELOG.txt
@@ -121,4 +160,4 @@ jobs:
         files: |
           ./ESurfingDialer/build/libs/* # ESurfingDialer的JAR构建产物
           ./Phone/ESurfingDockerPhone.tar.gz # ESurfingDockerPhone的Docker镜像
-          ./Phone/ESurfingDialer/* # ESurfingDialer的免Docke直接运行版本
+          ./Phone/ESurfingDialer.tar.gz # ESurfingDialer的免Docke直接运行版本
