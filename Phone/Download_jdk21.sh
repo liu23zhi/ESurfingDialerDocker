@@ -1,188 +1,87 @@
-name: 每日构建
-
-on:
-  schedule:
-    - cron:  '0 8 * * *'  # 东八区每天凌晨 00:00 UTC+8 触发
-  workflow_dispatch:  # 允许手动触发
-
-permissions:
-  contents: write
-  discussions: write
-  packages: write
-
-jobs:
-  build:
-    runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
-
-    steps:
-    - name: 检出代码
-      uses: actions/checkout@v4
-      with:
-        path: '${{ github.workspace }}'
-
-    - name: 生成时间戳
-      id: timestamp
-      run: echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
-
-    - name: 检查当前目录
-      run: |
-        ls -l ${{ github.workspace }}
-
-    - name: 检出ESurfingDialer代码
-      uses: actions/checkout@v4
-      with:
-        repository: 'Rsplwe/ESurfingDialer'
-        path: '${{ github.workspace }}/ESurfingDialer'
-
-    - name: 检查ESurfingDialer目录
-      run: |
-        ls -l ${{ github.workspace }}/ESurfingDialer
-
-    - name: 设置 JDK 20
-      uses: actions/setup-java@v4
-      with:
-        java-version: '20'
-        distribution: 'zulu'
-
-    - name: 检查JDK设置
-      run: |
-        java -version
-
-    - name: 进入ESurfingDialer目录并执行构建
-      run: |
-        cd ${{ github.workspace }}/ESurfingDialer
-        ./gradlew shadowJar
-
-    - name: 检查ESurfingDialer构建产物
-      run: |
-        ls -l ${{ github.workspace }}/ESurfingDialer/build/libs
-
-    - name: 上传ESurfingDialer的JAR构建产物
-      uses: actions/upload-artifact@v3
-      with:
-        name: ESurfingDialer的JAR构建产物
-        path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
-
-    - name: 查找最新构建的Jar文件并复制
-      run: |
-        chmod +x ${{ github.workspace }}/FindLasterBuildJar.sh
-        ${{ github.workspace }}/FindLasterBuildJar.sh
-
-    - name: 检查Jar文件复制结果
-      run: |
-        ls -l ${{ github.workspace }}/Phone
-
-    - name: 检出Oracle-Docker-images代码
-      uses: actions/checkout@v4
-      with:
-        repository: 'oracle/docker-images'
-        path: '${{ github.workspace }}/Oracle-Docker-images'
-
-    - name: 检查Oracle-Docker-images目录
-      run: |
-        ls -l ${{ github.workspace }}/Oracle-Docker-images
-
-    - name: 编译OracleJava镜像
-      run: |
-        chmod +x ${{ github.workspace }}/OracleJava.sh
-        ${{ github.workspace }}/OracleJava.sh
-
-    - name: 检查OracleJava镜像编译结果
-      run: |
-        ls -l ${{ github.workspace }}/Phone/
-		ls -l ${{ github.workspace }}/Phone/Direct/
-
-    - name: 编译ESurfingDockerPhone镜像
-      run: |
-        cd ${{ github.workspace }}/Phone
-        chmod +x ./build.sh
-        ./build.sh
-
-    - name: 登录到 GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: 为 ESurfingDockerPhoneDocker 镜像打标签
-      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
-
-    - name: 推送 ESurfingDockerPhoneDocker 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
-
-    - name: 为 ESurfingDockerPhoneDocker 镜像打latest标签
-      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
-
-    - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
-
-    - name: 下载 ESurfingDockerPhoneDocker:latest 镜像
-      run: |
-        docker save ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
-
-    - name: 上传 ESurfingDockerPhoneDocker:latest 镜像
-      uses: actions/upload-artifact@v3
-      with:
-        name: ESurfingDialer的Docker镜像
-        path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
-
-    - name: 下载Java21
-      run: |
-        chmod +x ${{ github.workspace }}/Phone/Download_jdk21.sh
-        cd ${{ github.workspace }}/Phone/
-        ./Download_jdk21.sh
-
-    - name: 检查Java21下载结果
-      run: |
-        ls -l ${{ github.workspace }}/Phone/Direct
-		ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
-		ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/
-
-    - name: 修改Phone下的Direct文件夹为ESurfingDialer
-      run: |
-        cd ${{ github.workspace }}/Phone/
-        mv ./Direct ./ESurfingDialer
-
-    - name: 检查修改后的文件夹
-      run: |
-        ls -l ${{ github.workspace }}/Phone/ESurfingDialer
-
-    - name: 压缩ESurfingDialer文件夹为zip格式
-      run: |
-        cd ${{ github.workspace }}/Phone/
-        zip -r ESurfingDialer.zip ESurfingDialer
-
-    - name: 检查压缩文件
-      run: |
-        ls -l ${{ github.workspace }}/Phone/ESurfingDialer.zip
-
-    - name: 上传ESurfingDialer的免Docke直接运行版本
-      uses: actions/upload-artifact@v3
-      with:
-        name: ESurfingDialer的免Docke直接运行版本
-        path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
-
-    - name: 获取天翼校园网官方Linux版本下载地址并下载，不能获取则使用预下载文件
-      run: |
-        cd ${{ github.workspace }}/PC/
-        pip3 install requests beautifulsoup4 lxml
-        python3 ./Get_ESurfingDialerClient.py
-
-    - name: 检查天翼校园网官方Linux版本下载结果
-      run: |
-        ls -l ${{ github.workspace }}/PC
-
-    - name: 生成更新日志
-      run: echo "# 好的更新已经到来" > ${{ github.workspace }}-CHANGELOG.txt
-
-    - name: 创建Release
-      uses: softprops/action-gh-release@v2
-      with:
-        body_path: ${{ github.workspace }}-CHANGELOG.txt
-        tag_name: V${{ env.TIMESTAMP }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        files: |
-          ${{ github.workspace }}/ESurfingDialer/build/libs/*
-          ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
-          ${{ github.workspace }}/Phone/ESurfingDialer.zip
+#!/bin/bash
+# 设置下载链接
+URL_LINUX="https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz"
+URL_WINDOWS="https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.zip"
+# 设置本地文件名
+FILE_NAME_LINUX="jdk-21_linux-x64_bin.tar.gz"
+FILE_NAME_WINDOWS="jdk-21_windows-x64_bin.zip"
+# 设置目标文件夹
+TARGET_FOLDER_LINUX="./Direct/jdk-21_linux-x64"
+TARGET_FOLDER_WINDOWS="./Direct/jdk-21_windows-x64"
+# 设置下载文件夹
+DOWNLOAD_FOLDER="./Direct"
+# 创建下载文件夹
+if [ ! -d "$DOWNLOAD_FOLDER" ]; then
+    echo "创建下载文件夹：$DOWNLOAD_FOLDER"
+    mkdir -p "$DOWNLOAD_FOLDER"
+fi
+# 下载并解压Linux版本的JDK
+if [ -f "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX" ]; then
+    echo "文件 $DOWNLOAD_FOLDER/$FILE_NAME_LINUX 已存在，跳过下载。"
+else
+    echo "开始下载Linux版本的JDK..."
+    wget -c $URL_LINUX -O "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX"
+    if [ $? -eq 0 ]; then
+        echo "Linux版本的JDK下载完成。"
+    else
+        echo "Linux版本的JDK下载失败。"
+        exit 1
+    fi
+fi
+# 检查Linux版本的JDK是否已解压
+if [ -d "$TARGET_FOLDER_LINUX/bin" ]; then
+    IS_EXTRACTED_LINUX=true
+else
+    IS_EXTRACTED_LINUX=false
+fi
+if [ "$IS_EXTRACTED_LINUX" = false ]; then
+    if [ ! -d "$TARGET_FOLDER_LINUX" ]; then
+        echo "创建Linux目标文件夹：$TARGET_FOLDER_LINUX"
+        mkdir -p "$TARGET_FOLDER_LINUX"
+    fi
+    echo "开始解压Linux版本的JDK..."
+    tar -zxvf "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX" -C "$TARGET_FOLDER_LINUX"
+    if [ $? -eq 0 ]; then
+        echo "Linux版本的JDK解压完成。"
+        # 删除原文件
+        rm "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX"
+    else
+        echo "Linux版本的JDK解压失败。"
+        exit 1
+    fi
+fi
+# 下载并解压Windows版本的JDK
+if [ -f "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS" ]; then
+    echo "文件 $DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS 已存在，跳过下载。"
+else
+    echo "开始下载Windows版本的JDK..."
+    wget -c $URL_WINDOWS -O "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS"
+    if [ $? -eq 0 ]; then
+        echo "Windows版本的JDK下载完成。"
+    else
+        echo "Windows版本的JDK下载失败。"
+        exit 1
+    fi
+fi
+# 检查Windows版本的JDK是否已解压
+if [ -d "$TARGET_FOLDER_WINDOWS/bin" ]; then
+    IS_EXTRACTED_WINDOWS=true
+else
+    IS_EXTRACTED_WINDOWS=false
+fi
+if [ "$IS_EXTRACTED_WINDOWS" = false ]; then
+    if [ ! -d "$TARGET_FOLDER_WINDOWS" ]; then
+        echo "创建Windows目标文件夹：$TARGET_FOLDER_WINDOWS"
+        mkdir -p "$TARGET_FOLDER_WINDOWS"
+    fi
+    echo "开始解压Windows版本的JDK..."
+    unzip "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS" -d "$TARGET_FOLDER_WINDOWS"
+    if [ $? -eq 0 ]; then
+        echo "Windows版本的JDK解压完成。"
+        # 删除原文件
+        rm "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS"
+    else
+        echo "Windows版本的JDK解压失败。"
+        exit 1
+    fi
+fi
