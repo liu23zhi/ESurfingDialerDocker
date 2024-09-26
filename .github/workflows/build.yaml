@@ -119,7 +119,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}-CHANGELOG.txt
-        tag_name: V${{ env.TIMESTAMP }}.${{ github.sha.slice(0, 4) }}
+        tag_name: V${{ env.TIMESTAMP }}.${{ github.sha.substr(0, 4) }}
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ./ESurfingDialer/build/libs/*
