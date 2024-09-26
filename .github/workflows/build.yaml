@@ -158,6 +158,6 @@ jobs:
         tag_name: V${{ env.TIMESTAMP }}
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
-          ./ESurfingDialer/build/libs/* # ESurfingDialer的JAR构建产物
-          ./Phone/ESurfingDockerPhone.tar.gz # ESurfingDockerPhone的Docker镜像
-          ./Phone/ESurfingDialer.zip # ESurfingDialer的免Docke直接运行版本
+          ./ESurfingDialer/build/libs/*
+          ./Phone/ESurfingDockerPhone.tar.gz
+          ./Phone/ESurfingDialer.zip
