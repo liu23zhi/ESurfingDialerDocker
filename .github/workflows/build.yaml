@@ -115,6 +115,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}-CHANGELOG.txt
+        # note you'll typically need to create a personal access token
+        # with permissions to create releases in the other repo
+        token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
         tag_name: V$(date +"%Y.%m.%d.%H.%M.%S.%N")  # 使用当前日期和时间作为版本号
         files: |
           ./ESurfingDialer/build/libs/*
