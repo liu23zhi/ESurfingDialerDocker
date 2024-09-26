@@ -6,6 +6,9 @@ on:
     - cron:  '0 0 * * *'  # 每天凌晨 00:00 UTC 触发
   workflow_dispatch:  # 允许手动触发
 
+permissions:
+  contents: write
+  discussions: write
 jobs:
   build:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
@@ -116,21 +119,15 @@ jobs:
       run: |
         ls -l ./PC/
 
-    - name: 创建发布
-      uses: actions/create-release@v1
-      with:
-        tag_name: V$(date +"%Y.%m.%d.%H.%M.%S.%N")  # 使用当前日期和时间作为版本号
-        release_name: ESurfingDialer Release $(date +"%Y.%m.%d.%H.%M.%S.%N")
-        draft: false
-        prerelease: false
-
-    - name: 上传所有构建产物
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: V$(date +"%Y.%m.%d.%H.%M.%S.%N")
-        files: |
-          ./ESurfingDialer/build/libs/*
-          ./Phone/ESurfingDialer/*
-          ./Phone/ESurfingDockerPhone.tar.gz
-        asset_name: ESurfingDialer的最新编译JAR（占用手机上网名额）
-        asset_content_type: application/zip
+      - name: Generate Changelog
+        run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
+        
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
+          repository: my_gh_org/my_gh_repo
+          # note you'll typically need to create a personal access token
+          # with permissions to create releases in the other repo
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
