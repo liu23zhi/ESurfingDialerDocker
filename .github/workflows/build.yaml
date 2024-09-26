@@ -38,22 +38,11 @@ jobs:
         cd ./ESurfingDialer
         ./gradlew shadowJar
 
-    - name: 上传构建产物
+    - name: 上传ESurfingDialer的JAR构建产物
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDialer的最新编译JAR
+        name: ESurfingDialer的JAR构建产物
         path: './ESurfingDialer/build/libs/*'
-
-    - name: 查找最新构建的Jar文件并复制
-      run: |
-        chmod +x ./FindLasterBuildJar.sh
-        ./FindLasterBuildJar.sh
-
-    - name: 检出Oracle-Docker-images代码
-      uses: actions/checkout@v4
-      with:
-        repository: 'oracle/docker-images'
-        path: './Oracle-Docker-images'
 
     - name: 编译OracleJava镜像
       run: |
@@ -66,10 +55,10 @@ jobs:
         chmod +x ./build.sh
         ./build.sh
 
-    - name: 上传构建产物
+    - name: 上传ESurfingDockerPhone的Docker镜像
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDialer的Docker镜像
+        name: ESurfingDockerPhone的Docker镜像
         path: './Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 下载Java21
@@ -78,47 +67,40 @@ jobs:
         cd ./Phone/
         ./Download_jdk21.sh
 
-    - name: 查看Phone目录下Java目录下的文件
-      run: |
-        cd ./Phone/
-        ls -l ./Direct/jdk-21_windows-x64
-        ls -l ./Direct/jdk-21_linux-x64
-
     - name: 修改Phone下的Direct文件夹为ESurfingDialer
       run: |
         cd ./Phone/
         mv ./Direct ./ESurfingDialer
 
-    - name: 上传构建产物
+    - name: 上传ESurfingDialer的免Docke直接运行版本
       uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialer的免Docke直接运行版本
         path: './Phone/ESurfingDialer/'
 
-    - name: 获取天翼校园网官方Linux版本下载地址并下载，不能获取则使用预下载文件
+    - name: 生成更新日志
+      id: generate_changelog
       run: |
-        cd ./PC/
-        pip3 install requests beautifulsoup4 lxml
-        python3 ./Get_ESurfingDialerClient.py
+        echo "更新日志：" > ${{ github.workspace }}-CHANGELOG.txt
+        echo "" >> ${{ github.workspace }}-CHANGELOG.txt
+        echo "以下是本次构建的各个产物及其说明：" >> ${{ github.workspace }}-CHANGELOG.txt
+        echo "" >> ${{ github.workspace }}-CHANGELOG.txt
+        echo "ESurfingDialer的JAR构建产物:" >> ${{ github.workspace }}-CHANGELOG.txt
+        find ./ESurfingDialer/build/libs/ -name '*-all.jar' -exec echo "- {}" \; >> ${{ github.workspace }}-CHANGELOG.txt
+        echo "" >> ${{ github.workspace }}-CHANGELOG.txt
+        echo "ESurfingDockerPhone的Docker镜像:" >> ${{ github.workspace }}-CHANGELOG.txt
+        echo "- Phone/ESurfingDockerPhone.tar.gz" >> ${{ github.workspace }}-CHANGELOG.txt
+        echo "" >> ${{ github.workspace }}-CHANGELOG.txt
+        echo "ESurfingDialer的免Docke直接运行版本:" >> ${{ github.workspace }}-CHANGELOG.txt
+        echo "- Phone/ESurfingDialer/" >> ${{ github.workspace }}-CHANGELOG.txt
 
-    - name: 查看PC目录下点文件
-      run: |
-        ls -l ./PC/
-
-    - name: Generate Changelog
-      run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
-
-    - name: Generate Timestamp
-      id: timestamp
-      run: echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
-
-    - name: Release
+    - name: 创建Release
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}-CHANGELOG.txt
-        tag_name: V${{ env.TIMESTAMP }}
+        tag_name: ${{ github.sha }}
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
-          ./ESurfingDialer/build/libs/*
-          ./Phone/ESurfingDockerPhone.tar.gz
-          ./Phone/ESurfingDialer/
+          ./ESurfingDialer/build/libs/* # ESurfingDialer的JAR构建产物
+          ./Phone/ESurfingDockerPhone.tar.gz # ESurfingDockerPhone的Docker镜像
+          ./Phone/ESurfingDialer/* # ESurfingDialer的免Docke直接运行版本
