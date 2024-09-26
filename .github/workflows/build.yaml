@@ -119,20 +119,20 @@ jobs:
       run: |
         ls -l ./Phone/ESurfingDialer
 
-    - name: 压缩ESurfingDialer文件夹
+    - name: 压缩ESurfingDialer文件夹为zip格式
       run: |
         cd ./Phone/
-        tar -czf ESurfingDialer.tar.gz ESurfingDialer
+        zip -r ESurfingDialer.zip ESurfingDialer
 
     - name: 检查压缩文件
       run: |
-        ls -l ./Phone/ESurfingDialer.tar.gz
+        ls -l ./Phone/ESurfingDialer.zip
 
     - name: 上传ESurfingDialer的免Docke直接运行版本
       uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialer的免Docke直接运行版本
-        path: './Phone/ESurfingDialer/''
+        path: './Phone/ESurfingDialer.zip'
 
     - name: 获取天翼校园网官方Linux版本下载地址并下载，不能获取则使用预下载文件
       run: |
@@ -160,4 +160,4 @@ jobs:
         files: |
           ./ESurfingDialer/build/libs/* # ESurfingDialer的JAR构建产物
           ./Phone/ESurfingDockerPhone.tar.gz # ESurfingDockerPhone的Docker镜像
-          ./Phone/ESurfingDialer.tar.gz # ESurfingDialer的免Docke直接运行版本
+          ./Phone/ESurfingDialer.zip # ESurfingDialer的免Docke直接运行版本
