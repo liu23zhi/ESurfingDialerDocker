@@ -17,6 +17,10 @@ jobs:
     - name: 检出代码
       uses: actions/checkout@v4
 
+    - name: 生成时间戳
+      id: timestamp
+      run: echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
+
     - name: 检查当前目录
       run: |
         ls -l
@@ -159,10 +163,6 @@ jobs:
 
     - name: 生成更新日志
       run: echo "# 好的更新已经到来" > ${{ github.workspace }}-CHANGELOG.txt
-
-    - name: 生成时间戳
-      id: timestamp
-      run: echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
 
     - name: 创建Release
       uses: softprops/action-gh-release@v2
