@@ -2,7 +2,7 @@ name: 每日构建
 
 on:
   schedule:
-    - cron:  '0 0 * * *'  # 东八区每天凌晨 00:00 UTC+8 触发
+    - cron: '0 0 * * *'  # 东八区每天凌晨 00:00 UTC+8 触发
   workflow_dispatch:  # 允许手动触发
 
 permissions:
@@ -20,7 +20,7 @@ jobs:
       name: ESurfingDialer
 
     steps:
-    - name: 检出代码
+    - name: 下载本项目所有代码
       uses: actions/checkout@v4
       with:
         path: '${{ github.workspace }}'
@@ -29,17 +29,21 @@ jobs:
       id: timestamp
       run: echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
 
-    - name: 检查当前目录
+    - name: 查看工作目录
       run: |
         ls -l ${{ github.workspace }}
 
-    - name: 检出ESurfingDialer代码
+    - name: 下载 ESurfingDialer 项目代码
       uses: actions/checkout@v4
       with:
         repository: 'Rsplwe/ESurfingDialer'
         path: '${{ github.workspace }}/ESurfingDialer'
-
-    - name: 检查ESurfingDialer目录
+        
+    - name: 查看工作目录
+      run: |
+        ls -l ${{ github.workspace }}
+        
+    - name: 查看 ESurfingDialer 目录
       run: |
         ls -l ${{ github.workspace }}/ESurfingDialer
 
@@ -49,59 +53,89 @@ jobs:
         java-version: '20'
         distribution: 'zulu'
 
-    - name: 检查JDK设置
+    - name: 查看 Java 版本
       run: |
         java -version
 
-    - name: 进入ESurfingDialer目录并执行构建
+    - name: 进入 ESurfingDialer 目录并执行构建
       run: |
         cd ${{ github.workspace }}/ESurfingDialer
         ./gradlew shadowJar
 
-    - name: 检查ESurfingDialer构建产物
+    - name: 查看 ESurfingDialer 构建产物
       run: |
         ls -l ${{ github.workspace }}/ESurfingDialer/build/libs
 
-    - name: 上传ESurfingDialer的JAR构建产物
+    - name: 上传 ESurfingDialer 的 JAR 构建产物
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDialer的JAR构建产物
+        name: ESurfingDialer 的 JAR 构建产物
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
-    - name: 查找最新构建的Jar文件并复制
+    - name: 生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
+
+    - name: 查找最新构建的 Jar 文件并复制
       run: |
         chmod +x ${{ github.workspace }}/FindLasterBuildJar.sh
         ${{ github.workspace }}/FindLasterBuildJar.sh
 
-    - name: 检查Jar文件复制结果
+    - name: 查看 Jar 文件复制结果
       run: |
         ls -l ${{ github.workspace }}/Phone
 
-    - name: 检出Oracle-Docker-images代码
+    - name: 为 ESurfingDialer 的 JAR 构建产物 生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/ESurfingDialer/Phone/client.jar'
+
+    - name: 下载 Oracle-Docker-images 项目代码
       uses: actions/checkout@v4
       with:
         repository: 'oracle/docker-images'
         path: '${{ github.workspace }}/Oracle-Docker-images'
 
-    - name: 检查Oracle-Docker-images目录
+    - name: 查看工作目录
+      run: |
+        ls -l ${{ github.workspace }}
+
+    - name: 查看 Oracle-Docker-images 目录
       run: |
         ls -l ${{ github.workspace }}/Oracle-Docker-images
 
-    - name: 编译OracleJava镜像
+    - name: 编译 OracleJava 镜像
       run: |
         chmod +x ${{ github.workspace }}/OracleJava.sh
         ${{ github.workspace }}/OracleJava.sh
 
-    - name: 检查OracleJava镜像编译结果
+    - name: 查看当前可用镜像
       run: |
-        ls -l ${{ github.workspace }}/Phone/
-        ls -l ${{ github.workspace }}/Phone/Direct/
+        docker image ls
 
-    - name: 编译ESurfingDockerPhone镜像
+    - name: 获取 OracleJava 镜像的 sha256
+      id: get-digest
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' oracle/jdk:21-ol9 | cut -d '@' -f 2)
+        echo "DIGEST0=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 OracleJava 镜像的证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: oracle/jdk:21-ol9
+        subject-digest: ${{ env.DIGEST0 }}
+        push-to-registry: true
+
+    - name: 编译 ESurfingDockerPhone 镜像
       run: |
         cd ${{ github.workspace }}/Phone
         chmod +x ./build.sh
         ./build.sh
+
+    - name: 查看当前可用镜像
+      run: |
+        docker image ls
 
     - name: 登录到 GitHub Container Registry
       uses: docker/login-action@v2
@@ -122,13 +156,13 @@ jobs:
     - name: 推送 ESurfingDockerPhoneDocker 镜像到 GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
-    - name: 获取镜像sha256
+    - name: 获取 ESurfingDockerPhoneDocker 的 Github 镜像的 sha256
       id: get-digest
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
         echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成镜像证明
+    - name: 生成 ESurfingDockerPhoneDocker 的 Github 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
@@ -141,51 +175,52 @@ jobs:
     - name: 推送 ESurfingDockerPhoneDocker 镜像到 DockerHub
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
-    - name: 获取镜像sha256
+    - name: 获取 ESurfingDockerPhoneDocker 的 DockerHub 镜像的 sha256
       id: get-digest
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成镜像证明
+    - name: 生成 ESurfingDockerPhoneDocker 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
         subject-digest: ${{ env.DIGEST2 }}
         push-to-registry: true
 
-    - name: 为 ESurfingDockerPhoneDocker 镜像打latest标签
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 latest 标签
       run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
 
     - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
 
-    - name: 获取镜像sha256
+    - name: 获取 ESurfingDockerPhoneDocker:latest 的 Github 镜像的 sha256
       id: get-digest
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成镜像证明
-      uses: actions/attest-build-provenance@v1
+    - name: 生成 ESurfingDockerPhoneDocker:latest 的 Github 镜像证明
+      uses: actions/attest
+-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
         subject-digest: ${{ env.DIGEST3 }}
         push-to-registry: true
 
-    - name: 为 ESurfingDockerPhoneDocker 镜像打latest标签
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 latest 标签
       run: docker tag esurfingdockerphone ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
 
     - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 DockerHub
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
 
-    - name: 获取镜像sha256
+    - name: 获取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像的 sha256
       id: get-digest
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成镜像证明
+    - name: 生成 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
@@ -199,59 +234,69 @@ jobs:
     - name: 上传 ESurfingDockerPhoneDocker:latest 镜像
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDialer的Docker镜像
+        name: ESurfingDialer 的 Docker 镜像
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
-    - name: 下载Java21
+    - name: 生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
+
+    - name: 下载 Java21
       run: |
         chmod +x ${{ github.workspace }}/Phone/Download_jdk21.sh
-        cd ${{ github.workspace }}/Phone/
+        cd ${{ github.workspace }}/Phone/ 
         ./Download_jdk21.sh
 
-    - name: 检查Java21下载结果
+    - name: 查看 Java21 下载结果
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/
 
-    - name: 修改Phone下的Direct文件夹为ESurfingDialer
+    - name: 修改 Phone 下的 Direct 文件夹为 ESurfingDialer
       run: |
         cd ${{ github.workspace }}/Phone/
         mv ./Direct ./ESurfingDialer
 
-    - name: 检查修改后的文件夹
+    - name: 查看修改后的文件夹
       run: |
         ls -l ${{ github.workspace }}/Phone/ESurfingDialer
 
-    - name: 压缩ESurfingDialer文件夹为zip格式
+    - name: 压缩 ESurfingDialer 文件夹为 zip 格式
       run: |
         cd ${{ github.workspace }}/Phone/
         zip -r ESurfingDialer.zip ESurfingDialer
 
-    - name: 检查压缩文件
+    - name: 查看压缩文件
       run: |
         ls -l ${{ github.workspace }}/Phone/ESurfingDialer.zip
 
-    - name: 上传ESurfingDialer的免Docke直接运行版本
+    - name: 上传 ESurfingDialer 的免 Docker 直接运行版本
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDialer的免Docke直接运行版本
+        name: ESurfingDialer 的免 Docker 直接运行版本
         path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
-    - name: 获取天翼校园网官方Linux版本下载地址并下载，不能获取则使用预下载文件
+    - name: 为 ESurfingDialer 的免 Docker 直接运行版本生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
+
+    - name: 获取天翼校园网官方 Linux 版本下载地址并下载，不能获取则使用预下载文件
       run: |
         cd ${{ github.workspace }}/PC/
         pip3 install requests beautifulsoup4 lxml
         python3 ./Get_ESurfingDialerClient.py
 
-    - name: 检查天翼校园网官方Linux版本下载结果
+    - name: 检查天翼校园网官方 Linux 版本下载结果
       run: |
         ls -l ${{ github.workspace }}/PC
 
     - name: 生成更新日志
       run: echo "# 好的更新已经到来" > ${{ github.workspace }}-CHANGELOG.txt
 
-    - name: 创建Release
+    - name: 创建 Release
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}-CHANGELOG.txt
@@ -261,3 +306,4 @@ jobs:
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
           ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
           ${{ github.workspace }}/Phone/ESurfingDialer.zip
+
