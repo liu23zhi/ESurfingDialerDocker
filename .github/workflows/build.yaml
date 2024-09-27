@@ -113,18 +113,6 @@ jobs:
       run: |
         docker image ls
 
-    - name: 获取 OracleJava 镜像的 sha256
-      run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' oracle/jdk:21-ol9 | cut -d '@' -f 2)
-        echo "DIGEST0=$DIGEST" >> $GITHUB_ENV
-
-    - name: 生成 OracleJava 镜像的证明
-      uses: actions/attest-build-provenance@v1
-      with:
-        subject-name: oracle/jdk:21-ol9
-        subject-digest: ${{ env.DIGEST0 }}
-        push-to-registry: true
-
     - name: 编译 ESurfingDockerPhone 镜像
       run: |
         cd ${{ github.workspace }}/Phone
