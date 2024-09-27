@@ -5,7 +5,7 @@ on:
     - cron:  '0 0 * * *'  # 东八区每天凌晨 00:00 UTC+8 触发
   workflow_dispatch:  # 允许手动触发
 
-Environment:
+env:
   name: ESurfingDialer
 
 permissions:
