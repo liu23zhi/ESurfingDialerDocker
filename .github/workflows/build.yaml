@@ -201,8 +201,7 @@ jobs:
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPhoneDocker:latest 的 Github 镜像证明
-      uses: actions/attest
--build-provenance@v1
+      uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
         subject-digest: ${{ env.DIGEST3 }}
