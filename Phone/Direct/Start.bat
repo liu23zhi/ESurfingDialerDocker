@@ -8,7 +8,7 @@ set "TIMEOUT_Print=1"
 set TIMEOUT=5
 
 :: 设置调试模式
-set "DEBUG=false"
+set "DEBUG=true"
 
 :: 文件完整情况
 set "COMPLETENESS=true"
