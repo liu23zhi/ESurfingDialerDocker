@@ -150,7 +150,7 @@ jobs:
     - name: 生成 ESurfingDockerPhoneDocker 的 Github 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST }}
         push-to-registry: true
 
@@ -168,7 +168,7 @@ jobs:
     - name: 生成 ESurfingDockerPhoneDocker 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+        subject-name: index.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST2 }}
         push-to-registry: true
 
@@ -186,7 +186,7 @@ jobs:
     - name: 生成 ESurfingDockerPhoneDocker:latest 的 Github 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST3 }}
         push-to-registry: true
 
@@ -204,7 +204,7 @@ jobs:
     - name: 生成 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+        subject-name: index.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST4 }}
         push-to-registry: true
 
