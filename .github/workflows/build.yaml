@@ -88,7 +88,7 @@ jobs:
     - name: 为 ESurfingDialer 的 JAR 构建产物 生成证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-path: '${{ github.workspace }}/ESurfingDialer/Phone/client.jar'
+        subject-path: '${{ github.workspace }}/Phone/client.jar'
 
     - name: 下载 Oracle-Docker-images 项目代码
       uses: actions/checkout@v4
