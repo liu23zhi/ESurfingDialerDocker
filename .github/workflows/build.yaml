@@ -246,7 +246,7 @@ jobs:
 
     - name: 修改文件权限
       run: |
-        chmod -R 777 ${{ github.workspace }}/Phone/ESurfingDialer/*
+        chmod -R 777 ${{ github.workspace }}/Phone/ESurfingDialer/
 
     - name: 压缩 ESurfingDialer 文件夹为 zip 格式
       run: |
