@@ -9,6 +9,8 @@ permissions:
   contents: write
   discussions: write
   packages: write
+  id-token: write
+  attestations: write
 
 jobs:
   build:
@@ -120,11 +122,56 @@ jobs:
     - name: 推送 ESurfingDockerPhoneDocker 镜像到 GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
+    - name: 获取镜像sha256
+      id: get-digest
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        echo "DIGEST=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+        subject-digest: ${{ env.DIGEST }}
+        push-to-registry: true
+
     - name: 为 ESurfingDockerPhoneDocker 镜像打标签
       run: docker tag esurfingdockerphone ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
     - name: 推送 ESurfingDockerPhoneDocker 镜像到 DockerHub
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+
+    - name: 获取镜像sha256
+      id: get-digest
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+        subject-digest: ${{ env.DIGEST2 }}
+        push-to-registry: true
+
+    - name: 为 ESurfingDockerPhoneDocker 镜像打latest标签
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+
+    - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+
+    - name: 获取镜像sha256
+      id: get-digest
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
+        echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+        subject-digest: ${{ env.DIGEST3 }}
+        push-to-registry: true
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打latest标签
       run: docker tag esurfingdockerphone ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
@@ -132,11 +179,18 @@ jobs:
     - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 DockerHub
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
 
-    - name: 为 ESurfingDockerPhoneDocker 镜像打latest标签
-      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+    - name: 获取镜像sha256
+      id: get-digest
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
+        echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
-    - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+    - name: 生成镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+        subject-digest: ${{ env.DIGEST4 }}
+        push-to-registry: true
 
     - name: 下载 ESurfingDockerPhoneDocker:latest 镜像
       run: |
@@ -206,4 +260,4 @@ jobs:
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
           ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
-          ${{ github.workspace }}/Phone/
+          ${{ github.workspace }}/Phone/ESurfingDialer.zip
