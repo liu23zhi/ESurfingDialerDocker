@@ -5,9 +5,6 @@ on:
     - cron:  '0 0 * * *'  # 东八区每天凌晨 00:00 UTC+8 触发
   workflow_dispatch:  # 允许手动触发
 
-env:
-  name: ESurfingDialer
-
 permissions:
   contents: write
   discussions: write
@@ -16,6 +13,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
+    
+    environment:
+      name: ESurfingDialer
 
     steps:
     - name: 检出代码
