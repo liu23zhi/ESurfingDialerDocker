@@ -155,20 +155,20 @@ jobs:
         push-to-registry: true
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打标签
-      run: docker tag esurfingdockerphone ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
     - name: 推送 ESurfingDockerPhoneDocker 镜像到 DockerHub
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
     - name: 获取 ESurfingDockerPhoneDocker 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPhoneDocker 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: index.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST2 }}
         push-to-registry: true
 
@@ -191,20 +191,20 @@ jobs:
         push-to-registry: true
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打 latest 标签
-      run: docker tag esurfingdockerphone ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
 
     - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 DockerHub
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
 
     - name: 获取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: index.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST4 }}
         push-to-registry: true
 
