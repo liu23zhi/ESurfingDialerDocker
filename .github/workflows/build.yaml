@@ -278,6 +278,12 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}/PC
 
+    - name: 编译 ESurfingDockerPC 镜像
+      run: |
+        cd ${{ github.workspace }}/PC
+        chmod +x ./build.sh
+        ./build.sh
+
     - name: 生成更新日志
       run: echo "# 好的更新已经到来" > ${{ github.workspace }}-CHANGELOG.txt
 
