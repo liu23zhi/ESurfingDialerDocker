@@ -239,14 +239,14 @@ if "%NEW_USERNAME%"=="""" (
 		)
 	) else (
 		:: 判断密码的第一个和最后一个字符是否同时为双引号，并相应地去除
-		if "%NEW_USERNAME:~0,1%"=="""" if "%NEW_USERNAME:~-1%"=="""" (
-			set "USERNAME=!NEW_USERNAME:~1,-1!"
-		)
+		:: if "%NEW_USERNAME:~0,1%"=="""" if "%NEW_USERNAME:~-1%"=="""" (
+		:: 	set "USERNAME=!NEW_USERNAME:~1,-1!"
+		:: )
 		
 		:: 判断密码的第一个和最后一个字符是否同时为单引号，并相应地去除
-		if "%NEW_USERNAME:~0,1%"=="'" if "%NEW_USERNAME:~-1%"=="'" (
-			set "USERNAME=!NEW_USERNAME:~1,-1!"
-		)
+		:: if "%NEW_USERNAME:~0,1%"=="'" if "%NEW_USERNAME:~-1%"=="'" (
+		:: 	set "USERNAME=!NEW_USERNAME:~1,-1!"
+		:: )
 		
 		set "USERNAME=%NEW_USERNAME%"
         if not "%DEBUG%"=="true" (
@@ -320,14 +320,14 @@ if "%NEW_PASSWORD%"=="""" (
 		)
 	) else (
 		:: 判断密码的第一个和最后一个字符是否同时为双引号，并相应地去除
-		if "%NEW_PASSWORD:~0,1%"=="""" if "%NEW_PASSWORD:~-1%"=="""" (
-			set "PASSWORD=!NEW_PASSWORD:~1,-1!"
-		)
+		:: if "%NEW_PASSWORD:~0,1%"=="""" if "%NEW_PASSWORD:~-1%"=="""" (
+		:: 	set "PASSWORD=!NEW_PASSWORD:~1,-1!"
+		:: )
 		
 		:: 判断密码的第一个和最后一个字符是否同时为单引号，并相应地去除
-		if "%NEW_PASSWORD:~0,1%"=="'" if "%NEW_PASSWORD:~-1%"=="'" (
-			set "PASSWORD=!NEW_PASSWORD:~1,-1!"
-		)
+		:: if "%NEW_PASSWORD:~0,1%"=="'" if "%NEW_PASSWORD:~-1%"=="'" (
+		:: 	set "PASSWORD=!NEW_PASSWORD:~1,-1!"
+		:: )
 		
 		set "PASSWORD=%NEW_PASSWORD%"
         if not "%DEBUG%"=="true" (
@@ -466,9 +466,9 @@ echo 用户输入了新的密码: %PASSWORD%
 :execute_java
 :: 执行Java程序
 if "%DEBUG%"=="true" (
-    echo 执行Java程序，参数为: "%JAVA_PATH%" -jar "%JAR_FILE%" -u "%USERNAME%" -p "%PASSWORD%"
+    echo 执行Java程序，参数为: "%JAVA_PATH%" -jar "%JAR_FILE%" -u %USERNAME% -p %PASSWORD%
 )
-"%JAVA_PATH%" -jar "%JAR_FILE%" -u "%USERNAME%" -p "%PASSWORD%"
+"%JAVA_PATH%" -jar "%JAR_FILE%" -u %USERNAME% -p %PASSWORD%
 if "%DEBUG%"=="true" (
     echo Java程序执行完毕。
 )
