@@ -238,6 +238,16 @@ if "%NEW_USERNAME%"=="""" (
 			goto END
 		)
 	) else (
+		:: 判断密码的第一个和最后一个字符是否同时为双引号，并相应地去除
+		if "%NEW_USERNAME:~0,1%"=="""" if "%NEW_USERNAME:~-1%"=="""" (
+			set "USERNAME=!NEW_USERNAME:~1,-1!"
+		)
+		
+		:: 判断密码的第一个和最后一个字符是否同时为单引号，并相应地去除
+		if "%NEW_USERNAME:~0,1%"=="'" if "%NEW_USERNAME:~-1%"=="'" (
+			set "USERNAME=!NEW_USERNAME:~1,-1!"
+		)
+		
 		set "USERNAME=%NEW_USERNAME%"
         if not "%DEBUG%"=="true" (
             goto Password_Input
@@ -309,6 +319,16 @@ if "%NEW_PASSWORD%"=="""" (
 			goto END
 		)
 	) else (
+		:: 判断密码的第一个和最后一个字符是否同时为双引号，并相应地去除
+		if "%NEW_PASSWORD:~0,1%"=="""" if "%NEW_PASSWORD:~-1%"=="""" (
+			set "PASSWORD=!NEW_PASSWORD:~1,-1!"
+		)
+		
+		:: 判断密码的第一个和最后一个字符是否同时为单引号，并相应地去除
+		if "%NEW_PASSWORD:~0,1%"=="'" if "%NEW_PASSWORD:~-1%"=="'" (
+			set "PASSWORD=!NEW_PASSWORD:~1,-1!"
+		)
+		
 		set "PASSWORD=%NEW_PASSWORD%"
         if not "%DEBUG%"=="true" (
             goto Settings_Page
