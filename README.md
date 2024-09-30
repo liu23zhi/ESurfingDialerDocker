@@ -1,6 +1,9 @@
 # 这一个基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 和中国电信官方客户端搭建的Docker镜像自动构建项目
 目前貌似只能在广东省使用。
+
 **此项目利用了Github action自动拉取源码进行构建**
+
+想最求最新的，可以尝试使用watchtower https://github.com/containrrr/watchtower
 ### 目前提供两种镜像；
 1. ESurfingDockerPc
 此镜像占用电脑设备上网资格进行网络认证
