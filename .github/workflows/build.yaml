@@ -210,7 +210,7 @@ jobs:
 
     - name: 下载 ESurfingDockerPhoneDocker:latest 镜像
       run: |
-        docker save ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
 
     - name: 上传 ESurfingDockerPhoneDocker:latest 镜像
       uses: actions/upload-artifact@v3
@@ -284,6 +284,97 @@ jobs:
         chmod +x ./build.sh
         ./build.sh
 
+    - name: 查看当前可用镜像
+      run: |
+        docker image ls
+
+    - name: 为 ESurfingDockerPc 镜像打标签
+      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+
+    - name: 推送 ESurfingDockerPc 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+
+    - name: 获取 ESurfingDockerPc 的 Github 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        echo "DIGEST=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc 的 Github 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
+        subject-digest: ${{ env.DIGEST }}
+        push-to-registry: true
+
+    - name: 为 ESurfingDockerPc 镜像打标签
+      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+
+    - name: 推送 ESurfingDockerPc 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+
+    - name: 获取 ESurfingDockerPc 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
+        subject-digest: ${{ env.DIGEST2 }}
+        push-to-registry: true
+
+    - name: 为 ESurfingDockerPc 镜像打 latest 标签
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
+
+    - name: 推送 ESurfingDockerPc:latest 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
+
+    - name: 获取 ESurfingDockerPc:latest 的 Github 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest | cut -d '@' -f 2)
+        echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest 的 Github 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
+        subject-digest: ${{ env.DIGEST3 }}
+        push-to-registry: true
+
+    - name: 为 ESurfingDockerPc 镜像打 latest 标签
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+
+    - name: 推送 ESurfingDockerPc:latest 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+
+    - name: 获取 ESurfingDockerPc:latest 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest | cut -d '@' -f 2)
+        echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
+        subject-digest: ${{ env.DIGEST4 }}
+        push-to-registry: true
+
+    - name: 下载 ESurfingDockerPc:latest 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 上传 ESurfingDockerPc:latest 镜像
+      uses: actions/upload-artifact@v3
+      with:
+        name: ESurfingDialer 的 Docker 镜像
+        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+
+    - name: 生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+
     - name: 生成更新日志
       run: echo "# 好的更新已经到来" > ${{ github.workspace }}-CHANGELOG.txt
 
@@ -297,4 +388,5 @@ jobs:
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
           ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
           ${{ github.workspace }}/Phone/ESurfingDialer.zip
+          ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
 
