@@ -28,6 +28,9 @@ jobs:
     - name: 生成时间戳
       run: echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
 
+    - name: 生成更新日志
+      run: echo -e "# 编译日期：${{ env.TIMESTAMP }}\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
     - name: 查看工作目录
       run: |
         ls -l ${{ github.workspace }}
@@ -250,6 +253,9 @@ jobs:
         name: ESurfingDialer 的 Docker 镜像
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
+    - name: 生成更新日志
+      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 "使用方法") \n" >> ${{ github.workspace }}/CHANGELOG.txt
+
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
       with:
@@ -434,18 +440,21 @@ jobs:
         name: ESurfingDialer 的 Docker 镜像
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
+    - name: 生成更新日志
+      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 "使用方法") \n" >> ${{ github.workspace }}/CHANGELOG.txt
+
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成更新日志
-      run: echo "# 好的更新已经到来" > ${{ github.workspace }}-CHANGELOG.txt
+      run: echo "# 好的更新已经到来" > ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 创建 Release
       uses: softprops/action-gh-release@v2
       with:
-        body_path: ${{ github.workspace }}-CHANGELOG.txt
+        body_path: ${{ github.workspace }}/CHANGELOG.txt
         tag_name: V${{ env.TIMESTAMP }}
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
