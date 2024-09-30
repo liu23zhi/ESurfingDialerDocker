@@ -152,7 +152,7 @@ jobs:
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST }}
-        push-to-registry: true
+        push-to-registry: false
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打标签
       run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
@@ -170,7 +170,7 @@ jobs:
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST2 }}
-        push-to-registry: true
+        push-to-registry: false
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打 latest 标签
       run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
@@ -188,7 +188,7 @@ jobs:
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST3 }}
-        push-to-registry: true
+        push-to-registry: false
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打 latest 标签
       run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
@@ -206,7 +206,7 @@ jobs:
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST4 }}
-        push-to-registry: true
+        push-to-registry: false
 
     - name: 下载 ESurfingDockerPhoneDocker:latest 镜像
       run: |
@@ -304,7 +304,7 @@ jobs:
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST }}
-        push-to-registry: true
+        push-to-registry: false
 
     - name: 为 ESurfingDockerPc 镜像打标签
       run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
@@ -322,7 +322,7 @@ jobs:
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST2 }}
-        push-to-registry: true
+        push-to-registry: false
 
     - name: 为 ESurfingDockerPc 镜像打 latest 标签
       run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
@@ -340,7 +340,7 @@ jobs:
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST3 }}
-        push-to-registry: true
+        push-to-registry: false
 
     - name: 为 ESurfingDockerPc 镜像打 latest 标签
       run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
@@ -358,7 +358,7 @@ jobs:
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST4 }}
-        push-to-registry: true
+        push-to-registry: false
 
     - name: 下载 ESurfingDockerPc:latest 镜像
       run: |
