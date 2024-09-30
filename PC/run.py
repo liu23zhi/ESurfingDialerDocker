@@ -30,7 +30,7 @@ def ping_host(host, count=1, timeout=5):
     return response == 0
 
 def simulate_execution():
-    print("模拟执行 ./ESurfingSvr")
+    print("模拟执行 ./ESurfingDialerClient/ESurfingSvr")
 
 def terminate_process(process):
     if process:
@@ -39,7 +39,7 @@ def terminate_process(process):
             process.wait(timeout=10)
         except subprocess.TimeoutExpired:
             process.kill()
-        print(f"已终止 ./ESurfingSvr，PID: {process.pid}")
+        print(f"已终止 ./ESurfingDialerClient/ESurfingSvr，PID: {process.pid}")
 
 def main(simulate=False, check_interval=10, ping_interval=30, ping_count=3, ping_timeout=5, restart_delay=30, ping_interval_sec=2, esurfing_args=None):
     current_ips = get_ip_addresses()
@@ -50,7 +50,7 @@ def main(simulate=False, check_interval=10, ping_interval=30, ping_count=3, ping
         process = None
     else:
         # 使用绝对路径执行
-        esurfing_path = os.path.abspath("./ESurfingSvr")
+        esurfing_path = os.path.abspath("./ESurfingDialerClient/ESurfingSvr")
         process = subprocess.Popen([esurfing_path] + esurfing_args)
         print(f"已启动 {esurfing_path}，PID: {process.pid}")
     
@@ -84,11 +84,11 @@ def main(simulate=False, check_interval=10, ping_interval=30, ping_count=3, ping
                 if not ping_success:
                     print("无法ping通 connect.rom.miui.com")
                     if simulate:
-                        print("模拟终止并重新启动 ./ESurfingSvr")
+                        print("模拟终止并重新启动 ./ESurfingDialerClient/ESurfingSvr")
                     else:
                         terminate_process(process)
                         time.sleep(restart_delay)  # 等待网络认证
-                        esurfing_path = os.path.abspath("./ESurfingSvr")
+                        esurfing_path = os.path.abspath("./ESurfingDialerClient/ESurfingSvr")
                         process = subprocess.Popen([esurfing_path] + esurfing_args)
                         print(f"已重新启动 {esurfing_path}，PID: {process.pid}")
                 else:
@@ -107,11 +107,11 @@ def main(simulate=False, check_interval=10, ping_interval=30, ping_count=3, ping
                 if not ping_success:
                     print("定时ping失败，无法ping通 connect.rom.miui.com")
                     if simulate:
-                        print("模拟终止并重新启动 ./ESurfingSvr")
+                        print("模拟终止并重新启动 ./ESurfingDialerClient/ESurfingSvr")
                     else:
                         terminate_process(process)
                         time.sleep(restart_delay)  # 等待网络认证
-                        esurfing_path = os.path.abspath("./ESurfingSvr")
+                        esurfing_path = os.path.abspath("./ESurfingDialerClient/ESurfingSvr")
                         process = subprocess.Popen([esurfing_path] + esurfing_args)
                         print(f"已重新启动 {esurfing_path}，PID: {process.pid}")
                 else:
@@ -121,8 +121,8 @@ def main(simulate=False, check_interval=10, ping_interval=30, ping_count=3, ping
         terminate_process(process)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="监控IP地址变化并管理 ./ESurfingSvr 进程")
-    parser.add_argument('esurfing_args', nargs=argparse.REMAINDER, help="传递给 ./ESurfingSvr 的参数")
+    parser = argparse.ArgumentParser(description="监控IP地址变化并管理 ./ESurfingDialerClient/ESurfingSvr 进程")
+    parser.add_argument('esurfing_args', nargs=argparse.REMAINDER, help="传递给 ./ESurfingDialerClient/ESurfingSvr 的参数")
     args = parser.parse_args()
     
     main(simulate=SIMULATE_MODE, check_interval=CHECK_INTERVAL, ping_interval=PING_INTERVAL, ping_count=PING_COUNT, ping_timeout=PING_TIMEOUT, restart_delay=RESTART_DELAY, ping_interval_sec=PING_INTERVAL_SEC, esurfing_args=args.esurfing_args)
