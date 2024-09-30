@@ -2,7 +2,7 @@ name: 每日构建
 
 on:
   schedule:
-    - cron: '0 0 0/1 * * '  # 东八区每天凌晨 00:00 UTC+8 触发
+    - cron: ' 0 * * * * '
   workflow_dispatch:  # 允许手动触发
 
 permissions:
