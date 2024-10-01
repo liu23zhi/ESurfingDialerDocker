@@ -12,7 +12,11 @@ PING_INTERVAL = 30  # 设置定时ping的间隔时间（秒）
 PING_HOST = "connect.rom.miui.com"
 PING_COUNT = 3  # 设置每次ping的次数
 PING_TIMEOUT = 5  # 设置ping的超时时间（秒）
+<<<<<<< HEAD
 RESTART_DELAY = 60  # 设置重启后等待网络认证的时间（秒）
+=======
+RESTART_DELAY = 5  # 设置重启后等待网络认证的时间（秒）
+>>>>>>> parent of 9abb69d (Update run.py)
 PING_INTERVAL_SEC = 2  # 设置每次ping之间的间隔时间（秒）
 
 def get_ip_addresses():
@@ -63,71 +67,60 @@ def main(simulate=False, check_interval=10, ping_interval=30, ping_count=3, ping
     signal.signal(signal.SIGTERM, signal_handler)
     
     last_ping_time = time.time()
-    network_ready = False  # 新增标志变量
-
+    
     try:
         while True:
             time.sleep(1)  # 每秒循环一次
             
-            # 检查网络是否准备就绪
-            if not network_ready:
-                new_ips = get_ip_addresses()
-                if new_ips != current_ips:
-                    print(f"IP地址发生变化: 从 {current_ips} 到 {new_ips}")
-                    current_ips = new_ips
-                    network_ready = True  # 更新网络准备就绪标志
-                    print("网络已准备就绪，开始监控")
+            # 检查IP地址变化
+            new_ips = get_ip_addresses()
+            if new_ips != current_ips:
+                print(f"IP地址发生变化: 从 {current_ips} 到 {new_ips}")
+                current_ips = new_ips
+                last_ping_time = time.time()  # 重置ping时间
+                ping_success = False
+                for attempt in range(ping_count):
+                    if ping_host(PING_HOST, count=1, timeout=ping_timeout):
+                        ping_success = True
+                        break
+                    if attempt < ping_count - 1:
+                        time.sleep(ping_interval_sec)
+                if not ping_success:
+                    print("无法ping通 connect.rom.miui.com")
+                    if simulate:
+                        print("模拟终止并重新启动 ./ESurfingDialerClient/ESurfingSvr")
+                    else:
+                        terminate_process(process)
+                        time.sleep(restart_delay)  # 等待网络认证
+                        esurfing_path = os.path.abspath("./ESurfingDialerClient/ESurfingSvr")
+                        process = subprocess.Popen([esurfing_path] + esurfing_args)
+                        print(f"已重新启动 {esurfing_path}，PID: {process.pid}")
+                else:
+                    print(f"IP地址变化后，ping {PING_HOST} 成功")
             
-            if network_ready:
-                # 检查IP地址变化
-                new_ips = get_ip_addresses()
-                if new_ips != current_ips:
-                    print(f"IP地址发生变化: 从 {current_ips} 到 {new_ips}")
-                    current_ips = new_ips
-                    last_ping_time = time.time()  # 重置ping时间
-                    ping_success = False
-                    for attempt in range(ping_count):
-                        if ping_host(PING_HOST, count=1, timeout=ping_timeout):
-                            ping_success = True
-                            break
-                        if attempt < ping_count - 1:
-                            time.sleep(ping_interval_sec)
-                    if not ping_success:
-                        print("无法ping通 connect.rom.miui.com")
-                        if simulate:
-                            print("模拟终止并重新启动 ./ESurfingDialerClient/ESurfingSvr")
-                        else:
-                            terminate_process(process)
-                            time.sleep(restart_delay)  # 等待网络认证
-                            esurfing_path = os.path.abspath("./ESurfingDialerClient/ESurfingSvr")
-                            process = subprocess.Popen([esurfing_path] + esurfing_args)
-                            print(f"已重新启动 {esurfing_path}，PID: {process.pid}")
+            # 定时ping
+            if time.time() - last_ping_time >= ping_interval:
+                print(f"开始定时ping {PING_HOST}")
+                ping_success = False
+                for attempt in range(ping_count):
+                    if ping_host(PING_HOST, count=1, timeout=ping_timeout):
+                        ping_success = True
+                        break
+                    if attempt < ping_count - 1:
+                        time.sleep(ping_interval_sec)
+                if not ping_success:
+                    print("定时ping失败，无法ping通 connect.rom.miui.com")
+                    if simulate:
+                        print("模拟终止并重新启动 ./ESurfingDialerClient/ESurfingSvr")
                     else:
-                        print(f"IP地址变化后，ping {PING_HOST} 成功")
-                
-                # 定时ping
-                if time.time() - last_ping_time >= ping_interval:
-                    print(f"开始定时ping {PING_HOST}")
-                    ping_success = False
-                    for attempt in range(ping_count):
-                        if ping_host(PING_HOST, count=1, timeout=ping_timeout):
-                            ping_success = True
-                            break
-                        if attempt < ping_count - 1:
-                            time.sleep(ping_interval_sec)
-                    if not ping_success:
-                        print("定时ping失败，无法ping通 connect.rom.miui.com")
-                        if simulate:
-                            print("模拟终止并重新启动 ./ESurfingDialerClient/ESurfingSvr")
-                        else:
-                            terminate_process(process)
-                            time.sleep(restart_delay)  # 等待网络认证
-                            esurfing_path = os.path.abspath("./ESurfingDialerClient/ESurfingSvr")
-                            process = subprocess.Popen([esurfing_path] + esurfing_args)
-                            print(f"已重新启动 {esurfing_path}，PID: {process.pid}")
-                    else:
-                        print(f"定时ping成功，{PING_HOST} 可达")
-                    last_ping_time = time.time()
+                        terminate_process(process)
+                        time.sleep(restart_delay)  # 等待网络认证
+                        esurfing_path = os.path.abspath("./ESurfingDialerClient/ESurfingSvr")
+                        process = subprocess.Popen([esurfing_path] + esurfing_args)
+                        print(f"已重新启动 {esurfing_path}，PID: {process.pid}")
+                else:
+                    print(f"定时ping成功，{PING_HOST} 可达")
+                last_ping_time = time.time()
     except KeyboardInterrupt:
         terminate_process(process)
 
