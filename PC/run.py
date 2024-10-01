@@ -12,7 +12,7 @@ PING_INTERVAL = 30  # 设置定时ping的间隔时间（秒）
 PING_HOST = "connect.rom.miui.com"
 PING_COUNT = 3  # 设置每次ping的次数
 PING_TIMEOUT = 5  # 设置ping的超时时间（秒）
-RESTART_DELAY = 30  # 设置重启后等待网络认证的时间（秒）
+RESTART_DELAY = 60  # 设置重启后等待网络认证的时间（秒）
 PING_INTERVAL_SEC = 2  # 设置每次ping之间的间隔时间（秒）
 
 def get_ip_addresses():
