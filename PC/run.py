@@ -59,17 +59,15 @@ def get_ip_addresses():
     return ip_addresses
 
 def ping_host(host, count=1, timeout=DEFAULT_PING_TIMEOUT):
-    """使用 python socket 库 ping 指定主机。"""
+    """使用系统 ping 命令 ping 指定主机。"""
     try:
-        # 使用 socket 库进行 ping 操作
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(timeout)
-        result = sock.connect_ex((host, 80))  # 尝试连接 80 端口
-        sock.close()
-        if result == 0:
-            return True
-        else:
-            return False
+        # 使用 subprocess.run 执行系统 ping 命令
+        result = subprocess.run(
+            ['ping', '-c', str(count), '-W', str(timeout * 1000), host],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        return result.returncode == 0  # 返回码为 0 表示 ping 成功
     except Exception as e:
         logging.error(f"ping {host} 失败: {e}")
         return False
