@@ -1,20 +1,30 @@
 # 这一个基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 和中国电信官方客户端搭建的Docker镜像自动构建项目
 目前貌似只能在广东省使用。
 
+## 目前只支持amd64架构，未来有可能会编译支持arm架构的Docker镜像。
+
 **此项目利用了Github action自动拉取源码进行构建**
 
 想最求最新的，可以尝试使用watchtower https://github.com/containrrr/watchtower
-### 目前提供两种镜像；
+### 目前提供两种Docker镜像；
 1. ESurfingDockerPc
 此镜像占用电脑设备上网资格进行网络认证
 2. ESurfingDockerPhoneDocker
 此镜像占用手机设备上网资格进行网络认证
 
+### 此外还提供Linux免docker直接运行版本
+1. ESurfingDialer.zip（[前往Release下载](/releases/latest/ "Release")）
+基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 编译而成。
+此方案占用手机设备上网资格进行网络认证。
+~~2. ESurfingOffice.zip（[前往Release下载](/releases/latest/ "Release")）
+基于中国电信官方客户端 编译而成。
+此方案占用电脑设备上网资格进行网络认证。~~（我还没写好呢！）
+
 **镜像会在编译时同时上传到Github和Docker Hub**
 
-**有能力者，可以尝试进行双线叠加。**
+**有能力者，可以尝试进行双线叠加。**~~*不建议使用OpenWrt进行叠加，因为我尝试了很多很多次，都没成功。*~~
 
-## 使用方法
+## Docker镜像使用方法
 **与Rsplwe大佬的项目相似**
 ### 1.使用ESurfingDockerPhoneDocker镜像
 #### (1)从Githu拉取镜像

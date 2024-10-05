@@ -18,6 +18,9 @@ find_latest_jar() {
     local latest_jar=$(find "$directory" -type f -name "$search_pattern" | sort -t. -k 2,2n -k 3,3n -k 4,4n | tail -1)
     if [[ -n "$latest_jar" ]]; then
         echo "找到的最新JAR文件路径为：$latest_jar"
+        local latest_jar_filename=$(basename "$latest_jar")
+        echo "找到的最新JAR文件名为：$latest_jar_filename"
+        echo "Latest_Jar_Filename=$latest_jar_filename" >> $GITHUB_ENV
         cp "$latest_jar" "$SCRIPT_DIR/Phone/client.jar"
         cp "$SCRIPT_DIR/Phone/client.jar" "$SCRIPT_DIR/Phone/Direct/client.jar"
     else

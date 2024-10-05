@@ -29,7 +29,7 @@ jobs:
       run: echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
 
     - name: 生成更新日志
-      run: echo -e "# 编译日期：${{ env.TIMESTAMP }}\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "# 编译日期：${{ env.TIMESTAMP }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 查看工作目录
       run: |
@@ -73,6 +73,9 @@ jobs:
       with:
         name: ESurfingDialer 的 JAR 构建产物
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
+
+    - name: 生成更新日志
+      run: echo -e "${{ env.Latest_Jar_Filename }} 此文件为Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer  的最新编译文件。\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
@@ -301,6 +304,9 @@ jobs:
         name: ESurfingDialer 的免 Docker 直接运行版本
         path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
+    - name: 生成更新日志
+      run: echo -e "ESurfingDockerPhone.tar.gz 此版本免Docker可运行。占用手机设备上网资格进行网络认证。 ~~[使用方法]~~（还没写） \n" >> ${{ github.workspace }}/CHANGELOG.txt
+
     - name: 为 ESurfingDialer 的免 Docker 直接运行版本生成证明
       uses: actions/attest-build-provenance@v1
       with:
@@ -449,7 +455,7 @@ jobs:
         subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成更新日志
-      run: echo "# 好的更新已经到来" > ${{ github.workspace }}/CHANGELOG.txt
+      run: echo "# 好的更新已经到来" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 创建 Release
       uses: softprops/action-gh-release@v2
