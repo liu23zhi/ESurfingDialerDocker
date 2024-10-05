@@ -5,14 +5,14 @@
 
 **此项目利用了Github action自动拉取源码进行构建**
 
-想最求最新的，可以尝试使用watchtower https://github.com/containrrr/watchtower
+可以尝试在使用本镜像的基础上，使用 [watchover](https://github.com/containrrr/watchtowe "watchover") 进行自动更新Docker镜像，确保该镜像为最新镜像。 
 ### 目前提供两种Docker镜像；
 1. ESurfingDockerPc
 此镜像占用电脑设备上网资格进行网络认证
 2. ESurfingDockerPhoneDocker
 此镜像占用手机设备上网资格进行网络认证
 
-### 此外还提供Linux免docker直接运行版本
+### 此外还提供免docker直接运行版本（支持Linux和windows）
 1. ESurfingDialer.zip（[前往Release下载](/releases/latest/ "Release")）
 基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 编译而成。
 此方案占用手机设备上网资格进行网络认证。
