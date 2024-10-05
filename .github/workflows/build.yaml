@@ -27,9 +27,10 @@ jobs:
 
     - name: 生成时间戳
       run: echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
+           echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> $GITHUB_ENV
 
     - name: 生成更新日志
-      run: echo -e "# 编译日期：${{ env.TIMESTAMP }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 查看工作目录
       run: |
