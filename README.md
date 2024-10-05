@@ -9,6 +9,7 @@
 ### 目前提供两种Docker镜像；
 1. ESurfingDockerPc
 此镜像占用电脑设备上网资格进行网络认证
+
 2. ESurfingDockerPhoneDocker
 此镜像占用手机设备上网资格进行网络认证
 
@@ -16,6 +17,7 @@
 1. ESurfingDialer.zip（[前往Release下载](/releases/latest/ "Release")）
 基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 编译而成。
 此方案占用手机设备上网资格进行网络认证。
+
 ~~2. ESurfingOffice.zip（[前往Release下载](/releases/latest/ "Release")）
 基于中国电信官方客户端 编译而成。
 此方案占用电脑设备上网资格进行网络认证。~~（我还没写好呢！）

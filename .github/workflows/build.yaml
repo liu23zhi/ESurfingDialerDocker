@@ -76,7 +76,7 @@ jobs:
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
     - name: 生成更新日志
-      run: echo -e "${{ env.Latest_Jar_Filename }} 此文件为Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer  的最新编译文件。\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "${{ env.LatestJarFilename }}  此文件为Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer  的最新编译文件。\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
@@ -258,7 +258,7 @@ jobs:
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 生成更新日志
-      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 "使用方法") \n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
@@ -306,7 +306,7 @@ jobs:
         path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
     - name: 生成更新日志
-      run: echo -e "ESurfingDockerPhone.tar.gz 此版本免Docker可运行。占用手机设备上网资格进行网络认证。 ~~[使用方法]~~（还没写） \n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPhone.tar.gz 此版本免Docker可运行。占用手机设备上网资格进行网络认证。 ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 为 ESurfingDialer 的免 Docker 直接运行版本生成证明
       uses: actions/attest-build-provenance@v1
@@ -448,7 +448,7 @@ jobs:
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成更新日志
-      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 "使用方法") \n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
@@ -456,7 +456,7 @@ jobs:
         subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成更新日志
-      run: echo "# 好的更新已经到来" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo "### 好的更新已经到来（更新日志生成测试）" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 创建 Release
       uses: softprops/action-gh-release@v2
