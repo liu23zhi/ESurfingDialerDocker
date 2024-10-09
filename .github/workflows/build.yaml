@@ -77,7 +77,10 @@ jobs:
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
     - name: 生成更新日志
-      run: echo -e "${{ env.LatestJarFilename }}  此文件为Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer  的最新编译文件。\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run:  |
+        LatestJarFilename=$(cat ${{ github.workspace }}/LatestJarFilename.txt)
+        echo "LatestJarFilename=$LatestJarFilename" >> $GITHUB_ENV
+        echo -e "${{ env.LatestJarFilename }}  此文件为Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer  的最新编译文件。\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
