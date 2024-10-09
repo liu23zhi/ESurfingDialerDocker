@@ -256,7 +256,7 @@ jobs:
     - name: 上传 ESurfingDockerPhoneDocker:latest 镜像
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDialer 的 Docker 镜像
+        name: ESurfingDialerPhone 的 Docker 镜像
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 生成更新日志
@@ -446,7 +446,7 @@ jobs:
     - name: 上传 ESurfingDockerPc:latest 镜像
       uses: actions/upload-artifact@v3
       with:
-        name: ESurfingDialer 的 Docker 镜像
+        name: ESurfingDialerPc 的 Docker 镜像
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成更新日志
