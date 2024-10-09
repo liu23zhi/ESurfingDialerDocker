@@ -64,10 +64,15 @@ def ping_host(host, count=1, timeout=DEFAULT_PING_TIMEOUT):
         # 使用 subprocess.run 执行系统 ping 命令
         result = subprocess.run(
             ['ping', '-c', str(count), '-W', str(timeout * 1000), host],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
+            stdout=subprocess.PIPE,  # 将标准输出重定向到管道
+            stderr=subprocess.PIPE,  # 将标准错误重定向到管道
         )
-        return result.returncode == 0  # 返回码为 0 表示 ping 成功
+        if result.returncode == 0:
+            logging.info(f"ping {host} 成功！\n输出:\n{result.stdout.decode()}")
+            return True
+        else:
+            logging.error(f"ping {host} 失败！\n输出:\n{result.stdout.decode()}\n错误:\n{result.stderr.decode()}")
+            return False
     except Exception as e:
         logging.error(f"ping {host} 失败: {e}")
         return False
