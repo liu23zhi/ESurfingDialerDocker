@@ -12,18 +12,8 @@ permissions:
   id-token: write
   attestations: write
 
-env:
-  Amd_Phone_Docker_Local_Name: esurfingdockerphoneamd64
-  Amd_Phone_Docker_Name: esurfingdockerphonedocker
-  Amd_Phone_Docker_Github_Download_Local_Name: ESurfingDockerPhone.tar.gz
-  Amd_Pc_Docker_Local_Name: esurfingdockerpc
-  Amd_Pc_Docker_Name: esurfingdockerpc
-  Amd_Pc_Docker_Github_Download_Local_Name: ESurfingDockerPc.tar.gz
-  Amd_Pc_Without_Docker_Local_Folder_Name: ESurfingDialer
-  Amd_Pc_Without_Docker_Local_Folder_Compress_Name: ESurfingDialer.zip
-
 jobs:
-  build_amd64:
+  build:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
     
     environment:
@@ -155,127 +145,127 @@ jobs:
         username: ${{ vars.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: 为 ${{ env.Amd_Phone_Docker_Local_Name}} 镜像打标签  ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }}
-      run: docker tag ${{ env.Amd_Phone_Docker_Local_Name }} ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }}
+    - name: 为 ESurfingDockerPhoneDocker 镜像打标签
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 推送 ${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }} 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }}
+    - name: 推送 ESurfingDockerPhoneDocker 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 获取 ${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }} 的 Github 镜像的 sha256
+    - name: 获取 ESurfingDockerPhoneDocker 的 Github 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
         echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成 ${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }} 的 Github 镜像证明
+    - name: 生成 ESurfingDockerPhoneDocker 的 Github 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST }}
         push-to-registry: false
 
-    - name: 为 ${{ env.Amd_Phone_Docker_Local_Name}} 镜像打标签  ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }}
-      run: docker tag ${{ env.Amd_Phone_Docker_Local_Name }} ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }}
+    - name: 为 ESurfingDockerPhoneDocker 镜像打标签
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 推送 ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }} 镜像到 DockerHub
-      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }}
+    - name: 推送 ESurfingDockerPhoneDocker 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 获取 ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }} 的 DockerHub 镜像的 sha256
+    - name: 获取 ESurfingDockerPhoneDocker 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成 ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:${{ env.TIMESTAMP }} 的 DockerHub 镜像证明
+    - name: 生成 ESurfingDockerPhoneDocker 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST2 }}
         push-to-registry: false
 
-    - name: 为 ${{ env.Amd_Phone_Docker_Local_Name}} 镜像打标签  ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}:latest
-      run: docker tag ${{ env.Amd_Phone_Docker_Local_Name }} ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}:latest
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 latest 标签
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 推送 ${{ env.Amd_Phone_Docker_Name}}:latest 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}:latest
+    - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 获取 ${{ env.Amd_Phone_Docker_Name}}:latest 的 Github 镜像的 sha256
+    - name: 获取 ESurfingDockerPhoneDocker:latest 的 Github 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}:latest | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成 ${{ env.Amd_Phone_Docker_Name}}:latest 的 Github 镜像证明
+    - name: 生成 ESurfingDockerPhoneDocker:latest 的 Github 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Phone_Docker_Name }}
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST3 }}
         push-to-registry: false
 
-    - name: 为 ${{ env.Amd_Phone_Docker_Local_Name}} 镜像打标签 ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:latest
-      run: docker tag ${{ env.Amd_Phone_Docker_Local_Name }} ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:latest
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 latest 标签
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 推送 ${{ env.Amd_Phone_Docker_Name}}:latest 镜像到 DockerHub
-      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:latest
+    - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 获取 ${{ env.Amd_Phone_Docker_Name}}:latest 的 DockerHub 镜像的 sha256
+    - name: 获取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:latest | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成 ${{ env.Amd_Phone_Docker_Name}}:latest 的 DockerHub 镜像证明
+    - name: 生成 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST4 }}
         push-to-registry: false
 
-    - name: 下载 ${{ env.Amd_Phone_Docker_Name}}:latest 镜像
+    - name: 下载 ESurfingDockerPhoneDocker:latest 镜像
       run: |
-        docker save ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Phone_Docker_Name }}:latest -o ${{ github.workspace }}/Phone/${{ env.Amd_Phone_Docker_Github_Download_Local_Name}}
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
 
-    - name: 上传 ${{ env.Amd_Phone_Docker_Name}}:latest 镜像
+    - name: 上传 ESurfingDockerPhoneDocker:latest 镜像
       uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialerPhone 的 Docker 镜像
-        path: '${{ github.workspace }}/Phone/${{ env.Amd_Phone_Docker_Github_Download_Local_Name}}'
+        path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 生成更新日志
-      run: echo -e "${{ env.Amd_Phone_Docker_Github_Download_Local_Name}} 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-path: '${{ github.workspace }}/Phone/${{ env.Amd_Phone_Docker_Github_Download_Local_Name}}'
+        subject-path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 下载 Java21
       run: |
@@ -289,41 +279,41 @@ jobs:
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/
 
-    - name: 修改 Phone 下的 Direct 文件夹为 ${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}
+    - name: 修改 Phone 下的 Direct 文件夹为 ESurfingDialer
       run: |
         cd ${{ github.workspace }}/Phone/
-        mv ./Direct ./${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}
+        mv ./Direct ./ESurfingDialer
 
     - name: 查看修改后的文件夹
       run: |
-        ls -l ${{ github.workspace }}/Phone/${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}
+        ls -l ${{ github.workspace }}/Phone/ESurfingDialer
 
     - name: 修改文件权限
       run: |
-        chmod -R 777 ${{ github.workspace }}/Phone/${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}/
+        chmod -R 777 ${{ github.workspace }}/Phone/ESurfingDialer/
 
-    - name: 压缩 ${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}} 文件夹为 zip 格式
+    - name: 压缩 ESurfingDialer 文件夹为 zip 格式
       run: |
         cd ${{ github.workspace }}/Phone/
-        zip -r ${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}.zip ${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}
+        zip -r ESurfingDialer.zip ESurfingDialer
 
     - name: 查看压缩文件
       run: |
-        ls -l ${{ github.workspace }}/Phone/${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}
+        ls -l ${{ github.workspace }}/Phone/ESurfingDialer.zip
 
     - name: 上传 ESurfingDialer 的免 Docker 直接运行版本
       uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialer 的免 Docker 直接运行版本
-        path: '${{ github.workspace }}/Phone/${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}'
+        path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
     - name: 生成更新日志
-      run: echo -e "${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}} 此版本免Docker可运行。占用手机设备上网资格进行网络认证。 ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPhone.tar.gz 此版本免Docker可运行。占用手机设备上网资格进行网络认证。 ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 为 ESurfingDialer 的免 Docker 直接运行版本生成证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-path: '${{ github.workspace }}/Phone/${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}'
+        subject-path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
     - name: 获取天翼校园网官方 Linux 版本下载地址并下载，不能获取则使用预下载文件
       run: |
@@ -335,7 +325,7 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}/PC
 
-    - name: 编译 ${{ env.Amd_Pc_Docker_Name}} 镜像
+    - name: 编译 ESurfingDockerPC 镜像
       run: |
         cd ${{ github.workspace }}/PC
         chmod +x ./build.sh
@@ -345,127 +335,127 @@ jobs:
       run: |
         docker image ls
 
-    - name: 为 ${{ env.Amd_Pc_Docker_Local_Name}} 镜像打标签 ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }}
-      run: docker tag ${{ env.Amd_Pc_Docker_Local_Name }} ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }}
+    - name: 为 ESurfingDockerPc 镜像打标签
+      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 推送 ${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }} 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }}
+    - name: 推送 ESurfingDockerPc 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 获取 ${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }} 的 Github 镜像的 sha256
+    - name: 获取 ESurfingDockerPc 的 Github 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
         echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成 ${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }} 的 Github 镜像证明
+    - name: 生成 ESurfingDockerPc 的 Github 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST }}
         push-to-registry: false
 
-    - name: 为 ${{ env.Amd_Pc_Docker_Local_Name}} 镜像打标签 ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }}
-      run: docker tag ${{ env.Amd_Pc_Docker_Local_Name }} ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }}
+    - name: 为 ESurfingDockerPc 镜像打标签
+      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 推送 ${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }} 镜像到 DockerHub
-      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }}
+    - name: 推送 ESurfingDockerPc 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 获取 ${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }} 的 DockerHub 镜像的 sha256
+    - name: 获取 ESurfingDockerPc 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成 ${{ env.Amd_Pc_Docker_Name }}:${{ env.TIMESTAMP }} 的 DockerHub 镜像证明
+    - name: 生成 ESurfingDockerPc 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST2 }}
         push-to-registry: false
 
-    - name: 为 ${{ env.Amd_Pc_Docker_Local_Name}} 镜像打标签 ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}:latest
-      run: docker tag ${{ env.Amd_Pc_Docker_Local_Name }} ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}:latest
+    - name: 为 ESurfingDockerPc 镜像打 latest 标签
+      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 推送 ${{ env.Amd_Pc_Docker_Name}}:latest 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}:latest
+    - name: 推送 ESurfingDockerPc:latest 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 获取 ${{ env.Amd_Pc_Docker_Name}}:latest 的 Github 镜像的 sha256
+    - name: 获取 ESurfingDockerPc:latest 的 Github 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}:latest | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest | cut -d '@' -f 2)
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成 ${{ env.Amd_Pc_Docker_Name}}:latest 的 Github 镜像证明
+    - name: 生成 ESurfingDockerPc:latest 的 Github 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: ghcr.io/${{ github.repository_owner }}/${{ env.Amd_Pc_Docker_Name }}
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST3 }}
         push-to-registry: false
 
-    - name: 为 ${{ env.Amd_Pc_Docker_Name}} 镜像打标签 ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}:latest
-      run: docker tag ${{ env.Amd_Pc_Docker_Local_Name }} ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}:latest
+    - name: 为 ESurfingDockerPc 镜像打 latest 标签
+      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 推送 ${{ env.Amd_Pc_Docker_Name}}:latest 镜像到 DockerHub
-      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}:latest
+    - name: 推送 ESurfingDockerPc:latest 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
-    - name: 获取 ${{ env.Amd_Pc_Docker_Name}}:latest 的 DockerHub 镜像的 sha256
+    - name: 获取 ESurfingDockerPc:latest 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}:latest | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
-    - name: 生成 ${{ env.Amd_Pc_Docker_Name}}:latest 的 DockerHub 镜像证明
+    - name: 生成 ESurfingDockerPc:latest 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST4 }}
         push-to-registry: false
 
-    - name: 下载 ${{ env.Amd_Pc_Docker_Name}}:latest 镜像
+    - name: 下载 ESurfingDockerPc:latest 镜像
       run: |
-        docker save ${{ vars.DOCKERHUB_USERNAME }}/${{ env.Amd_Pc_Docker_Name }}:latest -o ${{ github.workspace }}/PC/${{ env.Amd_Pc_Docker_Github_Download_Local_Name}}
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
 
-    - name: 上传 ${{ env.Amd_Pc_Docker_Name}}:latest 镜像
+    - name: 上传 ESurfingDockerPc:latest 镜像
       uses: actions/upload-artifact@v3
       with:
         name: ESurfingDialerPc 的 Docker 镜像
-        path: '${{ github.workspace }}/PC/${{ env.Amd_Pc_Docker_Github_Download_Local_Name }}'
+        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成更新日志
-      run: echo -e "${{ env.Amd_Pc_Docker_Local_Name}} 此镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-path: '${{ github.workspace }}/PC/${{ env.Amd_Pc_Docker_Local_Name}}'
+        subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成更新日志
       run: echo "### 好的更新已经到来（更新日志生成测试）" >> ${{ github.workspace }}/CHANGELOG.txt
@@ -478,7 +468,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
-          ${{ github.workspace }}/PC/${{ env.Amd_Pc_Docker_Github_Download_Local_Name}}
-          ${{ github.workspace }}/Phone/${{ env.Amd_Phone_Docker_Github_Download_Local_Name}}
-          ${{ github.workspace }}/Phone/${{ env.Amd_Pc_Without_Docker_Local_Folder_Name}}
+          ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+          ${{ github.workspace }}/Phone/ESurfingDialer.zip
+          ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
 
