@@ -1,4 +1,4 @@
 #!/bin/sh
 #cd./Phone
-docker build -t esurfingdockerphone .
-#docker save esurfingdockerphone -o./ESurfingDockerPhone.tar.gz
+docker build -t ${{ env.Amd_Phone_Docker_Local_Name }} .
+#docker save esurfingdockerphoneamd64 -o./ESurfingDockerPhone.tar.gz
