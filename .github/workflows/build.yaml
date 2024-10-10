@@ -12,6 +12,9 @@ permissions:
   id-token: write
   attestations: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20=true
+
 jobs:
   build-amd64:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
@@ -474,9 +477,6 @@ jobs:
 
   build-arm64:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
-    
-    needs:
-      - build-amd64
 
     environment:
       name: ESurfingDialer
@@ -1008,6 +1008,12 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}/ESurfingDialer/build/libs
 
+    - name: 上传 ESurfingDialer 的 JAR 构建产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialer 的通用 JAR 构建产物（来着Amd64和Arm的合并构建）
+        path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
+
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
       with:
@@ -1062,7 +1068,11 @@ jobs:
         docker image ls
 
     - name: 推送 esurfingdockerphonedocker:latest 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+      run: docker manifest  push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+
+    - name: 查看当前可用镜像
+      run: |
+        docker image ls
 
     - name: 获取 esurfingdockerphonedocker:latest 的 Github 镜像的 sha256
       run: |
@@ -1114,7 +1124,11 @@ jobs:
         docker image ls
 
     - name: 推送 ESurfingDockerC 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
+      run: docker manifest push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
+
+    - name: 查看当前可用镜像
+      run: |
+        docker image ls
 
     - name: 获取 esurfingdockerpc:latest 的 Github 镜像的 sha256
       run: |
@@ -1154,13 +1168,13 @@ jobs:
         chmod -R 777 ${{ github.workspace }}/ESurfingDialer/
 
     - name: 下载Amd免Docker版本
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ESurfingDialer 的 Amd64 免 Docker 直接运行版本
         path: ${{ github.workspace }}/ESurfingDialer/Amd
 
     - name: 下载Arm免Docker版本
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ESurfingDialer 的 Arm64 免 Docker 直接运行版本
         path: ${{ github.workspace }}/ESurfingDialer/Arm
