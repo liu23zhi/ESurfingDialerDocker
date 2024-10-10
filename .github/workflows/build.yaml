@@ -1,9 +1,9 @@
-name: Ã¿ÈÕ¹¹½¨
+name: æ¯æ—¥æž„å»º
 
 on:
   schedule:
     - cron: ' 0 * * * * '
-  workflow_dispatch:  # ÔÊÐíÊÖ¶¯´¥·¢
+  workflow_dispatch:  # å…è®¸æ‰‹åŠ¨è§¦å‘
 
 permissions:
   contents: write
@@ -14,453 +14,453 @@ permissions:
 
 jobs:
   build-amd64:
-    runs-on: ubuntu-latest  # ÔÚ×îÐÂµÄ Ubuntu »·¾³ÖÐÔËÐÐ
+    runs-on: ubuntu-latest  # åœ¨æœ€æ–°çš„ Ubuntu çŽ¯å¢ƒä¸­è¿è¡Œ
     
     environment:
       name: ESurfingDialer
 
     steps:
-    - name: ÏÂÔØ±¾ÏîÄ¿ËùÓÐ´úÂë
+    - name: ä¸‹è½½æœ¬é¡¹ç›®æ‰€æœ‰ä»£ç 
       uses: actions/checkout@v4
       with:
         path: '${{ github.workspace }}'
 
-    - name: Éú³ÉÊ±¼ä´Á
+    - name: ç”Ÿæˆæ—¶é—´æˆ³
       run: |
           echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
-          echo "TIMESTAMP2=$(date +'%YÄê%mÔÂ%dÈÕ%HÊ±%M·Ö%SÃë')" >> $GITHUB_ENV
+          echo "TIMESTAMP2=$(date +'%Yå¹´%mæœˆ%dæ—¥%Hæ—¶%Måˆ†%Sç§’')" >> $GITHUB_ENV
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo -e "# ±àÒëÈÕÆÚ£º${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo -e "# ç¼–è¯‘æ—¥æœŸï¼š${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: ²é¿´¹¤×÷Ä¿Â¼
+    - name: æŸ¥çœ‹å·¥ä½œç›®å½•
       run: |
         ls -l ${{ github.workspace }}
 
-    - name: ÏÂÔØ ESurfingDialer ÏîÄ¿´úÂë
+    - name: ä¸‹è½½ ESurfingDialer é¡¹ç›®ä»£ç 
       uses: actions/checkout@v4
       with:
         repository: 'Rsplwe/ESurfingDialer'
         path: '${{ github.workspace }}/ESurfingDialer'
         
-    - name: ²é¿´¹¤×÷Ä¿Â¼
+    - name: æŸ¥çœ‹å·¥ä½œç›®å½•
       run: |
         ls -l ${{ github.workspace }}
         
-    - name: ²é¿´ ESurfingDialer Ä¿Â¼
+    - name: æŸ¥çœ‹ ESurfingDialer ç›®å½•
       run: |
         ls -l ${{ github.workspace }}/ESurfingDialer
 
-    - name: ÉèÖÃ JDK 20
+    - name: è®¾ç½® JDK 20
       uses: actions/setup-java@v4
       with:
         java-version: '20'
         distribution: 'zulu'
 
-    - name: ²é¿´ Java °æ±¾
+    - name: æŸ¥çœ‹ Java ç‰ˆæœ¬
       run: |
         java -version
 
-    - name: ½øÈë ESurfingDialer Ä¿Â¼²¢Ö´ÐÐ¹¹½¨
+    - name: è¿›å…¥ ESurfingDialer ç›®å½•å¹¶æ‰§è¡Œæž„å»º
       run: |
         cd ${{ github.workspace }}/ESurfingDialer
         ./gradlew shadowJar
 
-    - name: ²é¿´ ESurfingDialer ¹¹½¨²úÎï
+    - name: æŸ¥çœ‹ ESurfingDialer æž„å»ºäº§ç‰©
       run: |
         ls -l ${{ github.workspace }}/ESurfingDialer/build/libs
 
-    - name: ÉÏ´« ESurfingDialer µÄ JAR ¹¹½¨²úÎï
+    - name: ä¸Šä¼  ESurfingDialer çš„ JAR æž„å»ºäº§ç‰©
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialer µÄÍ¨ÓÃ JAR ¹¹½¨²úÎï  À´×ÅAmd64-build
+        name: ESurfingDialer çš„é€šç”¨ JAR æž„å»ºäº§ç‰©  æ¥ç€Amd64-build
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
-    - name: Éú³ÉÖ¤Ã÷
+    - name: ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
-    - name: ²éÕÒ×îÐÂ¹¹½¨µÄ Jar ÎÄ¼þ²¢¸´ÖÆ
+    - name: æŸ¥æ‰¾æœ€æ–°æž„å»ºçš„ Jar æ–‡ä»¶å¹¶å¤åˆ¶
       run: |
         chmod +x ${{ github.workspace }}/FindLasterBuildJar.sh
         ${{ github.workspace }}/FindLasterBuildJar.sh
 
-    - name: ²é¿´ Jar ÎÄ¼þ¸´ÖÆ½á¹û
+    - name: æŸ¥çœ‹ Jar æ–‡ä»¶å¤åˆ¶ç»“æžœ
       run: |
         ls -l ${{ github.workspace }}/Phone
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
       run:  |
-        echo -e "${{ env.LatestJarFilename }}  ´ËÎÄ¼þÎªRsplwe´óÀÐµÄÏîÄ¿  https://github.com/Rsplwe/ESurfingDialer  µÄ×îÐÂ±àÒëÎÄ¼þ¡£\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+        echo -e "${{ env.LatestJarFilename }}  æ­¤æ–‡ä»¶ä¸ºRsplweå¤§ä½¬çš„é¡¹ç›®  https://github.com/Rsplwe/ESurfingDialer  çš„æœ€æ–°ç¼–è¯‘æ–‡ä»¶ã€‚\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: Îª ESurfingDialer µÄ JAR ¹¹½¨²úÎï Éú³ÉÖ¤Ã÷
+    - name: ä¸º ESurfingDialer çš„ JAR æž„å»ºäº§ç‰© ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/Phone/client.jar'
 
-    - name: ÏÂÔØ Oracle-Docker-images ÏîÄ¿´úÂë
+    - name: ä¸‹è½½ Oracle-Docker-images é¡¹ç›®ä»£ç 
       uses: actions/checkout@v4
       with:
         repository: 'oracle/docker-images'
         path: '${{ github.workspace }}/Oracle-Docker-images'
 
-    - name: ²é¿´¹¤×÷Ä¿Â¼
+    - name: æŸ¥çœ‹å·¥ä½œç›®å½•
       run: |
         ls -l ${{ github.workspace }}
 
-    - name: ²é¿´ Oracle-Docker-images Ä¿Â¼
+    - name: æŸ¥çœ‹ Oracle-Docker-images ç›®å½•
       run: |
         ls -l ${{ github.workspace }}/Oracle-Docker-images
 
-    - name: ±àÒë OracleJava ¾µÏñ
+    - name: ç¼–è¯‘ OracleJava é•œåƒ
       run: |
         chmod +x ${{ github.workspace }}/OracleJava.sh
         ${{ github.workspace }}/OracleJava.sh
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ±àÒë ESurfingDockerPhone ¾µÏñ
+    - name: ç¼–è¯‘ ESurfingDockerPhone é•œåƒ
       run: |
         cd ${{ github.workspace }}/Phone
         chmod +x ./build.sh
         ./build.sh
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: µÇÂ¼µ½ GitHub Container Registry
+    - name: ç™»å½•åˆ° GitHub Container Registry
       uses: docker/login-action@v2
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: µÇÂ¼ DockerHub
+    - name: ç™»å½• DockerHub
       uses: docker/login-action@v2
       with:
         username: ${{ vars.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Îª ESurfingDockerPhoneDocker ¾µÏñ´ò±êÇ©
+    - name: ä¸º ESurfingDockerPhoneDocker é•œåƒæ‰“æ ‡ç­¾
       run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPhoneDocker ¾µÏñµ½ GitHub Container Registry
+    - name: æŽ¨é€ ESurfingDockerPhoneDocker é•œåƒåˆ° GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPhoneDocker µÄ Github ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPhoneDocker çš„ Github é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64 | cut -d '@' -f 2)
         echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPhoneDocker µÄ Github ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPhoneDocker çš„ Github é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPhoneDocker ¾µÏñ´ò±êÇ©
+    - name: ä¸º ESurfingDockerPhoneDocker é•œåƒæ‰“æ ‡ç­¾
       run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPhoneDocker ¾µÏñµ½ DockerHub
+    - name: æŽ¨é€ ESurfingDockerPhoneDocker é•œåƒåˆ° DockerHub
       run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPhoneDocker µÄ DockerHub ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPhoneDocker çš„ DockerHub é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64 | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPhoneDocker µÄ DockerHub ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPhoneDocker çš„ DockerHub é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST2 }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPhoneDocker ¾µÏñ´ò latest ±êÇ©
+    - name: ä¸º ESurfingDockerPhoneDocker é•œåƒæ‰“ latest æ ‡ç­¾
       run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPhoneDocker:latest ¾µÏñµ½ GitHub Container Registry
+    - name: æŽ¨é€ ESurfingDockerPhoneDocker:latest é•œåƒåˆ° GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPhoneDocker:latest µÄ Github ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPhoneDocker:latest çš„ Github é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64 | cut -d '@' -f 2)
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPhoneDocker:latest µÄ Github ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPhoneDocker:latest çš„ Github é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST3 }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPhoneDocker ¾µÏñ´ò latest ±êÇ©
+    - name: ä¸º ESurfingDockerPhoneDocker é•œåƒæ‰“ latest æ ‡ç­¾
       run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPhoneDocker:latest ¾µÏñµ½ DockerHub
+    - name: æŽ¨é€ ESurfingDockerPhoneDocker:latest é•œåƒåˆ° DockerHub
       run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPhoneDocker:latest µÄ DockerHub ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPhoneDocker:latest çš„ DockerHub é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64 | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPhoneDocker:latest µÄ DockerHub ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPhoneDocker:latest çš„ DockerHub é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST4 }}
         push-to-registry: false
 
-    - name: ÏÂÔØ ESurfingDockerPhoneDocker:latest ¾µÏñ
+    - name: ä¸‹è½½ ESurfingDockerPhoneDocker:latest é•œåƒ
       run: |
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64 -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
 
-    - name: ÉÏ´« ESurfingDockerPhoneDocker:latest ¾µÏñ
+    - name: ä¸Šä¼  ESurfingDockerPhoneDocker:latest é•œåƒ
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPhone µÄAmd64 Docker ¾µÏñ  À´×ÅAmd64-build
+        name: ESurfingDialerPhone çš„Amd64 Docker é•œåƒ  æ¥ç€Amd64-build
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo -e "ESurfingDockerPhone.tar.gz ´Ë¾µÏñÕ¼ÓÃÊÖ»úÉè±¸ÉÏÍø×Ê¸ñ½øÐÐÍøÂçÈÏÖ¤¡£ [Ê¹ÓÃ·½·¨](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"Ê¹ÓÃ·½·¨\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo -e "ESurfingDockerPhone.tar.gz æ­¤é•œåƒå ç”¨æ‰‹æœºè®¾å¤‡ä¸Šç½‘èµ„æ ¼è¿›è¡Œç½‘ç»œè®¤è¯ã€‚ [ä½¿ç”¨æ–¹æ³•](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"ä½¿ç”¨æ–¹æ³•\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: Éú³ÉÖ¤Ã÷
+    - name: ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
-    - name: ÏÂÔØ Java21
+    - name: ä¸‹è½½ Java21
       run: |
         chmod +x ${{ github.workspace }}/Phone/Download_jdk21.sh
         cd ${{ github.workspace }}/Phone/ 
         ./Download_jdk21.sh
 
-    - name: ²é¿´ Java21 ÏÂÔØ½á¹û
+    - name: æŸ¥çœ‹ Java21 ä¸‹è½½ç»“æžœ
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/
 
-    - name: ÐÞ¸Ä Phone ÏÂµÄ Direct ÎÄ¼þ¼ÐÎª ESurfingDialer
+    - name: ä¿®æ”¹ Phone ä¸‹çš„ Direct æ–‡ä»¶å¤¹ä¸º ESurfingDialer
       run: |
         cd ${{ github.workspace }}/Phone/
         mv ./Direct ./ESurfingDialer
 
-    - name: ²é¿´ÐÞ¸ÄºóµÄÎÄ¼þ¼Ð
+    - name: æŸ¥çœ‹ä¿®æ”¹åŽçš„æ–‡ä»¶å¤¹
       run: |
         ls -l ${{ github.workspace }}/Phone/ESurfingDialer
 
-    - name: ÐÞ¸ÄÎÄ¼þÈ¨ÏÞ
+    - name: ä¿®æ”¹æ–‡ä»¶æƒé™
       run: |
         chmod -R 777 ${{ github.workspace }}/Phone/ESurfingDialer/
 
-    - name: Ñ¹Ëõ ESurfingDialer ÎÄ¼þ¼ÐÎª zip ¸ñÊ½
+    - name: åŽ‹ç¼© ESurfingDialer æ–‡ä»¶å¤¹ä¸º zip æ ¼å¼
       run: |
         cd ${{ github.workspace }}/Phone/
         zip -r ESurfingDialer.zip ESurfingDialer
 
-    - name: ²é¿´Ñ¹ËõÎÄ¼þ
+    - name: æŸ¥çœ‹åŽ‹ç¼©æ–‡ä»¶
       run: |
         ls -l ${{ github.workspace }}/Phone/ESurfingDialer.zip
 
-    - name: ÉÏ´« ESurfingDialer µÄÃâ Docker Ö±½ÓÔËÐÐ°æ±¾
+    - name: ä¸Šä¼  ESurfingDialer çš„å… Docker ç›´æŽ¥è¿è¡Œç‰ˆæœ¬
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialer µÄAmd64Ãâ Docker Ö±½ÓÔËÐÐ°æ±¾  À´×ÅAmd64-build
+        name: ESurfingDialer çš„Amd64å… Docker ç›´æŽ¥è¿è¡Œç‰ˆæœ¬  æ¥ç€Amd64-build
         path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo -e "ESurfingDialer.zip ´Ë°æ±¾ÃâDocker¿ÉÔËÐÐ¡£Õ¼ÓÃÊÖ»úÉè±¸ÉÏÍø×Ê¸ñ½øÐÐÍøÂçÈÏÖ¤¡£ ~~[Ê¹ÓÃ·½·¨]~~£¨»¹Ã»Ð´£© \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo -e "ESurfingDialer.zip æ­¤ç‰ˆæœ¬å…Dockerå¯è¿è¡Œã€‚å ç”¨æ‰‹æœºè®¾å¤‡ä¸Šç½‘èµ„æ ¼è¿›è¡Œç½‘ç»œè®¤è¯ã€‚ ~~[ä½¿ç”¨æ–¹æ³•]~~ï¼ˆè¿˜æ²¡å†™ï¼‰ \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: Îª ESurfingDialer µÄÃâ Docker Ö±½ÓÔËÐÐ°æ±¾Éú³ÉÖ¤Ã÷
+    - name: ä¸º ESurfingDialer çš„å… Docker ç›´æŽ¥è¿è¡Œç‰ˆæœ¬ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
-    - name: »ñÈ¡ÌìÒíÐ£Ô°Íø¹Ù·½ Linux °æ±¾ÏÂÔØµØÖ·²¢ÏÂÔØ£¬²»ÄÜ»ñÈ¡ÔòÊ¹ÓÃÔ¤ÏÂÔØÎÄ¼þ
+    - name: èŽ·å–å¤©ç¿¼æ ¡å›­ç½‘å®˜æ–¹ Linux ç‰ˆæœ¬ä¸‹è½½åœ°å€å¹¶ä¸‹è½½ï¼Œä¸èƒ½èŽ·å–åˆ™ä½¿ç”¨é¢„ä¸‹è½½æ–‡ä»¶
       run: |
         cd ${{ github.workspace }}/PC/
         pip3 install requests beautifulsoup4 lxml
         python3 ./Get_ESurfingDialerClient.py
 
-    - name: ¼ì²éÌìÒíÐ£Ô°Íø¹Ù·½ Linux °æ±¾ÏÂÔØ½á¹û
+    - name: æ£€æŸ¥å¤©ç¿¼æ ¡å›­ç½‘å®˜æ–¹ Linux ç‰ˆæœ¬ä¸‹è½½ç»“æžœ
       run: |
         ls -l ${{ github.workspace }}/PC
 
-    - name: ±àÒë ESurfingDockerPC ¾µÏñ
+    - name: ç¼–è¯‘ ESurfingDockerPC é•œåƒ
       run: |
         cd ${{ github.workspace }}/PC
         chmod +x ./build.sh
         ./build.sh
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: Îª ESurfingDockerPc ¾µÏñ´ò±êÇ©
+    - name: ä¸º ESurfingDockerPc é•œåƒæ‰“æ ‡ç­¾
       run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPc ¾µÏñµ½ GitHub Container Registry
+    - name: æŽ¨é€ ESurfingDockerPc é•œåƒåˆ° GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPc µÄ Github ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPc çš„ Github é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64 | cut -d '@' -f 2)
         echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPc µÄ Github ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPc çš„ Github é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPc ¾µÏñ´ò±êÇ©
+    - name: ä¸º ESurfingDockerPc é•œåƒæ‰“æ ‡ç­¾
       run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPc ¾µÏñµ½ DockerHub
+    - name: æŽ¨é€ ESurfingDockerPc é•œåƒåˆ° DockerHub
       run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPc µÄ DockerHub ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPc çš„ DockerHub é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64 | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPc µÄ DockerHub ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPc çš„ DockerHub é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST2 }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPc ¾µÏñ´ò latest ±êÇ©
+    - name: ä¸º ESurfingDockerPc é•œåƒæ‰“ latest æ ‡ç­¾
       run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPc:latest ¾µÏñµ½ GitHub Container Registry
+    - name: æŽ¨é€ ESurfingDockerPc:latest é•œåƒåˆ° GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPc:latest µÄ Github ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPc:latest çš„ Github é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64 | cut -d '@' -f 2)
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPc:latest µÄ Github ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPc:latest çš„ Github é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST3 }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPc ¾µÏñ´ò latest ±êÇ©
+    - name: ä¸º ESurfingDockerPc é•œåƒæ‰“ latest æ ‡ç­¾
       run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPc:latest ¾µÏñµ½ DockerHub
+    - name: æŽ¨é€ ESurfingDockerPc:latest é•œåƒåˆ° DockerHub
       run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPc:latest µÄ DockerHub ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPc:latest çš„ DockerHub é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64 | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPc:latest µÄ DockerHub ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPc:latest çš„ DockerHub é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST4 }}
         push-to-registry: false
 
-    - name: ÏÂÔØ ESurfingDockerPc:latest ¾µÏñ
+    - name: ä¸‹è½½ ESurfingDockerPc:latest é•œåƒ
       run: |
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64 -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
 
-    - name: ÉÏ´« ESurfingDockerPc:latest ¾µÏñ
+    - name: ä¸Šä¼  ESurfingDockerPc:latest é•œåƒ
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPc µÄAmd64 Docker ¾µÏñ  À´×ÅAmd64-build
+        name: ESurfingDialerPc çš„Amd64 Docker é•œåƒ  æ¥ç€Amd64-build
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo -e "ESurfingDockerPc.tar.gz ´Ë¾µÏñÕ¼ÓÃµçÄÔÉè±¸ÉÏÍø×Ê¸ñ½øÐÐÍøÂçÈÏÖ¤¡£ [Ê¹ÓÃ·½·¨](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"Ê¹ÓÃ·½·¨\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo -e "ESurfingDockerPc.tar.gz æ­¤é•œåƒå ç”¨ç”µè„‘è®¾å¤‡ä¸Šç½‘èµ„æ ¼è¿›è¡Œç½‘ç»œè®¤è¯ã€‚ [ä½¿ç”¨æ–¹æ³•](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"ä½¿ç”¨æ–¹æ³•\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: Éú³ÉÖ¤Ã÷
+    - name: ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo "### ºÃµÄ¸üÐÂÒÑ¾­µ½À´£¨¸üÐÂÈÕÖ¾Éú³É²âÊÔ£©" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo "### å¥½çš„æ›´æ–°å·²ç»åˆ°æ¥ï¼ˆæ›´æ–°æ—¥å¿—ç”Ÿæˆæµ‹è¯•ï¼‰" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: ´´½¨ Release
+    - name: åˆ›å»º Release
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/CHANGELOG.txt
@@ -473,470 +473,469 @@ jobs:
           ${{ github.workspace }}/Phone/ESurfingDialer.zip
 
   build-arm64:
-    runs-on: ubuntu-latest  # ÔÚ×îÐÂµÄ Ubuntu »·¾³ÖÐÔËÐÐ
+    runs-on: ubuntu-latest  # åœ¨æœ€æ–°çš„ Ubuntu çŽ¯å¢ƒä¸­è¿è¡Œ
     
     environment:
       name: ESurfingDialer
 
     steps:
-    - name: ³õÊ¼»¯ QEMU
+    - name: åˆå§‹åŒ– QEMU
       uses: docker/setup-qemu-action@v3
 
-    - name: ³õÊ¼»¯ Docker Buildx
+    - name: åˆå§‹åŒ– Docker Buildx
       uses: docker/setup-buildx-action@v3
       with:
         driver: docker
       
-    - name: ÏÂÔØ±¾ÏîÄ¿ËùÓÐ´úÂë
+    - name: ä¸‹è½½æœ¬é¡¹ç›®æ‰€æœ‰ä»£ç 
       uses: actions/checkout@v4
       with:
         path: '${{ github.workspace }}'
 
-    - name: Éú³ÉÊ±¼ä´Á
+    - name: ç”Ÿæˆæ—¶é—´æˆ³
       run: |
           echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
-          echo "TIMESTAMP2=$(date +'%YÄê%mÔÂ%dÈÕ%HÊ±%M·Ö%SÃë')" >> $GITHUB_ENV
+          echo "TIMESTAMP2=$(date +'%Yå¹´%mæœˆ%dæ—¥%Hæ—¶%Måˆ†%Sç§’')" >> $GITHUB_ENV
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo -e "# ±àÒëÈÕÆÚ£º${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo -e "# ç¼–è¯‘æ—¥æœŸï¼š${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: ²é¿´¹¤×÷Ä¿Â¼
+    - name: æŸ¥çœ‹å·¥ä½œç›®å½•
       run: |
         ls -l ${{ github.workspace }}
 
-    - name: ÏÂÔØ ESurfingDialer ÏîÄ¿´úÂë
+    - name: ä¸‹è½½ ESurfingDialer é¡¹ç›®ä»£ç 
       uses: actions/checkout@v4
       with:
         repository: 'Rsplwe/ESurfingDialer'
         path: '${{ github.workspace }}/ESurfingDialer'
         
-    - name: ²é¿´¹¤×÷Ä¿Â¼
+    - name: æŸ¥çœ‹å·¥ä½œç›®å½•
       run: |
         ls -l ${{ github.workspace }}
         
-    - name: ²é¿´ ESurfingDialer Ä¿Â¼
+    - name: æŸ¥çœ‹ ESurfingDialer ç›®å½•
       run: |
         ls -l ${{ github.workspace }}/ESurfingDialer
 
-    - name: ÉèÖÃ JDK 20
+    - name: è®¾ç½® JDK 20
       uses: actions/setup-java@v4
       with:
         java-version: '20'
         distribution: 'zulu'
 
-    - name: ²é¿´ Java °æ±¾
+    - name: æŸ¥çœ‹ Java ç‰ˆæœ¬
       run: |
         java -version
 
-    - name: ½øÈë ESurfingDialer Ä¿Â¼²¢Ö´ÐÐ¹¹½¨
+    - name: è¿›å…¥ ESurfingDialer ç›®å½•å¹¶æ‰§è¡Œæž„å»º
       run: |
         cd ${{ github.workspace }}/ESurfingDialer
         ./gradlew shadowJar
 
-    - name: ²é¿´ ESurfingDialer ¹¹½¨²úÎï
+    - name: æŸ¥çœ‹ ESurfingDialer æž„å»ºäº§ç‰©
       run: |
         ls -l ${{ github.workspace }}/ESurfingDialer/build/libs
 
-    - name: ÉÏ´« ESurfingDialer µÄ JAR ¹¹½¨²úÎï
+    - name: ä¸Šä¼  ESurfingDialer çš„ JAR æž„å»ºäº§ç‰©
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialer µÄÍ¨ÓÃ JAR ¹¹½¨²úÎï
+        name: ESurfingDialer çš„é€šç”¨ JAR æž„å»ºäº§ç‰©
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
-    - name: Éú³ÉÖ¤Ã÷
+    - name: ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
-    - name: ²éÕÒ×îÐÂ¹¹½¨µÄ Jar ÎÄ¼þ²¢¸´ÖÆ
+    - name: æŸ¥æ‰¾æœ€æ–°æž„å»ºçš„ Jar æ–‡ä»¶å¹¶å¤åˆ¶
       run: |
         chmod +x ${{ github.workspace }}/FindLasterBuildJar.sh
         ${{ github.workspace }}/FindLasterBuildJar.sh
 
-    - name: ²é¿´ Jar ÎÄ¼þ¸´ÖÆ½á¹û
+    - name: æŸ¥çœ‹ Jar æ–‡ä»¶å¤åˆ¶ç»“æžœ
       run: |
         ls -l ${{ github.workspace }}/Phone
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
       run:  |
-        echo -e "${{ env.LatestJarFilename }}  ´ËÎÄ¼þÎªRsplwe´óÀÐµÄÏîÄ¿  https://github.com/Rsplwe/ESurfingDialer  µÄ×îÐÂ±àÒëÎÄ¼þ¡£\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+        echo -e "${{ env.LatestJarFilename }}  æ­¤æ–‡ä»¶ä¸ºRsplweå¤§ä½¬çš„é¡¹ç›®  https://github.com/Rsplwe/ESurfingDialer  çš„æœ€æ–°ç¼–è¯‘æ–‡ä»¶ã€‚\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: Îª ESurfingDialer µÄ JAR ¹¹½¨²úÎï Éú³ÉÖ¤Ã÷
+    - name: ä¸º ESurfingDialer çš„ JAR æž„å»ºäº§ç‰© ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/Phone/client.jar'
 
-    - name: ÏÂÔØ Oracle-Docker-images ÏîÄ¿´úÂë
+    - name: ä¸‹è½½ Oracle-Docker-images é¡¹ç›®ä»£ç 
       uses: actions/checkout@v4
       with:
         repository: 'oracle/docker-images'
         path: '${{ github.workspace }}/Oracle-Docker-images'
 
-    - name: ²é¿´¹¤×÷Ä¿Â¼
+    - name: æŸ¥çœ‹å·¥ä½œç›®å½•
       run: |
         ls -l ${{ github.workspace }}
 
-    - name: ²é¿´ Oracle-Docker-images Ä¿Â¼
+    - name: æŸ¥çœ‹ Oracle-Docker-images ç›®å½•
       run: |
         ls -l ${{ github.workspace }}/Oracle-Docker-images
 
-    - name: ±àÒë OracleJava ¾µÏñ
+    - name: ç¼–è¯‘ OracleJava é•œåƒ
       run: |
         chmod +x ${{ github.workspace }}/OracleJava-arm.sh
         ${{ github.workspace }}/OracleJava-arm.sh
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ±àÒë ESurfingDockerPhone ¾µÏñ
+    - name: ç¼–è¯‘ ESurfingDockerPhone é•œåƒ
       run: |
         cd ${{ github.workspace }}/Phone
         chmod +x ./build-arm.sh
         ./build-arm.sh
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: µÇÂ¼µ½ GitHub Container Registry
+    - name: ç™»å½•åˆ° GitHub Container Registry
       uses: docker/login-action@v2
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: µÇÂ¼ DockerHub
+    - name: ç™»å½• DockerHub
       uses: docker/login-action@v2
       with:
         username: ${{ vars.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Îª ESurfingDockerPhoneDocker ¾µÏñ´ò±êÇ©
+    - name: ä¸º ESurfingDockerPhoneDocker é•œåƒæ‰“æ ‡ç­¾
       run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPhoneDocker ¾µÏñµ½ GitHub Container Registry
+    - name: æŽ¨é€ ESurfingDockerPhoneDocker é•œåƒåˆ° GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPhoneDocker µÄ Github ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPhoneDocker çš„ Github é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64 | cut -d '@' -f 2)
         echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPhoneDocker µÄ Github ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPhoneDocker çš„ Github é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPhoneDocker ¾µÏñ´ò±êÇ©
+    - name: ä¸º ESurfingDockerPhoneDocker é•œåƒæ‰“æ ‡ç­¾
       run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPhoneDocker ¾µÏñµ½ DockerHub
+    - name: æŽ¨é€ ESurfingDockerPhoneDocker é•œåƒåˆ° DockerHub
       run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPhoneDocker µÄ DockerHub ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPhoneDocker çš„ DockerHub é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64 | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPhoneDocker µÄ DockerHub ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPhoneDocker çš„ DockerHub é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST2 }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPhoneDocker ¾µÏñ´ò latest ±êÇ©
+    - name: ä¸º ESurfingDockerPhoneDocker é•œåƒæ‰“ latest æ ‡ç­¾
       run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPhoneDocker:latest ¾µÏñµ½ GitHub Container Registry
+    - name: æŽ¨é€ ESurfingDockerPhoneDocker:latest é•œåƒåˆ° GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPhoneDocker:latest µÄ Github ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPhoneDocker:latest çš„ Github é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-arm64 | cut -d '@' -f 2)
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPhoneDocker:latest µÄ Github ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPhoneDocker:latest çš„ Github é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST3 }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPhoneDocker ¾µÏñ´ò latest ±êÇ©
+    - name: ä¸º ESurfingDockerPhoneDocker é•œåƒæ‰“ latest æ ‡ç­¾
       run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPhoneDocker:latest ¾µÏñµ½ DockerHub
+    - name: æŽ¨é€ ESurfingDockerPhoneDocker:latest é•œåƒåˆ° DockerHub
       run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPhoneDocker:latest µÄ DockerHub ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPhoneDocker:latest çš„ DockerHub é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64 | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPhoneDocker:latest µÄ DockerHub ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPhoneDocker:latest çš„ DockerHub é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker
         subject-digest: ${{ env.DIGEST4 }}
         push-to-registry: false
 
-    - name: ÏÂÔØ ESurfingDockerPhoneDocker:latest ¾µÏñ
+    - name: ä¸‹è½½ ESurfingDockerPhoneDocker:latest é•œåƒ
       run: |
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64 -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
 
-    - name: ÉÏ´« ESurfingDockerPhoneDocker:latest ¾µÏñ
+    - name: ä¸Šä¼  ESurfingDockerPhoneDocker:latest é•œåƒ
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPhone µÄarm64 Docker ¾µÏñ
+        name: ESurfingDialerPhone çš„arm64 Docker é•œåƒ
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo -e "ESurfingDockerPhone.tar.gz ´Ë¾µÏñÕ¼ÓÃÊÖ»úÉè±¸ÉÏÍø×Ê¸ñ½øÐÐÍøÂçÈÏÖ¤¡£ [Ê¹ÓÃ·½·¨](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"Ê¹ÓÃ·½·¨\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo -e "ESurfingDockerPhone.tar.gz æ­¤é•œåƒå ç”¨æ‰‹æœºè®¾å¤‡ä¸Šç½‘èµ„æ ¼è¿›è¡Œç½‘ç»œè®¤è¯ã€‚ [ä½¿ç”¨æ–¹æ³•](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"ä½¿ç”¨æ–¹æ³•\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: Éú³ÉÖ¤Ã÷
+    - name: ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
-    - name: ÏÂÔØ Java21
+    - name: ä¸‹è½½ Java21
       run: |
         chmod +x ${{ github.workspace }}/Phone/Download_jdk21-arm.sh
         cd ${{ github.workspace }}/Phone/ 
         ./Download_jdk21-arm.sh
 
-    - name: ²é¿´ Java21 ÏÂÔØ½á¹û
+    - name: æŸ¥çœ‹ Java21 ä¸‹è½½ç»“æžœ
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/
 
-    - name: Java21 ¶Ô Arm64 µÄ Windows ²»¼æÈÝ £¬ ÒÆ³ý¶àÓàÎÄ¼þ
+    - name: Java21 å¯¹ Arm64 çš„ Windows ä¸å…¼å®¹ ï¼Œ ç§»é™¤å¤šä½™æ–‡ä»¶
       run: |
         rm -rf ${{ github.workspace }}/Phone/Direct/Start.bat
 
-    - name: ²é¿´ Java21 ¶àÓàÎÄ¼þÒÆ³ý½á¹û
+    - name: æŸ¥çœ‹ Java21 å¤šä½™æ–‡ä»¶ç§»é™¤ç»“æžœ
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
 
-    - name: ÐÞ¸Ä Phone ÏÂµÄ Direct ÎÄ¼þ¼ÐÎª ESurfingDialer
+    - name: ä¿®æ”¹ Phone ä¸‹çš„ Direct æ–‡ä»¶å¤¹ä¸º ESurfingDialer
       run: |
         cd ${{ github.workspace }}/Phone/
         mv ./Direct ./ESurfingDialer
 
-    - name: ²é¿´ÐÞ¸ÄºóµÄÎÄ¼þ¼Ð
+    - name: æŸ¥çœ‹ä¿®æ”¹åŽçš„æ–‡ä»¶å¤¹
       run: |
         ls -l ${{ github.workspace }}/Phone/ESurfingDialer
 
-    - name: ÐÞ¸ÄÎÄ¼þÈ¨ÏÞ
+    - name: ä¿®æ”¹æ–‡ä»¶æƒé™
       run: |
         chmod -R 777 ${{ github.workspace }}/Phone/ESurfingDialer/
 
-    - name: Ñ¹Ëõ ESurfingDialer ÎÄ¼þ¼ÐÎª zip ¸ñÊ½
+    - name: åŽ‹ç¼© ESurfingDialer æ–‡ä»¶å¤¹ä¸º zip æ ¼å¼
       run: |
         cd ${{ github.workspace }}/Phone/
         zip -r ESurfingDialer.zip ESurfingDialer
 
-    - name: ²é¿´Ñ¹ËõÎÄ¼þ
+    - name: æŸ¥çœ‹åŽ‹ç¼©æ–‡ä»¶
       run: |
         ls -l ${{ github.workspace }}/Phone/ESurfingDialer.zip
 
-    - name: ÉÏ´« ESurfingDialer µÄÃâ Docker Ö±½ÓÔËÐÐ°æ±¾
+    - name: ä¸Šä¼  ESurfingDialer çš„å… Docker ç›´æŽ¥è¿è¡Œç‰ˆæœ¬
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialer µÄarm64Ãâ Docker Ö±½ÓÔËÐÐ°æ±¾
+        name: ESurfingDialer çš„arm64å… Docker ç›´æŽ¥è¿è¡Œç‰ˆæœ¬
         path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo -e "ESurfingDialer.zip ´Ë°æ±¾ÃâDocker¿ÉÔËÐÐ¡£Õ¼ÓÃÊÖ»úÉè±¸ÉÏÍø×Ê¸ñ½øÐÐÍøÂçÈÏÖ¤¡££¨Java ²»¼æÈÝ Arm64 µÄWindows£© ~~[Ê¹ÓÃ·½·¨]~~£¨»¹Ã»Ð´£© \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo -e "ESurfingDialer.zip æ­¤ç‰ˆæœ¬å…Dockerå¯è¿è¡Œã€‚å ç”¨æ‰‹æœºè®¾å¤‡ä¸Šç½‘èµ„æ ¼è¿›è¡Œç½‘ç»œè®¤è¯ã€‚ï¼ˆJava ä¸å…¼å®¹ Arm64 çš„Windowsï¼‰ ~~[ä½¿ç”¨æ–¹æ³•]~~ï¼ˆè¿˜æ²¡å†™ï¼‰ \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: Îª ESurfingDialer µÄÃâ Docker Ö±½ÓÔËÐÐ°æ±¾Éú³ÉÖ¤Ã÷
+    - name: ä¸º ESurfingDialer çš„å… Docker ç›´æŽ¥è¿è¡Œç‰ˆæœ¬ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
-    - name: »ñÈ¡ÌìÒíÐ£Ô°Íø¹Ù·½ Linux °æ±¾ÏÂÔØµØÖ·²¢ÏÂÔØ£¬²»ÄÜ»ñÈ¡ÔòÊ¹ÓÃÔ¤ÏÂÔØÎÄ¼þ
+    - name: èŽ·å–å¤©ç¿¼æ ¡å›­ç½‘å®˜æ–¹ Linux ç‰ˆæœ¬ä¸‹è½½åœ°å€å¹¶ä¸‹è½½ï¼Œä¸èƒ½èŽ·å–åˆ™ä½¿ç”¨é¢„ä¸‹è½½æ–‡ä»¶
       run: |
         cd ${{ github.workspace }}/PC/
         pip3 install requests beautifulsoup4 lxml
         python3 ./Get_ESurfingDialerClient.py
 
-    - name: ¼ì²éÌìÒíÐ£Ô°Íø¹Ù·½ Linux °æ±¾ÏÂÔØ½á¹û
+    - name: æ£€æŸ¥å¤©ç¿¼æ ¡å›­ç½‘å®˜æ–¹ Linux ç‰ˆæœ¬ä¸‹è½½ç»“æžœ
       run: |
         ls -l ${{ github.workspace }}/PC
 
-    - name: ±àÒë ESurfingDockerPC ¾µÏñ
+    - name: ç¼–è¯‘ ESurfingDockerPC é•œåƒ
       run: |
         cd ${{ github.workspace }}/PC
         chmod +x ./build-arm.sh
         ./build-arm.sh
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: Îª ESurfingDockerPc ¾µÏñ´ò±êÇ©
+    - name: ä¸º ESurfingDockerPc é•œåƒæ‰“æ ‡ç­¾
       run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPc ¾µÏñµ½ GitHub Container Registry
+    - name: æŽ¨é€ ESurfingDockerPc é•œåƒåˆ° GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPc µÄ Github ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPc çš„ Github é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64 | cut -d '@' -f 2)
         echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPc µÄ Github ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPc çš„ Github é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPc ¾µÏñ´ò±êÇ©
+    - name: ä¸º ESurfingDockerPc é•œåƒæ‰“æ ‡ç­¾
       run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPc ¾µÏñµ½ DockerHub
+    - name: æŽ¨é€ ESurfingDockerPc é•œåƒåˆ° DockerHub
       run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPc µÄ DockerHub ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPc çš„ DockerHub é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64 | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPc µÄ DockerHub ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPc çš„ DockerHub é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST2 }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPc ¾µÏñ´ò latest ±êÇ©
+    - name: ä¸º ESurfingDockerPc é•œåƒæ‰“ latest æ ‡ç­¾
       run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPc:latest ¾µÏñµ½ GitHub Container Registry
+    - name: æŽ¨é€ ESurfingDockerPc:latest é•œåƒåˆ° GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPc:latest µÄ Github ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPc:latest çš„ Github é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64 | cut -d '@' -f 2)
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPc:latest µÄ Github ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPc:latest çš„ Github é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST3 }}
         push-to-registry: false
 
-    - name: Îª ESurfingDockerPc ¾µÏñ´ò latest ±êÇ©
+    - name: ä¸º ESurfingDockerPc é•œåƒæ‰“ latest æ ‡ç­¾
       run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: ÍÆËÍ ESurfingDockerPc:latest ¾µÏñµ½ DockerHub
+    - name: æŽ¨é€ ESurfingDockerPc:latest é•œåƒåˆ° DockerHub
       run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64
 
-    - name: ²é¿´µ±Ç°¿ÉÓÃ¾µÏñ
+    - name: æŸ¥çœ‹å½“å‰å¯ç”¨é•œåƒ
       run: |
         docker image ls
 
-    - name: »ñÈ¡ ESurfingDockerPc:latest µÄ DockerHub ¾µÏñµÄ sha256
+    - name: èŽ·å– ESurfingDockerPc:latest çš„ DockerHub é•œåƒçš„ sha256
       run: |
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64 | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
-    - name: Éú³É ESurfingDockerPc:latest µÄ DockerHub ¾µÏñÖ¤Ã÷
+    - name: ç”Ÿæˆ ESurfingDockerPc:latest çš„ DockerHub é•œåƒè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc
         subject-digest: ${{ env.DIGEST4 }}
         push-to-registry: false
 
-    - name: ÏÂÔØ ESurfingDockerPc:latest ¾µÏñ
+    - name: ä¸‹è½½ ESurfingDockerPc:latest é•œåƒ
       run: |
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64 -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
 
-    - name: ÉÏ´« ESurfingDockerPc:latest ¾µÏñ
+    - name: ä¸Šä¼  ESurfingDockerPc:latest é•œåƒ
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPc µÄarm64 Docker ¾µÏñ
+        name: ESurfingDialerPc çš„arm64 Docker é•œåƒ
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo -e "ESurfingDockerPc.tar.gz ´Ë¾µÏñÕ¼ÓÃµçÄÔÉè±¸ÉÏÍø×Ê¸ñ½øÐÐÍøÂçÈÏÖ¤¡£ [Ê¹ÓÃ·½·¨](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"Ê¹ÓÃ·½·¨\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo -e "ESurfingDockerPc.tar.gz æ­¤é•œåƒå ç”¨ç”µè„‘è®¾å¤‡ä¸Šç½‘èµ„æ ¼è¿›è¡Œç½‘ç»œè®¤è¯ã€‚ [ä½¿ç”¨æ–¹æ³•](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"ä½¿ç”¨æ–¹æ³•\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: Éú³ÉÖ¤Ã÷
+    - name: ç”Ÿæˆè¯æ˜Ž
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
-    - name: Éú³É¸üÐÂÈÕÖ¾
-      run: echo "### ºÃµÄ¸üÐÂÒÑ¾­µ½À´£¨¸üÐÂÈÕÖ¾Éú³É²âÊÔ£©" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: ç”Ÿæˆæ›´æ–°æ—¥å¿—
+      run: echo "### å¥½çš„æ›´æ–°å·²ç»åˆ°æ¥ï¼ˆæ›´æ–°æ—¥å¿—ç”Ÿæˆæµ‹è¯•ï¼‰" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: ´´½¨ Release
+    - name: åˆ›å»º Release
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/CHANGELOG.txt
