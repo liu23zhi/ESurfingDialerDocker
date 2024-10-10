@@ -469,6 +469,6 @@ jobs:
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
           ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
-          ${{ github.workspace }}/Phone/ESurfingDialer.zip
           ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+          ${{ github.workspace }}/Phone/ESurfingDialer.zip
 
