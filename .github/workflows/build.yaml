@@ -1,8 +1,8 @@
 name: 每日构建
 
 on:
-  schedule:
-    - cron: ' 0 * * * * '
+  #schedule:
+  #  - cron: ' 0 * * * * '
   workflow_dispatch:  # 允许手动触发
 
 permissions:
@@ -27,8 +27,19 @@ jobs:
 
     - name: 生成时间戳
       run: |
-          echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
-          echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> $GITHUB_ENV
+        echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
+        echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> $GITHUB_ENV
+        echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" > ${{ github.workspace }}/GITHUB_ENV.txt
+        echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 上传时间戳缓存文件
+      uses: actions/upload-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 删除时间戳缓存文件
+      run: rm ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 生成更新日志
       run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
@@ -475,6 +486,9 @@ jobs:
   build_Arm64:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
+    needs:
+      - build_Amd64
+
     environment:
       name: ESurfingDialer
 
@@ -492,10 +506,20 @@ jobs:
       with:
         path: '${{ github.workspace }}'
 
-    - name: 生成时间戳
+    - name: 下载时间戳缓存文件
+      uses: actions/download-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 重新写入时间戳变量
       run: |
-          echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
-          echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> $GITHUB_ENV
+        source ${{ github.workspace }}/GITHUB_ENV.txt
+        echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+        echo "TIMESTAMP2=$TIMESTAMP2" >> $GITHUB_ENV
+
+    - name: 删除时间戳缓存文件
+      run: rm ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 生成更新日志
       run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
@@ -963,10 +987,20 @@ jobs:
       with:
         path: '${{ github.workspace }}'
 
-    - name: 生成时间戳
+    - name: 下载时间戳缓存文件
+      uses: actions/download-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 重新写入时间戳变量
       run: |
-          echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
-          echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> $GITHUB_ENV
+        source ${{ github.workspace }}/GITHUB_ENV.txt
+        echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+        echo "TIMESTAMP2=$TIMESTAMP2" >> $GITHUB_ENV
+
+    - name: 删除时间戳缓存文件
+      run: rm ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 查看工作目录
       run: |
@@ -1117,7 +1151,7 @@ jobs:
 
     - name: 对镜像进行合并
       run: |
-        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64 ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64
+        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }} ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64 ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64
 
     - name: 查看当前可用镜像
       run: |
@@ -1129,6 +1163,16 @@ jobs:
     - name: 查看当前可用镜像
       run: |
         docker image ls
+
+    - name: 下载 ESurfingDockerC 的 Github 完整镜像
+      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
+
+    - name: 查看当前可用镜像
+      run: |
+        docker image ls
+
+    - name: 为 ESurfingDockerPhoneDocker 镜像打标签
+      run: docker tag ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
 
     - name: 获取 esurfingdockerpc:latest 的 Github 镜像的 sha256
       run: |
@@ -1220,3 +1264,9 @@ jobs:
           ${{ github.workspace }}/ESurfingDockerPc.tar.gz
           ${{ github.workspace }}/ESurfingDialer.zip
 
+    - name: 删除时间戳缓存文件
+      uses: joernott/rm-artifacts@v1
+      with:
+        name: TimeStampForGithubEnv
+        useGlob: false
+        failOnError: true
