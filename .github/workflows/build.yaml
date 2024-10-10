@@ -1264,9 +1264,10 @@ jobs:
           ${{ github.workspace }}/ESurfingDockerPc.tar.gz
           ${{ github.workspace }}/ESurfingDialer.zip
 
-    - name: 删除时间戳缓存文件
-      uses: joernott/rm-artifacts@v1
-      with:
-        name: TimeStampForGithubEnv
-        useGlob: false
-        failOnError: true
+    # - name: 删除时间戳缓存文件
+    #   uses: joernott/rm-artifact@v1.0.4
+    #   with:
+    #     name: TimeStampForGithubEnv
+    #     useGlob: false
+    #     failOnError: true
+
