@@ -13,7 +13,7 @@ permissions:
   attestations: write
 
 jobs:
-  build:
+  build-amd64:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
     
     environment:
@@ -146,14 +146,14 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打标签
-      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
     - name: 推送 ESurfingDockerPhoneDocker 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看当前可用镜像
       run: |
@@ -161,7 +161,7 @@ jobs:
 
     - name: 获取 ESurfingDockerPhoneDocker 的 Github 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64 | cut -d '@' -f 2)
         echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPhoneDocker 的 Github 镜像证明
@@ -172,14 +172,14 @@ jobs:
         push-to-registry: false
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打标签
-      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
     - name: 推送 ESurfingDockerPhoneDocker 镜像到 DockerHub
-      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看当前可用镜像
       run: |
@@ -187,7 +187,7 @@ jobs:
 
     - name: 获取 ESurfingDockerPhoneDocker 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64 | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPhoneDocker 的 DockerHub 镜像证明
@@ -198,14 +198,14 @@ jobs:
         push-to-registry: false
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打 latest 标签
-      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
     - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64
 
     - name: 查看当前可用镜像
       run: |
@@ -213,7 +213,7 @@ jobs:
 
     - name: 获取 ESurfingDockerPhoneDocker:latest 的 Github 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64 | cut -d '@' -f 2)
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPhoneDocker:latest 的 Github 镜像证明
@@ -224,14 +224,14 @@ jobs:
         push-to-registry: false
 
     - name: 为 ESurfingDockerPhoneDocker 镜像打 latest 标签
-      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
     - name: 推送 ESurfingDockerPhoneDocker:latest 镜像到 DockerHub
-      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64
 
     - name: 查看当前可用镜像
       run: |
@@ -239,7 +239,7 @@ jobs:
 
     - name: 获取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64 | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像证明
@@ -251,7 +251,7 @@ jobs:
 
     - name: 下载 ESurfingDockerPhoneDocker:latest 镜像
       run: |
-        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64 -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
 
     - name: 上传 ESurfingDockerPhoneDocker:latest 镜像
       uses: actions/upload-artifact@v4
@@ -336,14 +336,14 @@ jobs:
         docker image ls
 
     - name: 为 ESurfingDockerPc 镜像打标签
-      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
     - name: 推送 ESurfingDockerPc 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看当前可用镜像
       run: |
@@ -351,7 +351,7 @@ jobs:
 
     - name: 获取 ESurfingDockerPc 的 Github 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64 | cut -d '@' -f 2)
         echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPc 的 Github 镜像证明
@@ -362,14 +362,14 @@ jobs:
         push-to-registry: false
 
     - name: 为 ESurfingDockerPc 镜像打标签
-      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
     - name: 推送 ESurfingDockerPc 镜像到 DockerHub
-      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看当前可用镜像
       run: |
@@ -377,7 +377,7 @@ jobs:
 
     - name: 获取 ESurfingDockerPc 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }} | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64 | cut -d '@' -f 2)
         echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPc 的 DockerHub 镜像证明
@@ -388,14 +388,14 @@ jobs:
         push-to-registry: false
 
     - name: 为 ESurfingDockerPc 镜像打 latest 标签
-      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
+      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
     - name: 推送 ESurfingDockerPc:latest 镜像到 GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64
 
     - name: 查看当前可用镜像
       run: |
@@ -403,7 +403,7 @@ jobs:
 
     - name: 获取 ESurfingDockerPc:latest 的 Github 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64 | cut -d '@' -f 2)
         echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPc:latest 的 Github 镜像证明
@@ -414,14 +414,14 @@ jobs:
         push-to-registry: false
 
     - name: 为 ESurfingDockerPc 镜像打 latest 标签
-      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64
 
     - name: 查看当前可用镜像
       run: |
         docker image ls
 
     - name: 推送 ESurfingDockerPc:latest 镜像到 DockerHub
-      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64
 
     - name: 查看当前可用镜像
       run: |
@@ -429,7 +429,7 @@ jobs:
 
     - name: 获取 ESurfingDockerPc:latest 的 DockerHub 镜像的 sha256
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest | cut -d '@' -f 2)
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64 | cut -d '@' -f 2)
         echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
 
     - name: 生成 ESurfingDockerPc:latest 的 DockerHub 镜像证明
@@ -441,7 +441,7 @@ jobs:
 
     - name: 下载 ESurfingDockerPc:latest 镜像
       run: |
-        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64 -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
 
     - name: 上传 ESurfingDockerPc:latest 镜像
       uses: actions/upload-artifact@v4
@@ -464,7 +464,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/CHANGELOG.txt
-        tag_name: V${{ env.TIMESTAMP }}
+        tag_name: V${{ env.TIMESTAMP }}-Amd64
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
