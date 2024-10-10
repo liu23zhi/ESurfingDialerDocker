@@ -71,7 +71,7 @@ jobs:
         ls -l ${{ github.workspace }}/ESurfingDialer/build/libs
 
     - name: 上传 ESurfingDialer 的 JAR 构建产物
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ESurfingDialer 的 JAR 构建产物
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
@@ -254,7 +254,7 @@ jobs:
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
 
     - name: 上传 ESurfingDockerPhoneDocker:latest 镜像
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ESurfingDialerPhone 的 Docker 镜像
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
@@ -302,7 +302,7 @@ jobs:
         ls -l ${{ github.workspace }}/Phone/ESurfingDialer.zip
 
     - name: 上传 ESurfingDialer 的免 Docker 直接运行版本
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ESurfingDialer 的免 Docker 直接运行版本
         path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
@@ -444,7 +444,7 @@ jobs:
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
 
     - name: 上传 ESurfingDockerPc:latest 镜像
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ESurfingDialerPc 的 Docker 镜像
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
