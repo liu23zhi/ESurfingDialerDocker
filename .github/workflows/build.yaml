@@ -73,7 +73,7 @@ jobs:
     - name: 上传 ESurfingDialer 的 JAR 构建产物
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialer 的通用 JAR 构建产物
+        name: ESurfingDialer 的通用 JAR 构建产物  来着Amd64-build
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
     - name: 生成证明
@@ -256,7 +256,7 @@ jobs:
     - name: 上传 ESurfingDockerPhoneDocker:latest 镜像
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPhone 的Amd64 Docker 镜像
+        name: ESurfingDialerPhone 的Amd64 Docker 镜像  来着Amd64-build
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 生成更新日志
@@ -304,7 +304,7 @@ jobs:
     - name: 上传 ESurfingDialer 的免 Docker 直接运行版本
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialer 的Amd64免 Docker 直接运行版本
+        name: ESurfingDialer 的Amd64免 Docker 直接运行版本  来着Amd64-build
         path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
 
     - name: 生成更新日志
@@ -446,7 +446,7 @@ jobs:
     - name: 上传 ESurfingDockerPc:latest 镜像
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPc 的Amd64 Docker 镜像
+        name: ESurfingDialerPc 的Amd64 Docker 镜像  来着Amd64-build
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成更新日志
@@ -580,7 +580,7 @@ jobs:
 
     - name: 编译 OracleJava 镜像
       run: |
-        chmod +x ${{ github.workspace }}/OracleJava.sh
+        chmod +x ${{ github.workspace }}/OracleJava-arm.sh
         ${{ github.workspace }}/OracleJava-arm.sh
 
     - name: 查看当前可用镜像
@@ -591,7 +591,7 @@ jobs:
       run: |
         cd ${{ github.workspace }}/Phone
         chmod +x ./build-arm.sh
-        ./build.sh
+        ./build-arm.sh
 
     - name: 查看当前可用镜像
       run: |
