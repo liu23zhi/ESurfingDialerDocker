@@ -13,7 +13,7 @@ permissions:
   attestations: write
 
 jobs:
-  构建Amd64镜像:
+  build_Amd64:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
     
     environment:
@@ -472,7 +472,7 @@ jobs:
     #       ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
     #       ${{ github.workspace }}/Phone/ESurfingDialer.zip
 
-  构建Arm64镜像:
+  build_Arm64:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
     environment:
@@ -951,8 +951,8 @@ jobs:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
     
     needs:
-      - 构建Amd64镜像
-      - 构建Arm64镜像
+      - build_Amd64
+      - build_Arm64
 
     environment:
       name: ESurfingDialer
