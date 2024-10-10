@@ -510,7 +510,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: TimeStampForGithubEnv
-        path: ${{ github.workspace }}/GITHUB_ENV.txt
+        path: ${{ github.workspace }}/
 
     - name: 重新写入时间戳变量
       run: |
@@ -991,7 +991,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: TimeStampForGithubEnv
-        path: ${{ github.workspace }}/GITHUB_ENV.txt
+        path: ${{ github.workspace }}/
 
     - name: 重新写入时间戳变量
       run: |
