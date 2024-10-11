@@ -1,3 +1,5 @@
+# 正在兼容Arm架构，镜像目前十分混乱，请明辨。
+
 # 这一个基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 和中国电信官方客户端搭建的Docker镜像自动构建项目
 目前貌似只能在广东省使用。
 
