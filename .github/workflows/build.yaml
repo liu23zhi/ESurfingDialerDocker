@@ -1171,7 +1171,7 @@ jobs:
 
     - name: 查看压缩文件
       run: |
-        ls -l ${{ github.workspace }}/ESurfingDialer.zip
+        ls -l ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
 
     - name: 生成更新日志
       run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
@@ -1199,7 +1199,7 @@ jobs:
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
           ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
           ${{ github.workspace }}/ESurfingDockerPc.tar.gz
-          ${{ github.workspace }}/ESurfingDialer.zip
+          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
 
     - name: 删除时间戳缓存文件
       uses: geekyeggo/delete-artifact@v5
