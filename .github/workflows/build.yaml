@@ -1201,7 +1201,7 @@ jobs:
           ${{ github.workspace }}/ESurfingDockerPc.tar.gz
           ${{ github.workspace }}/ESurfingDialer.zip
 
-     - name: 删除时间戳缓存文件
-       uses: geekyeggo/delete-artifact@v5
-       with:
-         name: TimeStampForGithubEnv
+    - name: 删除时间戳缓存文件
+      uses: geekyeggo/delete-artifact@v5
+      with:
+        name: TimeStampForGithubEnv
