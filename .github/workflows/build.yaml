@@ -1121,7 +1121,7 @@ jobs:
 
     - name: 对镜像进行合并
       run: |
-        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }} ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64 ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64
+        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64 ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64
 
     - name: 查看当前可用镜像
       run: |
@@ -1152,21 +1152,21 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: ESurfingDialer 的 Amd64 免 Docker 直接运行版本
-        path: ${{ github.workspace }}/ESurfingDialer/Amd
+        path: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd
 
     - name: 下载Arm免Docker版本
       uses: actions/download-artifact@v4
       with:
         name: ESurfingDialer 的 Arm64 免 Docker 直接运行版本
-        path: ${{ github.workspace }}/ESurfingDialer/Arm
+        path: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm
 
     - name: 修改文件权限
       run: |
-        chmod -R 777 ${{ github.workspace }}/ESurfingDialer/
+        chmod -R 777 ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/
 
     - name: 压缩 ESurfingDialer 文件夹为 zip 格式
       run: |
-        cd ${{ github.workspace }}/
+        cd ${{ github.workspace }}/ESurfingDialer/
         zip -r ESurfingDialer.zip ESurfingDialer
 
     - name: 查看压缩文件
@@ -1201,7 +1201,7 @@ jobs:
           ${{ github.workspace }}/ESurfingDockerPc.tar.gz
           ${{ github.workspace }}/ESurfingDialer.zip
 
-    - name: 删除时间戳缓存文件
-      uses: geekyeggo/delete-artifact@v5
-      with:
-        name: TimeStampForGithubEnv
+     - name: 删除时间戳缓存文件
+       uses: geekyeggo/delete-artifact@v5
+       with:
+         name: TimeStampForGithubEnv
