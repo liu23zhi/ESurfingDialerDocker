@@ -1092,7 +1092,7 @@ jobs:
 
     - name: 对镜像进行合并
       run: |
-        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}:latest ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64 ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
+        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64 ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看镜像的 manifest 列表结构
       run: |
@@ -1142,7 +1142,7 @@ jobs:
 
     - name: 对镜像进行合并
       run: |
-        docker manifest create ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}:latest ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
+        docker manifest create ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }} ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看镜像的 manifest 列表结构
       run: |
@@ -1192,7 +1192,7 @@ jobs:
 
     - name: 对镜像进行合并
       run: |
-        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}:latest ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64 ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
+        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }} ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64 ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看镜像的 manifest 列表结构
       run: |
@@ -1242,7 +1242,7 @@ jobs:
 
     - name: 对镜像进行合并
       run: |
-        docker manifest create ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}:latest ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
+        docker manifest create ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }} ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}-amd64
 
     - name: 查看镜像的 manifest 列表结构
       run: |
