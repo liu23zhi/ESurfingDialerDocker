@@ -13,7 +13,7 @@ permissions:
   attestations: write
 
 jobs:
-  build_Amd64:
+  Build_Jar:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
     
     environment:
@@ -31,15 +31,6 @@ jobs:
         echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> $GITHUB_ENV
         echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" > ${{ github.workspace }}/GITHUB_ENV.txt
         echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> ${{ github.workspace }}/GITHUB_ENV.txt
-
-    - name: 上传时间戳缓存文件
-      uses: actions/upload-artifact@v4
-      with:
-        name: TimeStampForGithubEnv
-        path: ${{ github.workspace }}/GITHUB_ENV.txt
-
-    - name: 删除时间戳缓存文件
-      run: rm ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 生成更新日志
       run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
@@ -84,13 +75,76 @@ jobs:
     - name: 上传 ESurfingDialer 的 JAR 构建产物
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialer 的通用 JAR 构建产物（来着Amd64构建）
+        name: ESurfingDialer 的通用 JAR 构建产物
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
     - name: 生成证明
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
+
+    - name: 查找最新构建的 Jar 文件但不复制
+      run: |
+        chmod +x ${{ github.workspace }}/FindLasterBuildJar-without-copy.sh
+        ${{ github.workspace }}/FindLasterBuildJar-without-copy.sh
+
+    - name: 写入相关环境变量到缓存文件
+      run: |
+        echo "LatestJarFilename=$latest_jar_filename" >> ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 上传时间戳缓存文件
+      uses: actions/upload-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 删除时间戳缓存文件
+      run: rm ${{ github.workspace }}/GITHUB_ENV.txt
+
+  Build_Amd64:
+    runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
+
+    needs:
+      - Build_Jar
+
+    environment:
+      name: ESurfingDialer
+
+    steps:
+    - name: 下载本项目所有代码
+      uses: actions/checkout@v4
+      with:
+        path: '${{ github.workspace }}'
+
+    - name: 下载时间戳缓存文件
+      uses: actions/download-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/
+
+    - name: 重新写入时间戳变量
+      run: |
+        TIMESTAMP=(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        echo "$TIMESTAMP" >> $GITHUB_ENV
+
+    - name: 删除时间戳缓存文件
+      run: rm ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 创建所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 下载已编译的Jar文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的通用 JAR 构建产物
+        path: ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 生成更新日志
+      run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    - name: 查看工作目录
+      run: |
+        ls -l ${{ github.workspace }}
 
     - name: 查找最新构建的 Jar 文件并复制
       run: |
@@ -288,7 +342,13 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/bin/java
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/jdk-21.0.4
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/jdk-21.0.4/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/jdk-21.0.4/bin/java.exe
 
     - name: 修改 Phone 下的 Direct 文件夹为 ESurfingDialer
       run: |
@@ -483,11 +543,11 @@ jobs:
     #       ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
     #       ${{ github.workspace }}/Phone/ESurfingDialer.zip
 
-  build_Arm64:
+  Build_Arm64:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
     needs:
-      - build_Amd64
+      - Build_Jar
 
     environment:
       name: ESurfingDialer
@@ -514,12 +574,20 @@ jobs:
 
     - name: 重新写入时间戳变量
       run: |
-        source ${{ github.workspace }}/GITHUB_ENV.txt
-        echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
-        echo "TIMESTAMP2=$TIMESTAMP2" >> $GITHUB_ENV
+        TIMESTAMP=(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        echo "$TIMESTAMP" >> $GITHUB_ENV
 
     - name: 删除时间戳缓存文件
       run: rm ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 创建所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 下载已编译的Jar文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的通用 JAR 构建产物
+        path: ${{ github.workspace }}/ESurfingDialer/build/libs/
 
     - name: 生成更新日志
       run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
@@ -527,50 +595,6 @@ jobs:
     - name: 查看工作目录
       run: |
         ls -l ${{ github.workspace }}
-
-    - name: 下载 ESurfingDialer 项目代码
-      uses: actions/checkout@v4
-      with:
-        repository: 'Rsplwe/ESurfingDialer'
-        path: '${{ github.workspace }}/ESurfingDialer'
-        
-    - name: 查看工作目录
-      run: |
-        ls -l ${{ github.workspace }}
-        
-    - name: 查看 ESurfingDialer 目录
-      run: |
-        ls -l ${{ github.workspace }}/ESurfingDialer
-
-    - name: 设置 JDK 20
-      uses: actions/setup-java@v4
-      with:
-        java-version: '20'
-        distribution: 'zulu'
-
-    - name: 查看 Java 版本
-      run: |
-        java -version
-
-    - name: 进入 ESurfingDialer 目录并执行构建
-      run: |
-        cd ${{ github.workspace }}/ESurfingDialer
-        ./gradlew shadowJar
-
-    - name: 查看 ESurfingDialer 构建产物
-      run: |
-        ls -l ${{ github.workspace }}/ESurfingDialer/build/libs
-
-    - name: 上传 ESurfingDialer 的 JAR 构建产物
-      uses: actions/upload-artifact@v4
-      with:
-        name: ESurfingDialer 的通用 JAR 构建产物（来着Arm64构建）
-        path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
-
-    - name: 生成证明
-      uses: actions/attest-build-provenance@v1
-      with:
-        subject-path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
     - name: 查找最新构建的 Jar 文件并复制
       run: |
@@ -768,6 +792,9 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/bin/java
 
     - name: Java21 对 Arm64 的 Windows 不兼容 ， 移除多余文件
       run: |
@@ -975,8 +1002,8 @@ jobs:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
     
     needs:
-      - build_Amd64
-      - build_Arm64
+      - Build_Amd64
+      - Build_Arm64
 
     environment:
       name: ESurfingDialer
@@ -995,69 +1022,24 @@ jobs:
 
     - name: 重新写入时间戳变量
       run: |
-        source ${{ github.workspace }}/GITHUB_ENV.txt
-        echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
-        echo "TIMESTAMP2=$TIMESTAMP2" >> $GITHUB_ENV
+        TIMESTAMP=(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        echo "$TIMESTAMP" >> $GITHUB_ENV
 
     - name: 删除时间戳缓存文件
       run: rm ${{ github.workspace }}/GITHUB_ENV.txt
 
+    - name: 创建所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 下载已编译的Jar文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的通用 JAR 构建产物
+        path: ${{ github.workspace }}/ESurfingDialer/build/libs/
+
     - name: 查看工作目录
       run: |
         ls -l ${{ github.workspace }}
-
-    - name: 下载 ESurfingDialer 项目代码
-      uses: actions/checkout@v4
-      with:
-        repository: 'Rsplwe/ESurfingDialer'
-        path: '${{ github.workspace }}/ESurfingDialer'
-        
-    - name: 查看工作目录
-      run: |
-        ls -l ${{ github.workspace }}
-        
-    - name: 查看 ESurfingDialer 目录
-      run: |
-        ls -l ${{ github.workspace }}/ESurfingDialer
-
-    - name: 设置 JDK 20
-      uses: actions/setup-java@v4
-      with:
-        java-version: '20'
-        distribution: 'zulu'
-
-    - name: 查看 Java 版本
-      run: |
-        java -version
-
-    - name: 进入 ESurfingDialer 目录并执行构建
-      run: |
-        cd ${{ github.workspace }}/ESurfingDialer
-        ./gradlew shadowJar
-
-    - name: 查看 ESurfingDialer 构建产物
-      run: |
-        ls -l ${{ github.workspace }}/ESurfingDialer/build/libs
-
-    - name: 上传 ESurfingDialer 的 JAR 构建产物
-      uses: actions/upload-artifact@v4
-      with:
-        name: ESurfingDialer 的通用 JAR 构建产物（来着Amd64和Arm的合并构建）
-        path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
-
-    - name: 生成证明
-      uses: actions/attest-build-provenance@v1
-      with:
-        subject-path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
-
-    - name: 查找最新构建的 Jar 文件但不复制
-      run: |
-        chmod +x ${{ github.workspace }}/FindLasterBuildJar-without-copy.sh
-        ${{ github.workspace }}/FindLasterBuildJar-without-copy.sh
-
-    - name: 查看 Jar 文件复制结果
-      run: |
-        ls -l ${{ github.workspace }}/Phone
 
     - name: 查看工作目录
       run: |
@@ -1096,7 +1078,7 @@ jobs:
 
     - name: 查看镜像的 manifest 列表结构
       run: |
-        docker docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+        docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
     - name: 推送 esurfingdockerphonedocker:latest 镜像到 GitHub Container Registry
       run: docker manifest  push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
@@ -1121,7 +1103,7 @@ jobs:
 
     - name: 查看镜像的 manifest 列表结构
       run: |
-        docker docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
+        docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
 
     - name: 推送 esurfingdockerphonedocker:latest 镜像到 GitHub Container Registry
       run: docker manifest  push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
@@ -1146,7 +1128,7 @@ jobs:
 
     - name: 查看镜像的 manifest 列表结构
       run: |
-        docker docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
+        docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
 
     - name: 推送 esurfingdockerphonedocker:latest 镜像到 DockerHub
       run: docker manifest  push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.TIMESTAMP }}
@@ -1171,7 +1153,7 @@ jobs:
 
     - name: 查看镜像的 manifest 列表结构
       run: |
-        docker docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+        docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
 
     - name: 推送 esurfingdockerphonedocker:latest 镜像到 DockerHub
       run: docker manifest  push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
@@ -1196,7 +1178,7 @@ jobs:
 
     - name: 查看镜像的 manifest 列表结构
       run: |
-        docker docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+        docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}
 
     - name: 推送 esurfingdockerpc:latest 镜像到 GitHub Container Registry
       run: docker manifest  push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.TIMESTAMP }}
@@ -1221,7 +1203,7 @@ jobs:
 
     - name: 查看镜像的 manifest 列表结构
       run: |
-        docker docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
+        docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
 
     - name: 推送 esurfingdockerpc:latest 镜像到 GitHub Container Registry
       run: docker manifest  push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest
@@ -1246,7 +1228,7 @@ jobs:
 
     - name: 查看镜像的 manifest 列表结构
       run: |
-        docker docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
+        docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
 
     - name: 推送 esurfingdockerpc:latest 镜像到 DockerHub
       run: docker manifest  push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.TIMESTAMP }}
@@ -1271,7 +1253,7 @@ jobs:
 
     - name: 查看镜像的 manifest 列表结构
       run: |
-        docker docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+        docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
 
     - name: 推送 esurfingdockerpc:latest 镜像到 DockerHub
       run: docker manifest  push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
