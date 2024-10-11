@@ -90,7 +90,7 @@ jobs:
 
     - name: 写入相关环境变量到缓存文件
       run: |
-        echo "LatestJarFilename=$latest_jar_filename" >> ${{ github.workspace }}/GITHUB_ENV.txt
+        echo "LatestJarFilename=${{ env.LatestJarFilename }}" >> ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 上传时间戳缓存文件
       uses: actions/upload-artifact@v4
