@@ -1491,7 +1491,7 @@ jobs:
         name: Combine-Amd64-And-Arm64-ChangeLog
         path: '${{ github.workspace }}/CHANGELOG.txt'
 
-  Release_Combine-Amd64-And-Arm64:
+  Release-Combine-Amd64-And-Arm64:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
     needs:
@@ -1559,6 +1559,18 @@ jobs:
       with:
         body_path: ${{ github.workspace }}/CHANGELOG.txt
         tag_name: V${{ env.TIMESTAMP }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: |
+          ${{ github.workspace }}/ESurfingDialer/build/libs/*
+          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
+#          ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
+#          ${{ github.workspace }}/ESurfingDockerPc.tar.gz
+
+    - name: 创建 Release
+      uses: softprops/action-gh-release@v2
+      with:
+        body_path: ${{ github.workspace }}/CHANGELOG.txt
+        tag_name: V${{ env.TIMESTAMP }}-Complete
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
