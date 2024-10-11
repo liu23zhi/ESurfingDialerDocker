@@ -1105,36 +1105,6 @@ jobs:
       run: |
         docker image ls
 
-    - name: 下载 esurfingdockerphonedocker 的 完整 Github 镜像
-      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest
-
-    - name: 获取 esurfingdockerphonedocker:latest 的 Github 镜像的 sha256
-      run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
-        echo "DIGEST1=$DIGEST" >> $GITHUB_ENV
-
-    - name: 生成 esurfingdockerphonedocker:latest 的 Github 镜像证明
-      uses: actions/attest-build-provenance@v1
-      with:
-        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker
-        subject-digest: ${{ env.DIGEST1 }}
-        push-to-registry: false
-
-    - name: 下载 esurfingdockerphonedocker:latest 镜像
-      run: |
-        docker save ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
-
-    - name: 上传 esurfingdockerphonedocker:latest 镜像
-      uses: actions/upload-artifact@v4
-      with:
-        name: ESurfingDialerPhone 的完整版 Docker 镜像
-        path: '${{ github.workspace }}/ESurfingDockerPhone.tar.gz'
-
-    - name: 生成证明
-      uses: actions/attest-build-provenance@v1
-      with:
-        subject-path: '${{ github.workspace }}/ESurfingDockerPhone.tar.gz'
-
     - name: 下载 ESurfingDockerC 的 Amd64 Github 镜像
       run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64
 
@@ -1231,9 +1201,7 @@ jobs:
           ${{ github.workspace }}/ESurfingDockerPc.tar.gz
           ${{ github.workspace }}/ESurfingDialer.zip
 
-    # - name: 删除时间戳缓存文件
-    #   uses: joernott/rm-artifact@v1.0.4
-    #   with:
-    #     name: TimeStampForGithubEnv
-    #     useGlob: false
-    #     failOnError: true
+    - name: 删除时间戳缓存文件
+      uses: geekyeggo/delete-artifact@v5
+      with:
+        name: TimeStampForGithubEnv
