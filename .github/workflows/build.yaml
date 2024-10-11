@@ -124,7 +124,7 @@ jobs:
 
     - name: 重新写入时间戳变量
       run: |
-        TIMESTAMP=(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
         echo "$TIMESTAMP" >> $GITHUB_ENV
 
     - name: 删除时间戳缓存文件
@@ -574,7 +574,7 @@ jobs:
 
     - name: 重新写入时间戳变量
       run: |
-        TIMESTAMP=(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
         echo "$TIMESTAMP" >> $GITHUB_ENV
 
     - name: 删除时间戳缓存文件
@@ -1022,7 +1022,7 @@ jobs:
 
     - name: 重新写入时间戳变量
       run: |
-        TIMESTAMP=(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
         echo "$TIMESTAMP" >> $GITHUB_ENV
 
     - name: 删除时间戳缓存文件
