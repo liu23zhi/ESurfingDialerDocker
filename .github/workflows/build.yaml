@@ -630,7 +630,7 @@ jobs:
 
     - name: 写入 Amd64-Release-Url 等相关环境变量到缓存文件
       run: |
-        echo -e "Amd64-Release-Url=\"${{ steps.Amd64-Release.outputs.url }}\"" >> ${{ github.workspace }}/Amd64-Release-Url.txt
+        echo -e "\"${{ steps.Amd64-Release.outputs.url }}\"" >> ${{ github.workspace }}/Amd64-Release-Url.txt
         echo "Amd64-Release-Url=${{ steps.Amd64-Release.outputs.url }}" >> $GITHUB_ENV
 
     - name: 上传 Amd64-Release-Url 环境变量缓存文件
@@ -1182,7 +1182,7 @@ jobs:
 
     - name: 写入 Arm64-Release-Url 等相关环境变量到缓存文件
       run: |
-        echo -e "Arm64-Release-Url=\"${{ steps.Arm64-Release.outputs.url }}\"" >> ${{ github.workspace }}/Arm64-Release-Url.txt
+        echo -e "\"${{ steps.Arm64-Release.outputs.url }}\"" >> ${{ github.workspace }}/Arm64-Release-Url.txt
         echo "Arm64-Release-Url=${{ steps.Arm64-Release.outputs.url }}" >> $GITHUB_ENV
 
     - name: 上传 Arm64-Release-Url 环境变量缓存文件
@@ -1583,7 +1583,7 @@ jobs:
     - name: 重新写入 Amd64-Release-Url 环境变量
       run: |
         Amd64_Release_Url=$(cat ${{ github.workspace }}/Amd64-Release-Url.txt)
-        echo "$Amd64-Release-Url" >> $GITHUB_ENV
+        echo "Amd64_Release_Url=$Amd64-Release-Url" >> $GITHUB_ENV
 
     - name: 删除 Amd64-Release-Url 环境变量 缓存文件
       run: rm -rf ${{ github.workspace }}/Amd64-Release-Url.txt
@@ -1597,7 +1597,7 @@ jobs:
     - name: 重新写入 Arm64-Release-Url 环境变量
       run: |
         Arm64_Release_Url=$(cat ${{ github.workspace }}/Arm64-Release-Url.txt)
-        echo "$Arm64_Release_Url" >> $GITHUB_ENV
+        echo "Amd64_Release_Url=$Arm64_Release_Url" >> $GITHUB_ENV
 
     - name: 删除 Arm64-Release-Url 环境变量 缓存文件
       run: rm -rf ${{ github.workspace }}/Arm64-Release-Url.txt
@@ -1652,4 +1652,3 @@ jobs:
       uses: geekyeggo/delete-artifact@v5
       with:
         name: Arm64-Release-UrlForGithubEnv
-
