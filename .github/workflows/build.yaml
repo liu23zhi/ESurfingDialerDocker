@@ -1603,10 +1603,10 @@ jobs:
       run: rm -rf ${{ github.workspace }}/Arm64-Release-Url.txt
 
     - name: 生成 ESurfingDockerPhone 相关更新日志
-      run: echo -e "ESurfingDockerPhone 镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n<details>\n<summary>离线镜像文件 （能在线拉取就在线拉取吧）</summary>\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")  [Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n</details>\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPhone 镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n<details>\n<summary>离线镜像文件 （能在线拉取就在线拉取吧）</summary>\n\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")\n[Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n</details>\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成 ESurfingDockerPc 相关更新日志
-      run: echo -e "ESurfingDockerPc 镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n<details>\n<summary>离线镜像文件 （能在线拉取就在线拉取吧）</summary>\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")  [Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n</details>\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPc 镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n<details>\n<summary>离线镜像文件 （能在线拉取就在线拉取吧）</summary>\n\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")\n[Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n</details>\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成 免 Docker 直接运行版本 相关更新日志
       run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
@@ -1614,17 +1614,17 @@ jobs:
     # - name: 生成更新日志
     #   run: echo "### 好的更新已经到来（更新日志生成测试）" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: 创建 Release
-      uses: softprops/action-gh-release@v2
-      with:
-        body_path: ${{ github.workspace }}/CHANGELOG.txt
-        tag_name: V${{ env.TIMESTAMP }}-Complete
-        token: ${{ secrets.GITHUB_TOKEN }}
-        files: |
-          ${{ github.workspace }}/ESurfingDialer/build/libs/*
-          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
-#          ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
-#          ${{ github.workspace }}/ESurfingDockerPc.tar.gz
+#     - name: 创建 Release
+#       uses: softprops/action-gh-release@v2
+#       with:
+#         body_path: ${{ github.workspace }}/CHANGELOG.txt
+#         tag_name: V${{ env.TIMESTAMP }}-Complete
+#         token: ${{ secrets.GITHUB_TOKEN }}
+#         files: |
+#           ${{ github.workspace }}/ESurfingDialer/build/libs/*
+#           ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
+# #          ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
+# #          ${{ github.workspace }}/ESurfingDockerPc.tar.gz
 
     - name: 创建 Release
       uses: softprops/action-gh-release@v2
