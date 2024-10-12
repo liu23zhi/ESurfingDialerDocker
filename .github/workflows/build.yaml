@@ -1582,10 +1582,10 @@ jobs:
 
     - name: 重新写入 Amd64-Release-Url 环境变量
       run: |
-        Amd64-Release-UrlForGithubEnv=$(cat ${{ github.workspace }}/Amd64-Release-Url.txt)
-        echo "$Amd64-Release-UrlForGithubEnv" >> $GITHUB_ENV
+        export "${{ github.workspace }}/Amd64-Release-Url.txt)"
+        echo "Amd64-Release-Url=$Amd64-Release-Url" >> $GITHUB_ENV
 
-    - name: 删除 时间戳和相关环境变量 缓存文件
+    - name: 删除 Amd64-Release-Url 环境变量 缓存文件
       run: rm -rf ${{ github.workspace }}/Amd64-Release-Url.txt
 
     - name: 下载 Arm64-Release-Url 环境变量缓存文件
@@ -1596,10 +1596,10 @@ jobs:
 
     - name: 重新写入 Arm64-Release-Url 环境变量
       run: |
-        Arm64-Release-Url=$(cat ${{ github.workspace }}/Arm64-Release-Url.txt)
-        echo "$Arm64-Release-Url" >> $GITHUB_ENV
+        export "${{ github.workspace }}/Arm64-Release-Url.txt"
+        echo "Arm64-Release-Url=$Arm64-Release-Url" >> $GITHUB_ENV
 
-    - name: 删除 时间戳和相关环境变量 缓存文件
+    - name: 删除 Arm64-Release-Url 环境变量 缓存文件
       run: rm -rf ${{ github.workspace }}/Arm64-Release-Url.txt
 
     - name: 生成 ESurfingDockerPhone 相关更新日志
