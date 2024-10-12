@@ -1583,7 +1583,7 @@ jobs:
     - name: 重新写入 Amd64-Release-Url 环境变量
       run: |
         Amd64_Release_Url=$(cat ${{ github.workspace }}/Amd64-Release-Url.txt)
-        echo "Amd64_Release_Url=$Amd64-Release-Url" >> $GITHUB_ENV
+        echo "Amd64_Release_Url=$Amd64_Release_Url" >> $GITHUB_ENV
 
     - name: 删除 Amd64-Release-Url 环境变量 缓存文件
       run: rm -rf ${{ github.workspace }}/Amd64-Release-Url.txt
@@ -1597,16 +1597,16 @@ jobs:
     - name: 重新写入 Arm64-Release-Url 环境变量
       run: |
         Arm64_Release_Url=$(cat ${{ github.workspace }}/Arm64-Release-Url.txt)
-        echo "Amd64_Release_Url=$Arm64_Release_Url" >> $GITHUB_ENV
+        echo "Arm64_Release_Url=$Arm64_Release_Url" >> $GITHUB_ENV
 
     - name: 删除 Arm64-Release-Url 环境变量 缓存文件
       run: rm -rf ${{ github.workspace }}/Arm64-Release-Url.txt
 
     - name: 生成 ESurfingDockerPhone 相关更新日志
-      run: echo -e "ESurfingDockerPhone 镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n<details>\n<summary>离线镜像文件 （能在线拉取就在线拉取吧）</summary>\n[Amd64镜像文件下载](${{ env.Amd64-Release-Url }} "Amd64镜像文件下载")  [Arm64镜像文件下载](${{ env.Arm64-Release-Url }} "Arm64镜像文件下载")\n</details>\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPhone 镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n<details>\n<summary>离线镜像文件 （能在线拉取就在线拉取吧）</summary>\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")  [Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n</details>\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成 ESurfingDockerPc 相关更新日志
-      run: echo -e "ESurfingDockerPc 镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n<details>\n<summary>离线镜像文件 （能在线拉取就在线拉取吧）</summary>\n[Amd64镜像文件下载](${{ env.Amd64-Release-Url }} "Amd64镜像文件下载")  [Arm64镜像文件下载](${{ env.Arm64-Release-Url }} "Arm64镜像文件下载")\n</details>\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPc 镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n<details>\n<summary>离线镜像文件 （能在线拉取就在线拉取吧）</summary>\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")  [Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n</details>\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成 免 Docker 直接运行版本 相关更新日志
       run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
