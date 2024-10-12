@@ -1582,7 +1582,7 @@ jobs:
 
     - name: 重新写入 Amd64-Release-Url 环境变量
       run: |
-        export "${{ github.workspace }}/Amd64-Release-Url.txt)"
+        export "${{ github.workspace }}/Amd64-Release-Url.txt"
         echo "Amd64-Release-Url=$Amd64-Release-Url" >> $GITHUB_ENV
 
     - name: 删除 Amd64-Release-Url 环境变量 缓存文件
