@@ -1618,7 +1618,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/CHANGELOG.txt
-        tag_name: V${{ env.TIMESTAMP }}
+        tag_name: V${{ env.TIMESTAMP }}-Complete
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
@@ -1630,7 +1630,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/CHANGELOG.txt
-        tag_name: V${{ env.TIMESTAMP }}-Complete
+        tag_name: ${{ env.TIMESTAMP }}
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
