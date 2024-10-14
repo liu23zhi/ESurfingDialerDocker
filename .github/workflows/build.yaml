@@ -2,7 +2,7 @@ name: 每日构建
 
 on:
   schedule:
-    - cron: ' 0 */8 * * * '
+    - cron: '0 0,8,16 * * *'
   workflow_dispatch:  # 允许手动触发
 
 env:
