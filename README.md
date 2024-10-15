@@ -13,7 +13,7 @@
 此镜像占用电脑设备上网资格进行网络认证
 
 2. ESurfingDockerPhoneDocker
-此镜像占用手机设备上网资格进行网络认证
+此镜像占用手机设备上网资格进行网络认证(目前推荐使用这个）
 
 ### 此外还提供免docker直接运行版本（支持Linux和windows）
 1. ESurfingDialer.zip（[前往Release下载](/releases/latest/ "Release")）
@@ -63,7 +63,7 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 </details>
 
-##### (3)从Github Release下载，后本地导入
+##### (3)从Github Release下载（从本界面右边的Release点进去下载），后本地导入（记住导入文件的位置）
 
 [前往Release](/releases/latest/ "Release")下载ESurfingDockerPhone.tar.gz。
 
@@ -71,6 +71,7 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 ```shell
 docker load -i ESurfingDockerPhone.tar.gz
 ```
+注意：docker load -i 后面要填写你放置ESurfingDockerPhone.tar.gz文件的位置
 
 然后创建并启动容器
 
@@ -124,14 +125,15 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 </details>
 
-##### (3)从Github Release下载，后本地导入
+##### (3)从Github Release下载（从本界面右边的Release点进去下载），后本地导入（记住导入文件的位置）
 
-[前往Release](/releases/latest/ "Release")下载ESurfingDockerPc.tar.gz。
+[前往Release](/releases/latest/ "Release")下载ESurfingDockerPc.tar.gz
 
 执行列代码导入镜像文件
 ```shell
 docker load -i ESurfingDockerPc.tar.gz
 ```
+注意：docker load -i 后面要填写你放置ESurfingDockerPhone.tar.gz文件的位置
 
 然后创建并启动容器
 
