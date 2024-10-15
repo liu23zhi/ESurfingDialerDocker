@@ -1693,17 +1693,17 @@ jobs:
     #     #  ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
     #     #  ${{ github.workspace }}/ESurfingDockerPc.tar.gz
 
-    # - name: 创建 Release
-    #   uses: softprops/action-gh-release@v2
-    #   with:
-    #     body_path: ${{ github.workspace }}/CHANGELOG.txt
-    #     tag_name: ${{ env.TIMESTAMP }}
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-    #     files: |
-    #       ${{ github.workspace }}/ESurfingDialer/build/libs/*
-    #       ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
-    #     #  ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
-    #     #  ${{ github.workspace }}/ESurfingDockerPc.tar.gz
+    - name: 创建 Release
+      uses: softprops/action-gh-release@v2
+      with:
+        body_path: ${{ github.workspace }}/CHANGELOG.txt
+        tag_name: ${{ env.TIMESTAMP }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: |
+          ${{ github.workspace }}/ESurfingDialer/build/libs/*
+          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
+        #  ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
+        #  ${{ github.workspace }}/ESurfingDockerPc.tar.gz
 
     - name: 删除 时间戳和相关环境变量 缓存文件
       uses: geekyeggo/delete-artifact@v5
