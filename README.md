@@ -30,6 +30,7 @@
 
 ## Docker镜像使用方法
 **与Rsplwe大佬的项目相似**
+###openwrt带有docker使用ssh可按教程无脑食用
 ### 1.使用ESurfingDockerPhoneDocker镜像
 #### (1)从Githu拉取镜像
 
