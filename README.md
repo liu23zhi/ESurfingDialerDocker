@@ -16,7 +16,7 @@
 此镜像占用手机设备上网资格进行网络认证(目前推荐使用这个）
 
 ### 此外还提供免docker直接运行版本（支持Linux和windows）
-1. ESurfingDialer.zip（[前往Release下载](/releases/latest/ "Release")）
+1. ESurfingDialer.zip（[前往Release下载](https://github.com/liu23zhi/ESurfingDialerDocker/releases)）
 基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 编译而成。
 此方案占用手机设备上网资格进行网络认证。
 
@@ -65,9 +65,9 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 </details>
 
-##### (3)从Github Release下载（从本界面右边的Release点进去下载），后本地导入（记住导入文件的位置）
+##### (3)从Github Release下载，后本地导入（记住导入文件的位置）
 
-[前往Release](/releases/latest/ "Release")下载ESurfingDockerPhone.tar.gz。
+[前往Release](https://github.com/liu23zhi/ESurfingDialerDocker/releases)下载ESurfingDockerPhone.tar.gz。
 
 执行列代码导入镜像文件
 ```shell
@@ -127,9 +127,9 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 </details>
 
-##### (3)从Github Release下载（从本界面右边的Release点进去下载），后本地导入（记住导入文件的位置）
+##### (3)从Github Release下载，后本地导入（记住导入文件的位置）
 
-[前往Release](/releases/latest/ "Release")下载ESurfingDockerPc.tar.gz
+[前往Release](https://github.com/liu23zhi/ESurfingDialerDocker/releases)下载ESurfingDockerPc.tar.gz
 
 执行列代码导入镜像文件
 ```shell
