@@ -323,7 +323,7 @@ jobs:
     - name: 上传 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPhone 的 Amd64 Docker 镜像
+        name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-amd64）
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 生成 ESurfingDockerPhone 相关更新日志
@@ -519,7 +519,7 @@ jobs:
     - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPc 的 Amd64 Docker 镜像
+        name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-amd64）
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成 ESurfingDockerPc 相关更新日志
@@ -541,6 +541,7 @@ jobs:
 
     needs:
       - Build_Amd64
+      - Combine-Amd64-And-Arm64
 
     environment:
       name: ESurfingDialer
@@ -588,20 +589,48 @@ jobs:
     - name: 创建 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 所需文件夹
       run: mkdir -p ${{ github.workspace }}/Phone/
 
-    - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 文件
-      uses: actions/download-artifact@v4
+    # - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-amd64）
+    #     path: ${{ github.workspace }}/Phone/
+
+    - name: 拉取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
+      run: |
+         docker pull --platform linux/amd64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+
+    - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+
+    - name: 上传 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPhone 的 Amd64 Docker 镜像
-        path: ${{ github.workspace }}/Phone/
+        name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest）
+        path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 创建 ESurfingDockerPc:latest 的 DockerHub 镜像 所需文件夹
       run: mkdir -p ${{ github.workspace }}/PC/
 
-    - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像 文件
-      uses: actions/download-artifact@v4
+    # - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-amd64）
+    #     path: ${{ github.workspace }}/PC/
+
+    - name: 拉取 ESurfingDockerPc:latest 的 DockerHub 镜像
+      run: |
+         docker pull --platform linux/amd64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+
+    - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPc 的 Amd64 Docker 镜像
-        path: ${{ github.workspace }}/PC/
+        name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest）
+        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
       run: mkdir -p ${{ github.workspace }}/Phone/
@@ -1071,7 +1100,7 @@ jobs:
     - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPc 的 Arm64 Docker 镜像
+        name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-arm64）
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 生成 ESurfingDockerPc 相关更新日志
@@ -1093,6 +1122,7 @@ jobs:
 
     needs:
       - Build_Arm64
+      - Combine-Amd64-And-Arm64
 
     environment:
       name: ESurfingDialer
@@ -1140,20 +1170,57 @@ jobs:
     - name: 创建 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 所需文件夹
       run: mkdir -p ${{ github.workspace }}/Phone/
 
-    - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 文件
+    # - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialerPhone 的 Arm64 Docker 镜像
+    #     path: ${{ github.workspace }}/Phone/
+
+    - name: 拉取 ESurfingDockerPc:latest 的 DockerHub 镜像
+      run: |
+         docker pull --platform linux/arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+
+    - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialerPc 的 Armd64 Docker 镜像（标签为：latest）
+        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+
+    - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/Phone/
+
+    - name: 下载 ESurfingDialer 的免 Docker 直接运行版本 文件
       uses: actions/download-artifact@v4
       with:
-        name: ESurfingDialerPhone 的 Arm64 Docker 镜像
+        name: ESurfingDialer 的 Amd64 免 Docker 直接运行版本
         path: ${{ github.workspace }}/Phone/
 
     - name: 创建 ESurfingDockerPc:latest 的 DockerHub 镜像 所需文件夹
       run: mkdir -p ${{ github.workspace }}/PC/
 
-    - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像 文件
-      uses: actions/download-artifact@v4
+    # - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-arm64）
+    #     path: ${{ github.workspace }}/PC/
+
+    - name: 拉取 ESurfingDockerPc:latest 的 DockerHub 镜像
+      run: |
+         docker pull --platform linux/arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+
+    - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPc 的 Arm64 Docker 镜像
-        path: ${{ github.workspace }}/PC/
+        name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest）
+        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
     - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
       run: mkdir -p ${{ github.workspace }}/Phone/
@@ -1614,29 +1681,29 @@ jobs:
     # - name: 生成更新日志
     #   run: echo "### 好的更新已经到来（更新日志生成测试）" >> ${{ github.workspace }}/CHANGELOG.txt
 
-#     - name: 创建 Release
-#       uses: softprops/action-gh-release@v2
-#       with:
-#         body_path: ${{ github.workspace }}/CHANGELOG.txt
-#         tag_name: V${{ env.TIMESTAMP }}-Complete
-#         token: ${{ secrets.GITHUB_TOKEN }}
-#         files: |
-#           ${{ github.workspace }}/ESurfingDialer/build/libs/*
-#           ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
-# #          ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
-# #          ${{ github.workspace }}/ESurfingDockerPc.tar.gz
+    # - name: 创建 Release
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     body_path: ${{ github.workspace }}/CHANGELOG.txt
+    #     tag_name: V${{ env.TIMESTAMP }}-Complete
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     files: |
+    #       ${{ github.workspace }}/ESurfingDialer/build/libs/*
+    #       ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
+    #     #  ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
+    #     #  ${{ github.workspace }}/ESurfingDockerPc.tar.gz
 
-    - name: 创建 Release
-      uses: softprops/action-gh-release@v2
-      with:
-        body_path: ${{ github.workspace }}/CHANGELOG.txt
-        tag_name: ${{ env.TIMESTAMP }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        files: |
-          ${{ github.workspace }}/ESurfingDialer/build/libs/*
-          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
-#          ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
-#          ${{ github.workspace }}/ESurfingDockerPc.tar.gz
+    # - name: 创建 Release
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     body_path: ${{ github.workspace }}/CHANGELOG.txt
+    #     tag_name: ${{ env.TIMESTAMP }}
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     files: |
+    #       ${{ github.workspace }}/ESurfingDialer/build/libs/*
+    #       ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
+    #     #  ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
+    #     #  ${{ github.workspace }}/ESurfingDockerPc.tar.gz
 
     - name: 删除 时间戳和相关环境变量 缓存文件
       uses: geekyeggo/delete-artifact@v5
