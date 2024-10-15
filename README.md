@@ -41,7 +41,7 @@ docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码>
 <details>
 <summary>使用示例</summary>
 
-**假设账号为123，密码为456。则应该执行**
+**假设账号为123，密码为456。则应该执行(一定要把＜＞去掉)**
 
 ```shell
 docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client --network host --restart=always ghcr.io/liu23zhi/esurfingdockerphonedocker:latest
@@ -83,7 +83,7 @@ docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码>
 <details>
 <summary>使用示例</summary>
 
-**假设账号为123，密码为456。则应该执行**
+**假设账号为123，密码为456。则应该执行(一定要把＜＞去掉)**
 
 ```shell
 #导入镜像
@@ -103,7 +103,7 @@ docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码>
 <details>
 <summary>使用示例</summary>
 
-**假设账号为123，密码为456。则应该执行**
+**假设账号为123，密码为456。则应该执行(一定要把＜＞去掉)**
 
 ```shell
 docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client --network host --restart=always ghcr.io/liu23zhi/esurfingdockerpc:latest
@@ -119,7 +119,7 @@ docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码>
 <details>
 <summary>使用示例</summary>
 
-**假设账号为123，密码为456。则应该执行**
+**假设账号为123，密码为456。则应该执行(一定要把＜＞去掉)**
 
 ```shell
 docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client --network host --restart=always xenlia/esurfingdockerpc:latest
@@ -145,7 +145,7 @@ docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码>
 <details>
 <summary>使用示例</summary>
 
-**假设账号为123，密码为456。则应该执行**
+**假设账号为123，密码为456。则应该执行(一定要把＜＞去掉)**
 
 ```shell
 #导入镜像
