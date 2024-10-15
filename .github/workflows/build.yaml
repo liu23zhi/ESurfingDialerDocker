@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # 允许手动触发
 
 env:
-  now.FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 permissions:
   contents: write
   discussions: write
