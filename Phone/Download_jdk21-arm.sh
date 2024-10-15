@@ -1,7 +1,7 @@
 #!/bin/bash
 # 设置下载链接
-URL_LINUX="https://download.oracle.com/java/21/latest/jdk-21_linux-aarch64_bin.tar.gz"
-# URL_WINDOWS="https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.zip"
+URL_LINUX="https://download.oracle.com/java/21/archive/jdk-21.0.4_linux-aarch64_bin.tar.gz"
+# URL_WINDOWS="https://download.oracle.com/java/21/archive/jdk-21.0.4_windows-x64_bin.zip"
 # Java 对Windows 的arn64不兼容
 
 # 设置本地文件名

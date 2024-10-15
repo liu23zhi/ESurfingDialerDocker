@@ -1,7 +1,7 @@
 #!/bin/bash
 # 设置下载链接
-URL_LINUX="https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz"
-URL_WINDOWS="https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.zip"
+URL_LINUX="https://download.oracle.com/java/21/archive/jdk-21.0.4_linux-x64_bin.tar.gz"
+URL_WINDOWS="https://download.oracle.com/java/21/archive/jdk-21.0.4_windows-x64_bin.zip"
 # 设置本地文件名
 FILE_NAME_LINUX="jdk-21_linux-x64_bin.tar.gz"
 FILE_NAME_WINDOWS="jdk-21_windows-x64_bin.zip"
