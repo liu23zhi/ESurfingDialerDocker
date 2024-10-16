@@ -7,6 +7,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+
 permissions:
   contents: write
   discussions: write
@@ -1200,13 +1201,13 @@ jobs:
     #     name: ESurfingDialerPhone 的 Arm64 Docker 镜像
     #     path: ${{ github.workspace }}/Phone/
 
-    - name: 拉取 ESurfingDockerPc:latest 的 DockerHub 镜像
+    - name: 拉取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       run: |
-         docker pull --platform linux/arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+         docker pull --platform linux/arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
 
-    - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像
+    - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       run: |
-        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
 
     - name: 获取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像的 sha256
       run: |
@@ -1220,11 +1221,11 @@ jobs:
         subject-digest: ${{ env.DIGEST1 }}
         push-to-registry: false
 
-    - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
+    - name: 上传 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialerPc 的 Armd64 Docker 镜像（标签为：latest）
-        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+        name: ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest）
+        path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
       run: mkdir -p ${{ github.workspace }}/Phone/
