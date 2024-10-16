@@ -341,17 +341,15 @@ jobs:
         cd ${{ github.workspace }}/Phone/ 
         ./Download_jdk21.sh
 
-    - name: 查看 Java21 下载结果
+    - name: 查看 Java21 下载结果确保其在期待预期文件夹
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/bin/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/bin/java
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/bin/java
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/jdk-21.0.4
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/jdk-21.0.4/bin/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/jdk-21.0.4/bin/java.exe
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/bin/java.exe
 
     - name: 修改 Phone 下的 Direct 文件夹为 ESurfingDialer
       run: |
@@ -941,13 +939,12 @@ jobs:
         cd ${{ github.workspace }}/Phone/ 
         ./Download_jdk21-arm.sh
 
-    - name: 查看 Java21 下载结果
+    - name: 查看 Java21 下载结果确保其在期待预期文件夹
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/bin/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/jdk-21.0.4/bin/java
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/bin/java
 
     - name: Java21 对 Arm64 的 Windows 不兼容 ， 移除多余文件
       run: |
