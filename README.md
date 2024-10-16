@@ -13,10 +13,10 @@
 
 可以尝试在使用本镜像的基础上，使用 [watchover](https://github.com/containrrr/watchtowe "watchover") 进行自动更新Docker镜像，确保该镜像为最新镜像。 
 ### 目前提供两种Docker镜像；
-1. ESurfingDockerPc***（目前兼容性不好）***
+1. ESurfingDockerPc（目前兼容性不好）
 此镜像占用电脑设备上网资格进行网络认证
 
-2. ESurfingDockerPhoneDocker***（目前推荐使用）***
+2. ESurfingDockerPhoneDocker（目前推荐使用）
 此镜像占用手机设备上网资格进行网络认证
 
 ### 此外还提供免docker直接运行版本（支持Linux和windows）
