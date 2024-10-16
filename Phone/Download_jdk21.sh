@@ -102,7 +102,7 @@ if [ "$IS_EXTRACTED_LINUX" = false ]; then
         # 删除原文件
         rm "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX"
         # 检查是否为孤立的文件夹
-        check_and_move_files $DOWNLOAD_FOLDER/$FILE_NAME_LINUX $DOWNLOAD_FOLDER/$FILE_NAME_LINUX
+        check_and_move_files $TARGET_FOLDER_LINUX $TARGET_FOLDER_LINUX
     else
         echo "Linux版本的JDK解压失败。"
         exit 1
@@ -139,7 +139,7 @@ if [ "$IS_EXTRACTED_WINDOWS" = false ]; then
         # 删除原文件
         rm "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS"
         # 检查是否为孤立的文件夹
-        check_and_move_files $DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS $DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS
+        check_and_move_files $TARGET_FOLDER_WINDOWS $TARGET_FOLDER_WINDOWS
     else
         echo "Windows版本的JDK解压失败。"
         exit 1
