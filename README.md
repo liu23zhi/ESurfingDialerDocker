@@ -7,7 +7,9 @@
 # 这一个基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
 目前貌似只能在广东省使用。
 
-## 目前只支持amd64架构，目前正在努力兼容Arm64架构中。
+## 目前PC版本只支持amd64架构，目前正在努力兼容Arm64架构中。Phone版本已经兼容amd64和arm64了
+
+# PC版本存在严重BUG，正在修复，请勿使用
 
 **此项目利用了Github action自动拉取源码进行构建**
 
