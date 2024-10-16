@@ -1,7 +1,7 @@
 #!/bin/bash
 # 设置下载链接
-URL_LINUX="https://download.oracle.com/java/21/archive/jdk-21.0.4_linux-x64_bin.tar.gz"
-URL_WINDOWS="https://download.oracle.com/java/21/archive/jdk-21.0.4_windows-x64_bin.zip"
+URL_LINUX="https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz"
+URL_WINDOWS="https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.zip"
 # 设置本地文件名
 FILE_NAME_LINUX="jdk-21_linux-x64_bin.tar.gz"
 FILE_NAME_WINDOWS="jdk-21_windows-x64_bin.zip"
@@ -10,6 +10,62 @@ TARGET_FOLDER_LINUX="./Direct/jdk-21_linux-x64"
 TARGET_FOLDER_WINDOWS="./Direct/jdk-21_windows-x64"
 # 设置下载文件夹
 DOWNLOAD_FOLDER="./Direct"
+
+#!/bin/bash
+
+check_and_move_files() {        #                                       解压后的文件夹                    移动到文件夹 
+    local extract_path=$1       # 使用示例   check_and_move_files "/home/zelly/ubuntu/tmp/123" "/home/zelly/ubuntu/tmp/def"
+    local target_dir=$2
+
+    echo "检查 $extract_path 是否存在孤立的文件夹"
+    
+    current_path="$extract_path"
+    
+    while true; do
+        dirs=($(find "$current_path" -mindepth 1 -maxdepth 1 -type d))
+        files=($(find "$current_path" -mindepth 1 -maxdepth 1 -type f))
+        
+        echo "正在检查路径: $current_path"
+        echo "找到的文件夹: ${dirs[*]}"
+        echo "找到的文件: ${files[*]}"
+        
+        if [[ ${#dirs[@]} -eq 1 && ${#files[@]} -eq 0 ]]; then
+            current_path="${dirs[0]}"
+            echo "进入下一层文件夹: $current_path"
+        else
+            break
+        fi
+    done
+
+    if [[ ${#dirs[@]} -eq 0 && ${#files[@]} -eq 0 ]]; then
+        echo "没有找到目标文件夹或文件。"
+        exit 1
+    fi
+
+    if [ ! -d "$target_dir" ]; then
+        mkdir -p "$target_dir"
+        echo "创建目标文件夹: $target_dir"
+    fi
+    
+    for item in "$current_path"/*; do
+        echo "移动文件或文件夹：$item -> $target_dir"
+        mv "$item" "$target_dir"
+    done
+    
+    echo "所有文件已成功移动到 $target_dir"
+
+    # 检查并删除原文件夹
+    remaining_dirs=($(find "$current_path" -mindepth 1 -maxdepth 1 -type d))
+    remaining_files=($(find "$current_path" -mindepth 1 -maxdepth 1 -type f))
+    
+    if [[ ${#remaining_dirs[@]} -gt 0 || ${#remaining_files[@]} -gt 0 ]]; then
+        echo "原文件夹在 $current_path 移动后不为空，无法删除。"
+    else
+        rm -rf "$current_path"
+        echo "已删除原子文件夹：$current_path"
+    fi
+}
+
 # 创建下载文件夹
 if [ ! -d "$DOWNLOAD_FOLDER" ]; then
     echo "创建下载文件夹：$DOWNLOAD_FOLDER"
@@ -45,6 +101,8 @@ if [ "$IS_EXTRACTED_LINUX" = false ]; then
         echo "Linux版本的JDK解压完成。"
         # 删除原文件
         rm "$DOWNLOAD_FOLDER/$FILE_NAME_LINUX"
+        # 检查是否为孤立的文件夹
+        check_and_move_files $DOWNLOAD_FOLDER/$FILE_NAME_LINUX $DOWNLOAD_FOLDER/$FILE_NAME_LINUX
     else
         echo "Linux版本的JDK解压失败。"
         exit 1
@@ -80,6 +138,8 @@ if [ "$IS_EXTRACTED_WINDOWS" = false ]; then
         echo "Windows版本的JDK解压完成。"
         # 删除原文件
         rm "$DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS"
+        # 检查是否为孤立的文件夹
+        check_and_move_files $DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS $DOWNLOAD_FOLDER/$FILE_NAME_WINDOWS
     else
         echo "Windows版本的JDK解压失败。"
         exit 1

@@ -6,21 +6,8 @@ import tarfile
 import shutil
 import sys
 
-def delete_existing_files_and_folders(file_name, folder_name):
-    print(f"检查文件：{file_name} 和文件夹：{folder_name} 是否存在...")
-    if os.path.exists(file_name):
-        os.remove(file_name)
-        print(f"已删除文件：{file_name}")
-    else:
-        print(f"文件：{file_name} 不存在，无需删除")
-
-    if os.path.exists(folder_name):
-        shutil.rmtree(folder_name)
-        print(f"已删除文件夹：{folder_name}")
-    else:
-        print(f"文件夹：{folder_name} 不存在，无需删除")
-
 def download_file(url, local_filename):
+    #下载文件函数
     print(f"检查文件：{local_filename} 是否已存在...")
     if not os.path.exists(local_filename):
         print(f"文件不存在，开始下载：{url}")
@@ -56,7 +43,7 @@ def download_file(url, local_filename):
     else:
         print(f"文件 {local_filename} 已存在，跳过下载。")
 
-def get_linux_64_download_link(url):
+def get_linux_64_download_link_and_download(url,file_name):   #对中国电信天翼校园网客户端下载页面进行处理，获取下载链接
     print("正在获取网页内容...")
     try:
         headers = {
@@ -81,8 +68,8 @@ def get_linux_64_download_link(url):
             download_url = link.get('href')
             if download_url:
                 print(f"找到下载链接：{download_url}")
-                local_filename = 'ESurfingDialerClient.tar.gz'
-                download_file(download_url, local_filename)
+                local_filename = file_name
+                download_file(download_url, local_filename)#开始下载文件
                 if os.path.exists(local_filename):
                     return download_url
         print("没有找到有效的下载链接。")
@@ -144,6 +131,53 @@ def check_and_move_files(target_dir, extract_path, files_to_find):
     if not all_files_found:
         sys.exit(1)
 
+def check_and_move_files_two(extract_path, target_dir):
+    #print(f"起始路径: {extract_path}")
+    print(f"检查 {extract_path} 是否存在孤立的文件夹")
+    
+    current_path = extract_path
+    
+    while True:
+        dirs = [d for d in os.listdir(current_path) if os.path.isdir(os.path.join(current_path, d))]
+        files = [f for f in os.listdir(current_path) if os.path.isfile(os.path.join(current_path, f))]
+        
+        print(f"正在检查路径: {current_path}")
+        if len(dirs) > 0 :
+            print(f"找到的文件夹: {dirs}")
+        if len(files) > 0:
+            print(f"找到的文件: {files}")
+
+        if len(dirs) == 1 and len(files) == 0:
+            current_path = os.path.join(current_path, dirs[0])
+            print(f"进入下一层文件夹: {current_path}")
+        else:
+            break
+
+    if not dirs and not files:
+        print("没有找到目标文件夹或文件。")
+        sys.exit(1)
+
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+        print(f"创建目标文件夹: {target_dir}")
+    
+    for item in os.listdir(current_path):
+        src_path = os.path.join(current_path, item)
+        dest_path = os.path.join(target_dir, item)
+        print(f"移动文件或文件夹：{src_path} -> {dest_path}")
+        shutil.move(src_path, dest_path)
+    
+    print(f"所有文件已成功移动到 {target_dir}")
+
+    #检查并删除原文件夹
+    dirs2 = [d for d in os.listdir(current_path) if os.path.isdir(os.path.join(current_path, d))]
+    files2 = [f for f in os.listdir(current_path) if os.path.isfile(os.path.join(current_path, f))]
+    if len(dirs2) > 0 | len(files2) > 0:
+        print(f"原文件夹在 {current_path} 移动后不为空，无法删除。")
+    else:
+        shutil.rmtree(current_path)
+        print(f"已删除原子文件夹：{current_path}")
+
 def main():
     url = 'https://cdimage.ubuntu.com/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.1-base-amd64.tar.gz'
     file_name = 'ubuntu-base-24.04.1-base-amd64.tar.gz'
@@ -151,12 +185,21 @@ def main():
     backup_file_name = 'ubuntu-base-24.04.1-base-amd64.Old.tar.gz'  # 预下载文件名
 
     # 删除同名文件和文件夹
-    delete_existing_files_and_folders(file_name, folder_name)
+    print(f"检查文件：{file_name} 和文件夹：{folder_name} 是否存在...")
+    if os.path.exists(file_name):
+        os.remove(file_name)
+        print(f"已删除文件：{file_name}")
+    else:
+        print(f"文件：{file_name} 不存在，无需删除")
+
+    if os.path.exists(folder_name):
+        shutil.rmtree(folder_name)
+        print(f"已删除文件夹：{folder_name}")
+    else:
+        print(f"文件夹：{folder_name} 不存在，无需删除")
 
     # 获取下载链接
-    # download_url = get_linux_64_download_link(url)
-    # 不需要处理了url了
-    download_url = url
+    download_url = get_linux_64_download_link_and_download(url,file_name)
     if download_url and os.path.exists(file_name):
         # 下载文件
         local_filename = file_name
@@ -170,9 +213,11 @@ def main():
     if os.path.exists(local_filename):
         extract_tar_gz(local_filename, extract_path)
         # 检查并移动文件夹内的所有内容
-        # files_to_find = ['client', 'ESurfingSvr', 'tyxy']
-        # check_and_move_files(folder_name, extract_path, files_to_find)
-        #不需要解压之后进行文件定位
+        files_to_find = ['client', 'ESurfingSvr', 'tyxy']
+        #check_and_move_files(folder_name, extract_path, files_to_find)       #   移动到文件夹    解压后的文件夹    需要1查找的文件名称
+        # 确保文件夹不是孤立的文件夹
+        check_and_move_files_two(extract_path, folder_name)      #  解压后的文件夹    移动到文件夹
+
     else:
         print(f"预下载文件 {local_filename} 不存在，请检查文件路径。")
         sys.exit(1)

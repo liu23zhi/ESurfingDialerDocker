@@ -17,7 +17,7 @@ set "COMPLETENESS=true"
 set "SCRIPT_DIR=%~dp0%"
 
 :: 设置Java Home路径
-set "JAVA_HOME=%SCRIPT_DIR%jdk-21_windows-x64\jdk-21.0.4"
+set "JAVA_HOME=%SCRIPT_DIR%jdk-21_windows-x64"
 
 :: 设置Java路径
 set "JAVA_PATH=%JAVA_HOME%\bin\java.exe"
