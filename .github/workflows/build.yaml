@@ -603,6 +603,18 @@ jobs:
       run: |
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
 
+    - name: 获取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
+        echo "DIGEST1=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+        subject-digest: ${{ env.DIGEST1 }}
+        push-to-registry: false
+
     - name: 上传 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       uses: actions/upload-artifact@v4
       with:
@@ -625,6 +637,18 @@ jobs:
     - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像
       run: |
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 获取 ESurfingDockerPc:latest 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest | cut -d '@' -f 2)
+        echo "DIGEST1=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+        subject-digest: ${{ env.DIGEST1 }}
+        push-to-registry: false
 
     - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
       uses: actions/upload-artifact@v4
@@ -1184,6 +1208,18 @@ jobs:
       run: |
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
 
+    - name: 获取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest | cut -d '@' -f 2)
+        echo "DIGEST1=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+        subject-digest: ${{ env.DIGEST1 }}
+        push-to-registry: false
+
     - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
       uses: actions/upload-artifact@v4
       with:
@@ -1215,6 +1251,18 @@ jobs:
     - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像
       run: |
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 获取 ESurfingDockerPc:latest 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest | cut -d '@' -f 2)
+        echo "DIGEST1=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+        subject-digest: ${{ env.DIGEST1 }}
+        push-to-registry: false
 
     - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
       uses: actions/upload-artifact@v4
