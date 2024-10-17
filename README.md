@@ -185,7 +185,7 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 </details>
 
-#### [点击此查看pc运行错误代码详解](.\PC.md)
+#### [点击此查看pc运行错误代码详解](\PC.md)
 
 ## 以上两种镜像选择任意一个操作完成后
 
