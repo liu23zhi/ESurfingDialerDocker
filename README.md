@@ -1,7 +1,3 @@
----
-typora-root-url: ./11
----
-
 # 本docker镜像适用于广东地区使用天翼校园上网的方案
 
 > [!WARNING]
