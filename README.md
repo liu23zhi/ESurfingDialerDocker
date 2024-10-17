@@ -1,3 +1,7 @@
+---
+typora-root-url: ./11
+---
+
 # 本docker镜像适用于广东地区使用天翼校园上网的方案
 
 > [!WARNING]
@@ -7,7 +11,9 @@
 # 这一个基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
 目前貌似只能在广东省使用。
 
-## 目前PC版本只支持amd64架构，目前正在努力兼容Arm64架构中。Phone版本已经兼容amd64和arm64了
+## **目前PC版本只支持amd64架构，目前正在努力兼容Arm64架构中**。
+
+## Phone版本已经兼容amd64和arm64了
 
 # PC版本存在严重BUG，正在修复，请勿使用
 
@@ -168,7 +174,6 @@ docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码>
 ```
 <details>
 <summary>使用示例</summary>
-
 **假设账号为123，密码为456。则应该执行(一定要把＜＞去掉)**
 
 ```shell
@@ -180,7 +185,7 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 </details>
 
-## 
+#### [点击此查看pc运行错误代码详解](.\PC.md)
 
 ## 以上两种镜像选择任意一个操作完成后
 
@@ -191,5 +196,22 @@ docker logs -f dialer-client
 ```
 如果显示出以下信息代表成功了
 ```shell
-INFO [com.rsplwe.esurfing.network.RedirectInterceptor] (RedirectInterceptor:
+INFO [com.rsplwe.esurfing.Client] (Client:82) - The login has been authorized.
 ```
+
+
+
+## 所有弄完后把网线插入软路由的LAN口就可以上网
+
+
+
+
+
+
+
+
+
+
+
+
+
