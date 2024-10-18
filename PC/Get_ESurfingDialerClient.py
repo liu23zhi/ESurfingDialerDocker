@@ -141,9 +141,9 @@ def check_and_move_files_two(extract_path, target_dir):
     files2 = [f for f in os.listdir(current_path) if os.path.isfile(os.path.join(current_path, f))]
 
     if len(dirs2) > 0 :
-        print(f"找到的文件夹: {dirs}")
+        print(f"在根目录找到的文件夹: {dirs}")
     if len(files2) > 0:
-        print(f"找到的文件: {files}")
+        print(f"在根目录找到的文件: {files}")
 
     if not len(dirs2) >= 2 or len(files2) >= 1:
 

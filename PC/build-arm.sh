@@ -23,17 +23,17 @@ copy_the_file_or_dirs(){        #                                       需要�
     local target_dir=$2
     target_dir=$(echo "$target_dir" | tr -d '"')                        #删除多余的引号
     local last_dir=$(basename "$original_file_or_dir")
-    if [! -d "$original_file_or_dir" |! -f "$original_file_or_dir" ]
+    if [ ! -d "$original_file_or_dir" | ! -f "$original_file_or_dir" ]
         echo "原文件或者文件夹不存在"
         exit 1
     fi
     if [ -d "$original_file_or_dir" ]
         echo "目标 $original_file_or_dir 是个文件夹"
-        if [! -d "$target_dir/$last_dir"]
+        if [ ! -d "$target_dir/$last_dir"]
             echo "目标文件夹 $target_dir/$last_dir 不存在"
             echo "正在创建目标文件夹"
             mkdir -p "$target_dir/$last_dir"
-            if [! -d "$target_dir/$last_dir" ]
+            if [ ! -d "$target_dir/$last_dir" ]
                 echo "目标文件夹 $target_dir/$last_dir 创建失败，请检查权限" 
                 exit 1
             else
@@ -54,7 +54,7 @@ copy_the_file_or_dirs(){        #                                       需要�
             cp -a "$original_file_or_dir" "$target_dir"
             echo "查看复制结果"
             ls -l $target_dir
-            if [! -f "$target_dir" ]
+            if [ ! -f "$target_dir" ]
                 echo "目标文件 $original_file_or_dir 复制失败"
                 exit 1
             else
