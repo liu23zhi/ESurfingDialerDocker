@@ -1,5 +1,5 @@
 #!/bin/sh
-
+apt update
 # 安装必要的软件包
 apt install sudo inetutils-ping python3
 
