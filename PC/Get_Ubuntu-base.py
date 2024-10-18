@@ -181,7 +181,7 @@ def check_and_move_files_two(extract_path, target_dir):
 def main():
     url = 'https://cdimage.ubuntu.com/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.1-base-amd64.tar.gz'
     file_name = 'ubuntu-base-24.04.1-base-amd64.tar.gz'
-    folder_name = './ubuntu-base-24.04.1-base-amd64'
+    folder_name = './ubuntu-base'
     backup_file_name = 'ubuntu-base-24.04.1-base-amd64.Old.tar.gz'  # 预下载文件名
 
     # 删除同名文件和文件夹
@@ -199,7 +199,10 @@ def main():
         print(f"文件夹：{folder_name} 不存在，无需删除")
 
     # 获取下载链接
-    download_url = get_linux_64_download_link_and_download(url,file_name)
+    # Ubuntu镜像是直接链接，不需要处理
+    download_url = url
+    download_file(download_url, file_name)#开始下载文件
+    ##download_url = get_linux_64_download_link_and_download(url,file_name)
     if download_url and os.path.exists(file_name):
         # 下载文件
         local_filename = file_name
@@ -213,7 +216,7 @@ def main():
     if os.path.exists(local_filename):
         extract_tar_gz(local_filename, extract_path)
         # 检查并移动文件夹内的所有内容
-        files_to_find = ['client', 'ESurfingSvr', 'tyxy']
+        ## files_to_find = ['client', 'ESurfingSvr', 'tyxy']
         #check_and_move_files(folder_name, extract_path, files_to_find)       #   移动到文件夹    解压后的文件夹    需要1查找的文件名称
         # 确保文件夹不是孤立的文件夹
         check_and_move_files_two(extract_path, folder_name)      #  解压后的文件夹    移动到文件夹
