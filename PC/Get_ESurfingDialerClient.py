@@ -137,46 +137,59 @@ def check_and_move_files_two(extract_path, target_dir):
     
     current_path = extract_path
     
-    while True:
-        dirs = [d for d in os.listdir(current_path) if os.path.isdir(os.path.join(current_path, d))]
-        files = [f for f in os.listdir(current_path) if os.path.isfile(os.path.join(current_path, f))]
-        
-        print(f"正在检查路径: {current_path}")
-        if len(dirs) > 0 :
-            print(f"找到的文件夹: {dirs}")
-        if len(files) > 0:
-            print(f"找到的文件: {files}")
-
-        if len(dirs) == 1 and len(files) == 0:
-            current_path = os.path.join(current_path, dirs[0])
-            print(f"进入下一层文件夹: {current_path}")
-        else:
-            break
-
-    if not dirs and not files:
-        print("没有找到目标文件夹或文件。")
-        sys.exit(1)
-
-    if not os.path.exists(target_dir):
-        os.makedirs(target_dir)
-        print(f"创建目标文件夹: {target_dir}")
-    
-    for item in os.listdir(current_path):
-        src_path = os.path.join(current_path, item)
-        dest_path = os.path.join(target_dir, item)
-        print(f"移动文件或文件夹：{src_path} -> {dest_path}")
-        shutil.move(src_path, dest_path)
-    
-    print(f"所有文件已成功移动到 {target_dir}")
-
-    #检查并删除原文件夹
     dirs2 = [d for d in os.listdir(current_path) if os.path.isdir(os.path.join(current_path, d))]
     files2 = [f for f in os.listdir(current_path) if os.path.isfile(os.path.join(current_path, f))]
-    if len(dirs2) > 0 | len(files2) > 0:
-        print(f"原文件夹在 {current_path} 移动后不为空，无法删除。")
+
+    if len(dirs2) > 0 :
+        print(f"找到的文件夹: {dirs}")
+    if len(files2) > 0:
+        print(f"找到的文件: {files}")
+
+    if not len(dirs2) >= 2 or len(files2) >= 1:
+
+        while True:
+            dirs = [d for d in os.listdir(current_path) if os.path.isdir(os.path.join(current_path, d))]
+            files = [f for f in os.listdir(current_path) if os.path.isfile(os.path.join(current_path, f))]
+            
+            print(f"正在检查路径: {current_path}")
+            if len(dirs) > 0 :
+                print(f"找到的文件夹: {dirs}")
+            if len(files) > 0:
+                print(f"找到的文件: {files}")
+
+            if len(dirs) == 1 and len(files) == 0:
+                current_path = os.path.join(current_path, dirs[0])
+                print(f"进入下一层文件夹: {current_path}")
+            else:
+                break
+
+        if not dirs and not files:
+            print("没有找到目标文件夹或文件。")
+            sys.exit(1)
+
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
+            print(f"创建目标文件夹: {target_dir}")
+        
+        for item in os.listdir(current_path):
+            src_path = os.path.join(current_path, item)
+            dest_path = os.path.join(target_dir, item)
+            print(f"移动文件或文件夹：{src_path} -> {dest_path}")
+            shutil.move(src_path, dest_path)
+        
+        print(f"所有文件已成功移动到 {target_dir}")
+    
+        #检查并删除原文件夹
+        dirs3 = [d for d in os.listdir(current_path) if os.path.isdir(os.path.join(current_path, d))]
+        files3 = [f for f in os.listdir(current_path) if os.path.isfile(os.path.join(current_path, f))]
+        if len(dirs3) > 0 or len(files3) > 0:
+            print(f"原文件夹在 {current_path} 移动后不为空，无法删除。")
+        else:
+            shutil.rmtree(current_path)
+            print(f"已删除原子文件夹：{current_path}")
+
     else:
-        shutil.rmtree(current_path)
-        print(f"已删除原子文件夹：{current_path}")
+        print(f"不是孤立的文件夹，不需要处理。")
 
 def main():
     url = 'http://zsteduapp.10000.gd.cn/More/linuxDownLoad/linuxDownLoad.html'

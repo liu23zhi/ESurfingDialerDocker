@@ -39,7 +39,11 @@ copy_the_file_or_dirs(){        #                                       需要�
             else
                 echo "目标文件夹 $target_dir 创建成功"
             fi
+            echo "正在复制 $original_file_or_dir 到 $target_dir"
             cp -a "$original_file_or_dir" "$target_dir/"
+            echo "查看复制结果"
+            ls -l $target_dir
+            ls -l $target_dir/$last_dir
         fi
     fi
     if [ -f "$original_file_or_dir" ]
@@ -48,6 +52,8 @@ copy_the_file_or_dirs(){        #                                       需要�
             echo "目标路径 $target_dir 是文件,直接覆盖"
             echo "正在复制 $original_file_or_dir 到 $target_dir"
             cp -a "$original_file_or_dir" "$target_dir"
+            echo "查看复制结果"
+            ls -l $target_dir
             if [! -f "$target_dir" ]
                 echo "目标文件 $original_file_or_dir 复制失败"
                 exit 1
@@ -59,6 +65,8 @@ copy_the_file_or_dirs(){        #                                       需要�
             echo "目标路径 $target_dir 是个文件夹"
             echo "正在复制 $original_file_or_dir 到 $target_dir/"
             cp -a "$original_file_or_dir" "$target_dir/"
+            echo "查看复制结果"
+            ls -l $target_dir
         fi
     fi
 }
