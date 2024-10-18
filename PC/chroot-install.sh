@@ -27,5 +27,5 @@ pip3 install psutil
 
 #配置中国电信客户端运行环境
 chmod -R 777 /app/ESurfingDialerClient/tyxy
-cd /app/ESurfingDialerClient/tyxy
+cd /app/ESurfingDialerClient/
 /app/ESurfingDialerClient/tyxy
