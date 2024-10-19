@@ -14,7 +14,10 @@ RUN sudo /app/configuration-chroot.sh
 CMD ["/app/configuration-chroot.sh"]
 COPY ./chroot-install.sh /app/
 RUN sudo chroot /app/ubuntu-base/ "/app/chroot-install.sh"
-CMD ["sudo chroot /app/ubuntu-base/ /usr/bin/env DIALER_USER=$DIALER_USER DIALER_PASSWORD=$DIALER_PASSWORD /app/run.sh"]
+CMD ["sudo", "chroot", "/app/ubuntu-base/", "sh", "-c", 
+"export DIALER_USER=$DIALER_USER && export DIALER_PASSWORD=$DIALER_PASSWORD && cd /app/ESurfingDialerClient/ && /app/ESurfingDialerClient/run.sh"]
+
+
 # RUN chmod -R 777 /app/	
 # RUN cd /app/ESurfingDialerClient/ && ./tyxy
 # RUN apt-get update && apt-get install iproute2 -y

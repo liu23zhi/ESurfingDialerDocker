@@ -26,6 +26,8 @@ apt install -y python3-netifaces python3-psutil
 
 
 #配置中国电信客户端运行环境
+echo "开始配置中国电信客户端运行环境"
 chmod -R 777 /app/ESurfingDialerClient/tyxy
 cd /app/ESurfingDialerClient/
 /app/ESurfingDialerClient/tyxy
+echo "配置中国电信客户端运行环境执行完毕"
