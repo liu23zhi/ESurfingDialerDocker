@@ -3,8 +3,10 @@ WORKDIR /app
 
 COPY ./ubuntu-base/ /app/ubuntu-base/
 COPY ./configuration-chroot.sh /app/configuration-chroot.sh
+# 安装软件包
 RUN apt update
-RUN apt install -y sudo
+RUN apt install -y sudo inotify-tools
+
 RUN sudo chmod -R 777 /app/configuration-chroot.sh
 RUN sudo /app/configuration-chroot.sh
 COPY ./sync_files_for_chroot.sh /app/
