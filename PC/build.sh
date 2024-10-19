@@ -92,9 +92,10 @@ copy_the_file_or_dirs() {
 # 使用示例   copy_the_file_or_dirs /home/zelly/ubuntu/tmp/123 /home/zelly/ubuntu/tmp/def             需要复制的文件                   目标目录
 copy_the_file_or_dirs ./ESurfingDialerClient $TARGET_DIR
 chmod -R 777 $TARGET_DIR/ESurfingDialerClient
-copy_the_file_or_dirs ./run.sh $TARGET_DIR
+ls -l $TARGET_DIR
+copy_the_file_or_dirs ./run.sh $TARGET_DIR/ESurfingDialerClient
 chmod -R 777 $TARGET_DIR/ESurfingDialerClient/run.sh
-copy_the_file_or_dirs ./run.py $TARGET_DIR
+copy_the_file_or_dirs ./run.py $TARGET_DIR/ESurfingDialerClient
 chmod -R 777 $TARGET_DIR/ESurfingDialerClient/run.py
 copy_the_file_or_dirs ./chroot-install.sh $TARGET_DIR
 chmod -R 777 $TARGET_DIR/chroot-install.sh
