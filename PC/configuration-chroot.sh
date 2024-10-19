@@ -71,28 +71,44 @@ sudo chmod -R 777 /app/ubuntu-base/tmp
 
 # 创建或清空env_vars.sh文件
 > /app/ubuntu-base/app/env_vars.sh
+
 echo "开始导出环境变量"
 echo "echo \"开始传递账号密码\"" >> /app/ubuntu-base/app/env_vars.sh
-# 显示环境变量
-echo "echo \"账号用户名（DIALER_USER）: \$DIALER_USER\"" >> /app/ubuntu-base/app/env_vars.sh
-echo "echo \"账号密码（DIALER_PASSWORD）: \$DIALER_PASSWORD\"" >> /app/ubuntu-base/app/env_vars.sh
 
 # 导出环境变量
 echo "export DIALER_USER=$DIALER_USER" >> /app/ubuntu-base/app/env_vars.sh
 echo "export DIALER_PASSWORD=$DIALER_PASSWORD" >> /app/ubuntu-base/app/env_vars.sh
 
+# 显示环境变量
+echo "echo \"账号用户名（DIALER_USER）: \$DIALER_USER\"" >> /app/ubuntu-base/app/env_vars.sh
+echo "echo \"账号密码（DIALER_PASSWORD）: \$DIALER_PASSWORD\"" >> /app/ubuntu-base/app/env_vars.sh
+
 # 运行主程序
 echo "echo \"开始运行主程序\"" >> /app/ubuntu-base/app/env_vars.sh
 echo "cd /app/ESurfingDialerClient/" >> /app/ubuntu-base/app/env_vars.sh
-echo "ls -l /app/ESurfingDialerClient/"
-echo "ls -l /app/" >> /app/ubuntu-base/app/env_vars.sh
-echo "/app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
+echo "ls -l " >> /app/ubuntu-base/app/env_vars.sh
+echo "chmod -R 777 /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
+echo "bash /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
+# 追加 run.sh 的内容到 env_vars.sh
+#echo "开始准备运行参数"
+#echo "获取到参数内容"
+#cat /app/ubuntu-base/app/ESurfingDialerClient/run.sh
+#cat /app/ubuntu-base/app/ESurfingDialerClient/run.sh >> /app/ubuntu-base/app/env_vars.sh
+#echo "写入后内容"
+#cat /app/ubuntu-base/app/env_vars.sh
+#echo "ls -l /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
+#echo "/bin/sh -c \"/app/ESurfingDialerClient/run.sh\"" >> /app/ubuntu-base/app/env_vars.sh
+
+#别循环了，艹
+echo "exit" >> /app/ubuntu-base/app/env_vars.sh
 
 sudo chmod -R 777 /app/ubuntu-base/app/env_vars.sh
 
 sudo chmod -R 777 /app/ubuntu-base/app/ESurfingDialerClient/run.sh
 
+#sleep infinity
+
 if test "$1" = "true"
 then
-    sudo chroot /app/ubuntu-base "/app/env_vars.sh"
+    sudo chroot /app/ubuntu-base "/app/env_vars.sh" && exit
 fi

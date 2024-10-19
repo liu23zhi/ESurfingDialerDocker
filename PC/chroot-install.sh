@@ -7,6 +7,9 @@ apt install -y sudo inetutils-ping python3
 echo 'tzdata tzdata/Areas select Asia' | debconf-set-selections
 echo 'tzdata tzdata/Zones/Asia select Shanghai' | debconf-set-selections
 
+# 无人值守安装 expect
+DEBIAN_FRONTEND=noninteractive apt-get install -y expect
+
 # 无人值守安装 python3
 DEBIAN_FRONTEND=noninteractive apt-get install -y python3
 
