@@ -7,6 +7,7 @@
 SCRIPT_DIR=$(dirname "$0")
 
 # 定义目标目录
+#不能改，改了就坏
 TARGET_DIR="./ubuntu-base/app"
 
 #下载Ubuntu模拟环境

@@ -11,9 +11,9 @@ COPY ./sync_files_for_chroot.sh /app/
 RUN sudo chmod -R 777 /app/sync_files_for_chroot.sh
 RUN sudo chmod -R 777 /app/configuration-chroot.sh
 RUN sudo /app/configuration-chroot.sh
-#修正莫名其妙的文件丢失问题
-COPY ./chroot-install.sh /app/ubuntu-base/app/
-RUN chmod -R 777 /app/ubuntu-base/app//chroot-install.sh
+# #修正莫名其妙的文件丢失问题
+# COPY ./chroot-install.sh /app/ubuntu-base/app/
+# RUN chmod -R 777 /app/ubuntu-base/app//chroot-install.sh
 
 
 RUN sudo chroot /app/ubuntu-base/ "/app/chroot-install.sh"

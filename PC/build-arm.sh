@@ -2,19 +2,20 @@
 #cd./Phone
 #docker build -t esurfingdockerpc .
 #!/bin/bash
+
+# 获取脚本所在目录的绝对地址
+SCRIPT_DIR=$(dirname "$0")
+
 # 定义目标目录
+#不能改，改了就坏
 TARGET_DIR="./ubuntu-base/app"
 
 #下载Ubuntu模拟环境
 python3 ./Get_Ubuntu-base.py
 
 # 如果目标目录不存在，则创建所需的文件夹
-if [ ! -d "$TARGET_DIR" ]; then
-    mkdir -p "$TARGET_DIR"
-    echo "目标目录 $TARGET_DIR 已创建。"
-else
-    echo "目标目录 $TARGET_DIR 已存在。"
-fi
+
+mkdir -p "$TARGET_DIR"
 
 #复制文件或者文件夹到目标目录
 copy_the_file_or_dirs() {
@@ -99,6 +100,7 @@ copy_the_file_or_dirs ./run.py $TARGET_DIR/ESurfingDialerClient
 chmod -R 777 $TARGET_DIR/ESurfingDialerClient/run.py
 copy_the_file_or_dirs ./chroot-install.sh $TARGET_DIR
 chmod -R 777 $TARGET_DIR/chroot-install.sh
+ls -l $TARGET_DIR
 
 #完整环境代码位于               chroot-install.sh 
 #初始化运行环境代码位于         configuration-chroot.sh

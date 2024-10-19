@@ -88,7 +88,7 @@ echo "echo \"账号密码（DIALER_PASSWORD）: \$DIALER_PASSWORD\"" >> /app/ubu
 # 运行主程序
 echo "echo \"开始运行主程序\"" >> /app/ubuntu-base/app/env_vars.sh
 echo "cd /app/ESurfingDialerClient/" >> /app/ubuntu-base/app/env_vars.sh
-echo "ls -l " >> /app/ubuntu-base/app/env_vars.sh
+# echo "ls -l " >> /app/ubuntu-base/app/env_vars.sh
 echo "chmod -R 777 /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
 echo "bash /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
 # 追加 run.sh 的内容到 env_vars.sh
@@ -105,7 +105,7 @@ echo "bash /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
 echo "exit" >> /app/ubuntu-base/app/env_vars.sh
 
 sudo chmod -R 777 /app/ubuntu-base/app/env_vars.sh
-
+# ls -l /app/ubuntu-base/app/ESurfingDialerClient/
 sudo chmod -R 777 /app/ubuntu-base/app/ESurfingDialerClient/run.sh
 
 #sleep infinity
