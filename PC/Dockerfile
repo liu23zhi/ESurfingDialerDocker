@@ -4,7 +4,7 @@ WORKDIR /app
 COPY ./ubuntu-base/ /app/ubuntu-base/
 COPY ./configuration-chroot.sh /app/configuration-chroot.sh
 RUN apt update
-RUN apt install sudo
+RUN apt install -y sudo
 RUN sudo chmod -R 777 /app/configuration-chroot.sh
 RUN sudo /app/configuration-chroot.sh
 RUN sudo chmod -R 777 /app/configuration-chroot.sh
