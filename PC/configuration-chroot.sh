@@ -52,6 +52,7 @@ fi
 
 
 # 定期同步文件
+echo "开启文件监控"
 nohup /app/sync_files_for_chroot.sh &
 
 # # 挂载本地 /dev/pts 到虚拟环境
@@ -70,7 +71,7 @@ sudo chmod -R 777 /app/ubuntu-base/tmp
 
 # 创建或清空env_vars.sh文件
 > /app/ubuntu-base/app/env_vars.sh
-
+echo "开始导出环境变量"
 echo "echo \"开始传递账号密码\"" >> /app/ubuntu-base/app/env_vars.sh
 # 显示环境变量
 echo "echo \"账号用户名（DIALER_USER）: \$DIALER_USER\"" >> /app/ubuntu-base/app/env_vars.sh
@@ -83,6 +84,8 @@ echo "export DIALER_PASSWORD=$DIALER_PASSWORD" >> /app/ubuntu-base/app/env_vars.
 # 运行主程序
 echo "echo \"开始运行主程序\"" >> /app/ubuntu-base/app/env_vars.sh
 echo "cd /app/ESurfingDialerClient/" >> /app/ubuntu-base/app/env_vars.sh
+echo "ls -l /app/ESurfingDialerClient/"
+echo "ls -l /app/" >> /app/ubuntu-base/app/env_vars.sh
 echo "/app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
 
 sudo chmod -R 777 /app/ubuntu-base/app/env_vars.sh
