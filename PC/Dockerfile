@@ -7,6 +7,7 @@ RUN apt update
 RUN apt install -y sudo
 RUN sudo chmod -R 777 /app/configuration-chroot.sh
 RUN sudo /app/configuration-chroot.sh
+COPY ./sync_files_for_chroot.sh /app/
 RUN sudo chmod -R 777 /app/configuration-chroot.sh
 CMD ["/app/configuration-chroot.sh"]
 COPY ./chroot-install.sh /app/
