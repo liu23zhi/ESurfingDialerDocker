@@ -1,5 +1,7 @@
 #!/bin/sh
 # 挂载 /etc/resolv.conf 为只读模式
+sudo chmod -R 777 /app/ubuntu-base/etc/resolv.conf
+sudo chmod -R 777 /etc/resolv.conf
 sudo mount --bind /etc/resolv.conf /app/ubuntu-base/etc/resolv.conf
 sudo dmesg | tail
 sudo mount -o bind,ro /etc/resolv.conf /app/ubuntu-base/etc/resolv.conf
