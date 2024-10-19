@@ -69,6 +69,8 @@ sudo chmod -R 777 /app/ubuntu-base/tmp
 
 #将变量写入chroot
 
+mkdir -p /app/ubuntu-base/app/
+
 # 创建或清空env_vars.sh文件
 > /app/ubuntu-base/app/env_vars.sh
 

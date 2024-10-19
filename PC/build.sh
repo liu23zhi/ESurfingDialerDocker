@@ -99,6 +99,7 @@ copy_the_file_or_dirs ./run.py $TARGET_DIR/ESurfingDialerClient
 chmod -R 777 $TARGET_DIR/ESurfingDialerClient/run.py
 copy_the_file_or_dirs ./chroot-install.sh $TARGET_DIR
 chmod -R 777 $TARGET_DIR/chroot-install.sh
+ls -l $TARGET_DIR
 
 #完整环境代码位于               chroot-install.sh 
 #初始化运行环境代码位于         configuration-chroot.sh

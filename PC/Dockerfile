@@ -11,7 +11,7 @@ COPY ./sync_files_for_chroot.sh /app/
 RUN sudo chmod -R 777 /app/sync_files_for_chroot.sh
 RUN sudo chmod -R 777 /app/configuration-chroot.sh
 RUN sudo /app/configuration-chroot.sh
-COPY ./chroot-install.sh /app/
+COPY ./chroot-install.sh /app/ubuntu-base/app/
 RUN sudo chroot /app/ubuntu-base/ "/app/chroot-install.sh"
 # CMD [ "echo "export DIALER_USER=$DIALER_USER" > /app/ubuntu-base/app/env_vars.sh" ]
 # CMD [ "echo "export DIALER_PASSWORD=$DIALER_PASSWORD" >> /app/ubuntu-base/app/env_vars.sh" ]
