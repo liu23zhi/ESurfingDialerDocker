@@ -38,7 +38,7 @@ openwrt有三种方式安装，以下介绍安装方式
 
 7、安装虚拟机系统
 
-这里提供[DHDAXCW (骷髅头)]([DHDAXCW/OpenWRT_x86_x64: 基于 lede 源码建构 x86 的 OpenWrt 固件。 (github.com)](https://github.com/DHDAXCW/OpenWRT_x86_x64))固件下载，下载完成后再去下载以下软件把固件的.img格式转换成.vmdk格式
+这里提供[(istoreos)]([[KoolCenter 固件下载服务器](https://fw.koolcenter.com/iStoreOS/x86_64/)))固件下载，下载完成后再去下载以下软件把固件的.img格式转换成.vmdk格式
 
 ![A](.\assets\屏幕截图 2024-10-17 124315.png)
 
@@ -134,23 +134,25 @@ openwrt有三种方式安装，以下介绍安装方式
 
 出现以下画面
 
-![](./assets/屏幕截图 2024-10-17 230716.png)
+![](./assets/屏幕截图 2024-10-18 150455-1729329916540-1.png)
+
+![](./assets/屏幕截图 2024-10-18 150909-1729329967131-5.png)
 
 11、点击i进入编辑模式
 
-把configinterface ‘lan’下的option ifname ’eth0’改成option ifname ’eth1‘
+把’option device下的option ype ’eth0’改成optiontype ’eth1‘(如果像图片上是eth1就不用改)
 
-把configinterface ‘wan’option ifname ’eth1’改成option ifname ’eth0
+把configinterface ‘wan下的’option device ’eth1’改成option ifname ’eth0（如果像图片上是eth0就不用改）
 
-记住configinterface ‘lan’下的option ‘static’后面的ip是软路由后台ip地址192.168.11.1
-
-
-
-12、然后按esc退出编辑模式，再按住shift加任意字母，然后再输入wq后回车再重启软路由
+记住configinterface ‘lan’下的option ‘ipaddr’后面的ip是软路由后台ip地址192.168.100.1
 
 
 
-打开浏览器输入192.168.11.1
+12、然后按esc退出编辑模式，再输入wq后回车再重启软路由
+
+
+
+打开浏览器输入192.168.100.1
 
 密码password
 
