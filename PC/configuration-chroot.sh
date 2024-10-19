@@ -91,5 +91,5 @@ sudo chmod -R 777 /app/ubuntu-base/app/ESurfingDialerClient/run.sh
 
 if test "$1" = "true"
 then
-    sudo chroot /app/ubuntu-base /app/env_vars.sh
+    sudo chroot /app/ubuntu-base "/app/env_vars.sh"
 fi
