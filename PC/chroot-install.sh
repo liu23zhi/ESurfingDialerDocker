@@ -11,12 +11,11 @@ echo 'tzdata tzdata/Zones/Asia select Shanghai' | debconf-set-selections
 DEBIAN_FRONTEND=noninteractive apt-get install -y python3
 
 # 安装其他必要的软件包
-apt install python-is-python3 iproute2 python3-pip
+apt install -y python-is-python3 iproute2 python3-pip
 
 # 安装 Python 包
 pip3 install netifaces
 pip3 install psutil
-
 
 #取消挂载
 #sudo umount /home/zelly/ubuntu/etc/resolv.conf
