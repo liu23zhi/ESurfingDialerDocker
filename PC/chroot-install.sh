@@ -14,8 +14,9 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y python3
 apt install -y python-is-python3 iproute2 python3-pip
 
 # 安装 Python 包
-pip3 install netifaces
-pip3 install psutil
+# pip3 install netifaces
+# pip3 install psutil
+apt install -y python3-netifaces python3-psutil
 
 #取消挂载
 #sudo umount /home/zelly/ubuntu/etc/resolv.conf

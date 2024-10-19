@@ -1,4 +1,4 @@
-FROM debian
+FROM ubuntu
 WORKDIR /app
 
 COPY ./ubuntu-base/ /app/ubuntu-base/
