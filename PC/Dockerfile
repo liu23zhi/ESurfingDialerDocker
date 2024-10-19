@@ -14,6 +14,8 @@ RUN sudo /app/configuration-chroot.sh
 #修正莫名其妙的文件丢失问题
 COPY ./chroot-install.sh /app/ubuntu-base/app/
 RUN chmod -R 777 /app/ubuntu-base/app//chroot-install.sh
+
+
 RUN sudo chroot /app/ubuntu-base/ "/app/chroot-install.sh"
 # CMD [ "echo "export DIALER_USER=$DIALER_USER" > /app/ubuntu-base/app/env_vars.sh" ]
 # CMD [ "echo "export DIALER_PASSWORD=$DIALER_PASSWORD" >> /app/ubuntu-base/app/env_vars.sh" ]

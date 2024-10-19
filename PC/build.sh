@@ -7,7 +7,7 @@
 SCRIPT_DIR=$(dirname "$0")
 
 # 定义目标目录
-TARGET_DIR="$SCRIPT_DIR/app/ubuntu-base/app"
+TARGET_DIR="./ubuntu-base/app"
 
 #下载Ubuntu模拟环境
 python3 ./Get_Ubuntu-base.py
