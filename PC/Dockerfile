@@ -21,7 +21,7 @@ RUN sudo chroot /app/ubuntu-base/ "/app/chroot-install.sh"
 # CMD ["/app/configuration-chroot.sh"]
 # CMD ["sudo", "chroot", "/app/ubuntu-base/", "sh", "-c", "export DIALER_USER=$DIALER_USER && export DIALER_PASSWORD=$DIALER_PASSWORD && cd /app/ESurfingDialerClient/ && exec /app/run.sh"]
 
-CMD ["/bin/sh", "-c", "/app/configuration-chroot.sh && sudo chroot /app/ubuntu-base/ sh -c 'export DIALER_USER=$DIALER_USER && export DIALER_PASSWORD=$DIALER_PASSWORD && cd /app/ESurfingDialerClient/ && exec /app/ESurfingDialerClient/run.sh'"]
+CMD ["/app/configuration-chroot.sh "]
 
 
 # RUN chmod -R 777 /app/	
