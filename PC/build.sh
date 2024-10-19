@@ -103,5 +103,5 @@ chmod -R 777 $TARGET_DIR/chroot-install.sh
 #初始化运行环境代码位于         configuration-chroot.sh
 
 
-docker buildx build --platform linux/amd64 --tag esurfingdockerpc --load .
+docker buildx build --platform linux/armd64 --tag esurfingdockerpc --load .
 #docker save esurfingdockerphone -o./ESurfingDockerPhone.tar.gz
