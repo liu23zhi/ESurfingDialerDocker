@@ -19,8 +19,8 @@
 
 #改用自动监控
 
-sudo chmod -R 777 ./sync_files_for_chroot.sh
-nohup ./sync_proc_files.sh &
+sudo chmod -R 777 /app/sync_files_for_chroot.sh
+nohup /app/sync_proc_files.sh &
 
 
 # sudo dmesg | tail
