@@ -30,7 +30,8 @@ DEFAULT_WAIT_AFTER_NO_PING = 10  # 在 ping 失败后重启前的等待时间（
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 设置可执行文件路径
-ESURFING_DIAlER_CLIENT_PATH = os.path.join(SCRIPT_DIR, "ESurfingDialerClient")
+# ESURFING_DIAlER_CLIENT_PATH = os.path.join(SCRIPT_DIR, "ESurfingDialerClient")
+ESURFING_DIAlER_CLIENT_PATH = os.path.join(SCRIPT_DIR)
 ESURFING_SVR_PATH = os.path.join(ESURFING_DIAlER_CLIENT_PATH, "ESurfingSvr")
 
 # 设置日志文件路径

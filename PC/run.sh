@@ -1,8 +1,12 @@
 #!/bin/sh
 
+# 读取环境变量
+sudo chmod -R 777 /app/env_vars.sh
+/app/env_vars.sh
+
 # 打印环境变量
-echo "DIALER_USER: ${DIALER_USER}"
-echo "DIALER_PASSWORD: ${DIALER_PASSWORD}"
+echo "账号用户名（DIALER_USER）: ${DIALER_USER}"
+echo "账号密码（DIALER_PASSWORD）: ${DIALER_PASSWORD}"
 
 # 执行 Python 脚本
 python3 /app/ESurfingDialerClient/run.py ${DIALER_USER} ${DIALER_PASSWORD}
