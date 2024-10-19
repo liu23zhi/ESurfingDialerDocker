@@ -12,23 +12,22 @@
 
 # 挂载 proc 为只读模式
 # sudo mount -t proc -o ro proc /app/ubuntu-base/proc
+# sudo dmesg | tail
 # 挂载不了
 # /proc/net/route
 # /proc/net/ipv6_route
 
-
 #改用自动监控
 
 sudo chmod -R 777 /app/sync_files_for_chroot.sh
-nohup /app/sync_proc_files.sh &
+nohup /app/sync_files_for_chroot.sh &
 
-
+# # 挂载本地 /dev/pts 到虚拟环境
+# mkdir -p /app/ubuntu-base/dev/pts
+# sudo mount -t devpts devpts /app/ubuntu-base/dev/pts
 # sudo dmesg | tail
+#没有用，不挂载了
 
-# 挂载本地 /dev/pts 到虚拟环境
-mkdir -p /app/ubuntu-base/dev/pts
-sudo mount -t devpts devpts /app/ubuntu-base/dev/pts
-sudo dmesg | tail
 
 # 补全虚拟环境
 if [ ! -d /app/ubuntu-base/tmp ]; then
