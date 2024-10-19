@@ -20,9 +20,38 @@
 #改用自动监控
 
 sudo chmod -R 777 /app/sync_files_for_chroot.sh
+
+#确保文件夹存在
+mkdir -p /app/ubuntu-base/proc/net
+
+if [ ! -f /app/ubuntu-base/proc/net/route ]; then
+    touch /app/ubuntu-base/proc/net/route
+fi
+if [ ! -f /app/ubuntu-base/proc/net/ipv6_route ]; then
+    touch /app/ubuntu-base/proc/net/ipv6_route
+fi
+if [ ! -f /app/ubuntu-base/etc/resolv.conf ]; then
+    mkdir -p /app/ubuntu-base/etc
+    touch /app/ubuntu-base/etc/resolv.conf
+fi
+
 cp /proc/net/route /app/ubuntu-base/proc/net/route
+
 cp /proc/net/ipv6_route /app/ubuntu-base/proc/net/ipv6_route
+
 cp /etc/resolv.conf /app/ubuntu-base/etc/resolv.conf
+
+#确保/dev/null权限正确
+sudo chmod -R 777 /app/ubuntu-base/dev/null
+
+if [ ! -f /app/ubuntu-base/dev/null ]; then
+    mkdir -p /app/ubuntu-base/dev/
+    touch /app/ubuntu-base/dev/null
+    chmod -R 777 /app/ubuntu-base/dev/null
+fi
+
+
+# 定期同步文件
 nohup /app/sync_files_for_chroot.sh &
 
 # # 挂载本地 /dev/pts 到虚拟环境

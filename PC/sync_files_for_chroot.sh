@@ -5,6 +5,8 @@ mkdir -p /app/ubuntu-base/proc/net
 
 # 定期检查和同步文件
 while true; do
+    #等待文件中的任何一个被修改
+    inotifywait -e modify /proc/net/route /proc/net/ipv6_route /etc/resolv.conf
     # 检查并创建目标文件（如果不存在）
     if [ ! -f /app/ubuntu-base/proc/net/route ]; then
         touch /app/ubuntu-base/proc/net/route
@@ -12,10 +14,10 @@ while true; do
     if [ ! -f /app/ubuntu-base/proc/net/ipv6_route ]; then
         touch /app/ubuntu-base/proc/net/ipv6_route
     fi
-    # if [ ! -f /app/ubuntu-base/etc/resolv.conf ]; then
-    #     mkdir -p /app/ubuntu-base/etc
-    #     touch /app/ubuntu-base/etc/resolv.conf
-    # fi
+    if [ ! -f /app/ubuntu-base/etc/resolv.conf ]; then
+        mkdir -p /app/ubuntu-base/etc
+        touch /app/ubuntu-base/etc/resolv.conf
+    fi
 
     # 同步文件内容
     cp /proc/net/route /app/ubuntu-base/proc/net/route
