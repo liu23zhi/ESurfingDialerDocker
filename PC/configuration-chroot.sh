@@ -20,6 +20,9 @@
 #改用自动监控
 
 sudo chmod -R 777 /app/sync_files_for_chroot.sh
+cp /proc/net/route /app/ubuntu-base/proc/net/route
+cp /proc/net/ipv6_route /app/ubuntu-base/proc/net/ipv6_route
+cp /etc/resolv.conf /app/ubuntu-base/etc/resolv.conf
 nohup /app/sync_files_for_chroot.sh &
 
 # # 挂载本地 /dev/pts 到虚拟环境
