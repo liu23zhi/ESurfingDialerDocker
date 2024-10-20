@@ -1,8 +1,8 @@
 # 本docker镜像适用于广东地区使用天翼校园上网的方案
 
-> [!WARNING]
->
-> 注意：正在兼容Arm架构，镜像目前十分混乱，请明辨。
+># 本项目Phone版本是指占用手机资格进行连接，不是用于手机上的。pc版本是占用电脑上网资格。pc和phone都可拉取使用，目前推荐使用phone
+
+
 
 # 这一个基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
 目前貌似只能在广东省使用。
