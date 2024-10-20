@@ -35,8 +35,8 @@
 **镜像会在编译时同时上传到Github和Docker Hub**
 
 **有能力者，可以尝试进行双线叠加。**~~*不建议使用OpenWrt进行叠加，因为我尝试了很多很多次，都没成功。*~~
-
-#                                        Docker镜像使用方法
+# 这里有[虚拟机安装openwrt](/QWE.md)的方法
+# Docker镜像使用方法
 **与Rsplwe大佬的项目相似**
 
 ### ***openwrt带有docker使用ssh可按教程无脑食用*** 
