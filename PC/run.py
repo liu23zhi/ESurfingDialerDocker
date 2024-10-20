@@ -14,14 +14,14 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 
 # 设置默认参数
 DEFAULT_PING_HOSTS = ["www.baidu.com", "connect.rom.miui.com"]  # 默认的 ping 检测主机列表
-DEFAULT_PING_COUNT = 3  # 每次 ping 操作尝试的次数
+DEFAULT_PING_COUNT = 1  # 每次 ping 操作尝试的次数
 DEFAULT_PING_TIMEOUT = 2  # 每次 ping 操作的超时时间（秒）
 DEFAULT_NETWORK_AUTH_TIMEOUT = 30  # 网络认证的超时时间（秒）
-DEFAULT_MONITOR_PING_INTERVAL = 30  # 网络 ping 检测的间隔时间（秒）
+DEFAULT_MONITOR_PING_INTERVAL = 5  # 网络 ping 检测的间隔时间（秒）
 DEFAULT_MONITOR_IP_INTERVAL = 3  # IP 地址检测的间隔时间（秒）
 DEFAULT_MAX_RESTART_COUNT = 5  # 允许的最大重启次数
 DEFAULT_MAX_NO_IP_COUNT = 3  # 允许的最大无 IP 地址次数
-DEFAULT_WAIT_AFTER_PING = 10  # ping 失败后的等待时间（秒）
+DEFAULT_WAIT_AFTER_PING = 5  # ping 失败后的等待时间（秒）
 DEFAULT_RESTART_ON_NO_IP = True  # 是否在多次无法获取 IP 地址时重启
 DEFAULT_RESTART_ON_NO_PING = True  # 是否在多次 ping 失败时重启
 DEFAULT_WAIT_AFTER_NO_PING = 10  # 在 ping 失败后重启前的等待时间（秒）
@@ -30,7 +30,8 @@ DEFAULT_WAIT_AFTER_NO_PING = 10  # 在 ping 失败后重启前的等待时间（
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 设置可执行文件路径
-ESURFING_DIAlER_CLIENT_PATH = os.path.join(SCRIPT_DIR, "ESurfingDialerClient")
+# ESURFING_DIAlER_CLIENT_PATH = os.path.join(SCRIPT_DIR, "ESurfingDialerClient")
+ESURFING_DIAlER_CLIENT_PATH = os.path.join(SCRIPT_DIR)
 ESURFING_SVR_PATH = os.path.join(ESURFING_DIAlER_CLIENT_PATH, "ESurfingSvr")
 
 # 设置日志文件路径

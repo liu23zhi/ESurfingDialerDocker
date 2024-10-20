@@ -11,7 +11,11 @@ COPY ./sync_files_for_chroot.sh /app/
 RUN sudo chmod -R 777 /app/sync_files_for_chroot.sh
 RUN sudo chmod -R 777 /app/configuration-chroot.sh
 RUN sudo /app/configuration-chroot.sh
-COPY ./chroot-install.sh /app/
+# #修正莫名其妙的文件丢失问题
+# COPY ./chroot-install.sh /app/ubuntu-base/app/
+# RUN chmod -R 777 /app/ubuntu-base/app//chroot-install.sh
+
+
 RUN sudo chroot /app/ubuntu-base/ "/app/chroot-install.sh"
 # CMD [ "echo "export DIALER_USER=$DIALER_USER" > /app/ubuntu-base/app/env_vars.sh" ]
 # CMD [ "echo "export DIALER_PASSWORD=$DIALER_PASSWORD" >> /app/ubuntu-base/app/env_vars.sh" ]
@@ -21,7 +25,7 @@ RUN sudo chroot /app/ubuntu-base/ "/app/chroot-install.sh"
 # CMD ["/app/configuration-chroot.sh"]
 # CMD ["sudo", "chroot", "/app/ubuntu-base/", "sh", "-c", "export DIALER_USER=$DIALER_USER && export DIALER_PASSWORD=$DIALER_PASSWORD && cd /app/ESurfingDialerClient/ && exec /app/run.sh"]
 
-CMD ["/bin/sh", "-c", "/app/configuration-chroot.sh && sudo chroot /app/ubuntu-base/ sh -c 'export DIALER_USER=$DIALER_USER && export DIALER_PASSWORD=$DIALER_PASSWORD && cd /app/ESurfingDialerClient/ && exec /app/ESurfingDialerClient/run.sh'"]
+CMD ["sh", "-c", "/app/configuration-chroot.sh true"]
 
 
 # RUN chmod -R 777 /app/	
