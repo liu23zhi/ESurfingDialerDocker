@@ -112,5 +112,32 @@ sudo chmod -R 777 /app/ubuntu-base/app/ESurfingDialerClient/run.sh
 
 if test "$1" = "true"
 then
-    sudo chroot /app/ubuntu-base "/app/env_vars.sh" && exit
+    # sudo chroot /app/ubuntu-base "/app/env_vars.sh" && exit
+
+# 创建 run_chroot.exp 文件并写入 expect 脚本内容
+cat > run_chroot.exp << 'EOF'
+#!/usr/bin/expect -f
+
+# 设置超时时间，以防某些操作需要更长时间
+set timeout -1
+
+# 启动 chroot 环境
+spawn sudo chroot /app/ubuntu-base "/usr/bin/sh"
+
+# 等待 shell 提示符出现
+expect "#"
+
+# 发送命令到 chroot 环境
+send "/app/env_vars.sh && exit\r"
+
+# 等待命令执行完成
+expect eof
+EOF
+
+# 设置 run_chroot.exp 文件的执行权限
+chmod +x run_chroot.exp
+
+# 执行 run_chroot.exp 文件
+./run_chroot.exp
+
 fi
