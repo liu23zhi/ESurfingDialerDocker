@@ -61,6 +61,14 @@ nohup /app/sync_files_for_chroot.sh &
 # sudo dmesg | tail
 #没有用，不挂载了
 
+# 预设时区配置
+echo 'tzdata tzdata/Areas select Asia' | debconf-set-selections
+echo 'tzdata tzdata/Zones/Asia select Shanghai' | debconf-set-selections
+
+# 无人值守安装 expect
+echo "检查 expect 安装情况"
+DEBIAN_FRONTEND=noninteractive apt-get install -y expect
+
 
 # 补全虚拟环境
 
@@ -115,7 +123,8 @@ then
     # sudo chroot /app/ubuntu-base "/app/env_vars.sh" && exit
 
 # 创建 run_chroot.exp 文件并写入 expect 脚本内容
-cat > run_chroot.exp << 'EOF'
+#touch ./run_chroot.exp
+cat > /app/run_chroot.exp << 'EOF'
 #!/usr/bin/expect -f
 
 # 设置超时时间，以防某些操作需要更长时间
@@ -135,9 +144,11 @@ expect eof
 EOF
 
 # 设置 run_chroot.exp 文件的执行权限
-chmod +x run_chroot.exp
+chmod +x /app/run_chroot.exp
+
+ls -l /app/run_chroot.exp
 
 # 执行 run_chroot.exp 文件
-./run_chroot.exp
+/usr/bin/expect /app/run_chroot.exp
 
 fi
