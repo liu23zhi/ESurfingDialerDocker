@@ -11,8 +11,9 @@ echo 'tzdata tzdata/Zones/Asia select Shanghai' | debconf-set-selections
 echo ”无人值守安装 python3“
 DEBIAN_FRONTEND=noninteractive apt-get install -y python3
 
-echo ”无人值守安装 qemu“
-DEBIAN_FRONTEND=noninteractive apt-get install -y qemu-user-static qemu-system-x86
+# echo ”无人值守安装 qemu“
+# 怎么感觉安装到chroot环境里面去了
+# DEBIAN_FRONTEND=noninteractive apt-get install -y qemu-user-static qemu-system-x86
 
 # 安装其他必要的软件包
 apt install -y python-is-python3 iproute2 python3-pip
