@@ -141,9 +141,10 @@ sudo chmod -R 777 /app/ubuntu-base/app/ESurfingDialerClient/run.sh
 
 #sleep infinity
 
-if test "$1" = "true"
-then
-    # sudo chroot /app/ubuntu-base "/app/env_vars.sh" && exit
+if test "$1" = "true"; then
+
+
+# sudo chroot /app/ubuntu-base "/app/env_vars.sh" && exit
 
 # 创建 run_chroot.exp 文件并写入 expect 脚本内容
 #touch ./run_chroot.exp
@@ -174,8 +175,9 @@ ls -l /app/run_chroot.exp
 # 执行 run_chroot.exp 文件
 /usr/bin/expect /app/run_chroot.exp
 
-elif test "$1" = "arm"
-    # sudo chroot /app/ubuntu-base "/app/env_vars.sh" && exit
+elif test "$1" = "arm"; then
+
+# sudo chroot /app/ubuntu-base "/app/env_vars.sh" && exit
 
 # 创建 run_chroot.exp 文件并写入 expect 脚本内容
 #touch ./run_chroot.exp
