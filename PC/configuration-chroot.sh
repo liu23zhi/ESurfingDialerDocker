@@ -74,6 +74,8 @@ else
   DEBIAN_FRONTEND=noninteractive apt-get install -y expect
 fi
 
+echo ”无人值守安装 qemu“
+DEBIAN_FRONTEND=noninteractive apt-get install -y qemu-user-static qemu-system-x86
 
 #创建一些必须的文件
 mkdir -p /app/ubuntu-base/usr/lib/tmpfiles.d/
