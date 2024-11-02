@@ -104,7 +104,7 @@ mkdir -p /app/ubuntu-base/app/
 # > /app/ubuntu-base/app/env_vars.sh
 
 echo "#!/bin/sh" > /app/ubuntu-base/app/env_vars.sh
-echo "开始导出环境变量" >> /app/ubuntu-base/app/env_vars.sh
+echo "echo \"开始导出环境变量\"" >> /app/ubuntu-base/app/env_vars.sh
 echo "echo \"开始传递账号密码\"" >> /app/ubuntu-base/app/env_vars.sh
 
 # 导出环境变量
@@ -128,7 +128,7 @@ echo "cd /app/ESurfingDialerClient/" >> /app/ubuntu-base/app/env_vars.sh
 # echo "ls -l " >> /app/ubuntu-base/app/env_vars.sh
 
 if test "$1" = "arm"; then
-    echo "/usr/bin/qemu-x86_64-static /usr/bin/bash -c z -R 777 /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
+    echo "/usr/bin/qemu-x86_64-static /usr/bin/bash -c chmod -R 777 /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
     echo "/usr/bin/qemu-x86_64-static /usr/bin/bash -c /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
 else
     echo "chmod -R 777 /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
