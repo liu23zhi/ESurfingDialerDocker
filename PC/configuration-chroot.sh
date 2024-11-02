@@ -194,7 +194,7 @@ cat > /app/run_chroot.exp << 'EOF'
 set timeout -1
 
 # 启动 chroot 环境
-spawn sudo chroot /app/ubuntu-base "/usr/bin/sh"
+spawn sudo chroot /app/ubuntu-base/ /usr/bin/qemu-x86_64-static /usr/bin/bash
 
 # 等待 shell 提示符出现
 expect "#"
