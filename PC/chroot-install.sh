@@ -1,7 +1,7 @@
 #!/bin/sh
 apt update
 # 安装必要的软件包
-apt install -y sudo inetutils-ping python3 curl wget
+apt install -y sudo inetutils-ping python3 curl wget dialog
 
 # 预设时区配置
 echo 'tzdata tzdata/Areas select Asia' | debconf-set-selections
@@ -10,6 +10,9 @@ echo 'tzdata tzdata/Zones/Asia select Shanghai' | debconf-set-selections
 # 无人值守安装 python3
 echo ”无人值守安装 python3“
 DEBIAN_FRONTEND=noninteractive apt-get install -y python3
+
+echo ”无人值守安装 qemu“
+DEBIAN_FRONTEND=noninteractive apt-get -y qemu-user-static qemu-system-x86
 
 # 安装其他必要的软件包
 apt install -y python-is-python3 iproute2 python3-pip

@@ -69,11 +69,19 @@ nohup /app/sync_files_for_chroot.sh &
 # echo "检查 expect 安装情况"
 # DEBIAN_FRONTEND=noninteractive apt-get install -y expect
 
+#创建一些必须的文件
+mkdir -p /app/ubuntu-base/usr/lib/tmpfiles.d/
+touch /app/ubuntu-base/usr/lib/tmpfiles.d/systemd-network.conf
+touch /app/ubuntu-base/usr/lib/tmpfiles.d/systemd.conf
+chmod -R 777 /app/ubuntu-base/usr/lib/tmpfiles.d/
 
 # 补全虚拟环境
 
 mkdir -p /app/ubuntu-base/tmp
 sudo chmod -R 777 /app/ubuntu-base/tmp
+
+# 复制qemu到chroot中备用
+sudo cp /usr/bin/qemu-x86_64-static /app/ubuntu-base/usr/bin/
 
 #将变量写入chroot
 
@@ -89,8 +97,8 @@ echo "echo \"开始传递账号密码\"" >> /app/ubuntu-base/app/env_vars.sh
 echo "export DIALER_USER=$DIALER_USER" >> /app/ubuntu-base/app/env_vars.sh
 echo "export DIALER_PASSWORD=$DIALER_PASSWORD" >> /app/ubuntu-base/app/env_vars.sh
 
-#添加更多的环境变量用于帮助python区分系统
-if test "$1" = "arm"
+# 添加更多的环境变量用于帮助python区分系统
+if test "$1" = "arm"; then
     echo "export system=arm" >> /app/ubuntu-base/app/env_vars.sh
 else
     echo "export system=amd" >> /app/ubuntu-base/app/env_vars.sh
@@ -105,7 +113,7 @@ echo "echo \"开始运行主程序\"" >> /app/ubuntu-base/app/env_vars.sh
 echo "cd /app/ESurfingDialerClient/" >> /app/ubuntu-base/app/env_vars.sh
 # echo "ls -l " >> /app/ubuntu-base/app/env_vars.sh
 
-if test "$1" = "arm"
+if test "$1" = "arm"; then
     echo "/usr/bin/qemu-x86_64-static /usr/bin/bash -c z -R 777 /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
     echo "/usr/bin/qemu-x86_64-static /usr/bin/bash -c /app/ESurfingDialerClient/run.sh" >> /app/ubuntu-base/app/env_vars.sh
 else
