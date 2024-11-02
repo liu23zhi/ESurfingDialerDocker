@@ -62,12 +62,18 @@ nohup /app/sync_files_for_chroot.sh &
 #没有用，不挂载了
 
 # # 预设时区配置
-# echo 'tzdata tzdata/Areas select Asia' | debconf-set-selections
-# echo 'tzdata tzdata/Zones/Asia select Shanghai' | debconf-set-selections
+echo 'tzdata tzdata/Areas select Asia' | debconf-set-selections
+echo 'tzdata tzdata/Zones/Asia select Shanghai' | debconf-set-selections
 
 # # 无人值守安装 expect
-# echo "检查 expect 安装情况"
-# DEBIAN_FRONTEND=noninteractive apt-get install -y expect
+echo "检查 expect 安装情况"
+if test -e "/usr/bin/expect"; then
+  echo "/usr/bin/expect 存在，跳过安装"
+else
+  echo "/usr/bin/expect 不存在，执行无人值守安装"
+  DEBIAN_FRONTEND=noninteractive apt-get install -y expect
+fi
+
 
 #创建一些必须的文件
 mkdir -p /app/ubuntu-base/usr/lib/tmpfiles.d/
