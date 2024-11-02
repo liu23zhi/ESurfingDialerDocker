@@ -1,7 +1,7 @@
 #!/bin/sh
 apt update
 # 安装必要的软件包
-apt install -y sudo inetutils-ping python3
+apt install -y sudo inetutils-ping python3 curl wget
 
 # 预设时区配置
 echo 'tzdata tzdata/Areas select Asia' | debconf-set-selections

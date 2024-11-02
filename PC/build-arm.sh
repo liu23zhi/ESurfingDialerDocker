@@ -106,5 +106,5 @@ ls -l $TARGET_DIR
 #初始化运行环境代码位于         configuration-chroot.sh
 
 
-docker buildx build --platform linux/arm64 --tag esurfingdockerpc --load .
+docker buildx build --file Dockerfile.arm --platform linux/arm64 --tag esurfingdockerpc --load .
 #docker save esurfingdockerphone -o./ESurfingDockerPhone.tar.gz
