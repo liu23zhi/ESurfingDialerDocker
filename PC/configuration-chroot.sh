@@ -101,9 +101,10 @@ sudo cp /usr/bin/qemu-x86_64-static /app/ubuntu-base/usr/bin/
 mkdir -p /app/ubuntu-base/app/
 
 # 创建或清空env_vars.sh文件
-> /app/ubuntu-base/app/env_vars.sh
+# > /app/ubuntu-base/app/env_vars.sh
 
-echo "开始导出环境变量"
+echo "#!/bin/sh" > /app/ubuntu-base/app/env_vars.sh
+echo "开始导出环境变量" >> /app/ubuntu-base/app/env_vars.sh
 echo "echo \"开始传递账号密码\"" >> /app/ubuntu-base/app/env_vars.sh
 
 # 导出环境变量
