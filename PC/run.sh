@@ -10,9 +10,14 @@ echo "账号用户名（DIALER_USER）: ${DIALER_USER}"
 echo "账号密码（DIALER_PASSWORD）: ${DIALER_PASSWORD}"
 echo "当前系统为：${system}"
 
+# echo "执行前"
+#/usr/bin/qemu-x86_64-static /usr/bin/bash -c /usr/bin/python3 /app/ESurfingDialerClient/run.py ${DIALER_USER} ${DIALER_PASSWORD} --use_qemu
+
 # 执行 Python 脚本
-if ${system}=="arm"; then
-    /usr/bin/qemu-x86_64-static /usr/bin/bash -c /usr/bin/python3 /app/ESurfingDialerClient/run.py ${DIALER_USER} ${DIALER_PASSWORD} --use_qemu
-elif ${system}=="amd"; then
+if [ "${system}" == "arm" ]; then
+    /usr/bin/qemu-x86_64-static /usr/bin/python3 /app/ESurfingDialerClient/run.py ${DIALER_USER} ${DIALER_PASSWORD} --use_qemu
+else
     python3 /app/ESurfingDialerClient/run.py ${DIALER_USER} ${DIALER_PASSWORD}
 fi
+
+echo "执行完毕"
