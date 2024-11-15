@@ -17,7 +17,7 @@
 
 **此项目利用了Github action自动拉取源码进行构建**
 
-可以尝试在使用本镜像的基础上，使用 [watchover](https://github.com/containrrr/watchtowe "watchover") 进行自动更新Docker镜像，确保该镜像为最新镜像。 
+可以尝试在使用本镜像的基础上，使用 [watchover](https://github.com/containrrr/watchtower "watchover") 进行自动更新Docker镜像，确保该镜像为最新镜像。 
 ### 目前提供两种Docker镜像；
 1. ESurfingDockerPc（目前兼容性不好）
 此镜像占用电脑设备上网资格进行网络认证
