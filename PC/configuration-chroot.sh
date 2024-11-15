@@ -153,7 +153,17 @@ sudo chmod -R 777 /app/ubuntu-base/app/env_vars.sh
 # ls -l /app/ubuntu-base/app/ESurfingDialerClient/
 sudo chmod -R 777 /app/ubuntu-base/app/ESurfingDialerClient/run.sh
 
-#sleep infinity
+
+if [ $sleep ]; then
+    echo "当前环境变量\"sleep\" 为 \"$sleep\""
+    echo "环境变量\"sleep\"为\"true\"才能进入手动模式。"
+    if [ "$sleep" == "true" ]; then
+        echo "进入手动调试模式。"
+        echo "执行指令：sleep infinity"
+        sleep infinity
+    fi
+fi
+
 
 if test "$1" = "true"; then
 
