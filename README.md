@@ -4,15 +4,16 @@
 
 ## 基于Rsplwe大佬的项目 ☞[[传送门](https://github.com/Rsplwe/ESurfingDialer)] 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
 
-># Phone版本占用手机认证通道进行网络认证
-># ~~PC版本占用电脑认证通道进行网络认证~~（PC的docker版本现在已经炸了）
+**Phone版本占用手机认证通道进行网络认证**
+**~~PC版本占用电脑认证通道进行网络认证~~**（PC版本已经炸了）
 
 ## Phone版本已经兼容amd64和arm64架构设备
+## 随缘修复PC版本（最近不大可能会）
 
 **此项目利用了Github action自动拉取源码进行构建**
 
 可以尝试在使用本镜像的基础上，使用 **[watchtower](https://github.com/containrrr/watchtower "watchover")** 进行自动更新Docker镜像，确保该镜像为最新镜像。 
-### 目前提供~~两种~~一种Docker镜像；
+### 目前提供 ~~两种~~ 一种 Docker镜像；
 
 ~~1. ESurfingDockerPc~~ **（炸了）**
 
@@ -35,7 +36,12 @@
 
 > **作者的话：因为电脑认证通道和手机认证通道并不冲突，所以理论上是可以实现一个账号双倍宽带速率的** | 🤣☞ **（理论上）**
 
-# 这里有[虚拟机安装openwrt](/QWE.md)的方法
+# 推荐搭配openwrt食用
+
+# 如果没有合适的硬件路由器，一台x86双网口主机&虚拟机也是一个不错的选择
+
+**[这里](/QWE.md)有虚拟机安装openwrt的方法**
+
 # Docker镜像使用方法
 **与Rsplwe大佬的项目相似**
 
