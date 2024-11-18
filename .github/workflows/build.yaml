@@ -71,7 +71,7 @@ jobs:
         cd ${{ github.workspace }}/ESurfingDialer
         cd ./src/main/kotlin/com/rsplwe/esurfing/network
         ls -l
-        apt install -y sed
+        sudo apt install -y sed
         sed -i '/\.connectTimeout/c\ .connectTimeout(30, TimeUnit.SECONDS)' NetClient.kt
         sed -i '/\.readTimeout/c\ .readTimeout(30, TimeUnit.SECONDS)' NetClient.kt
         sed -i '/\.writeTimeout/c\ .writeTimeout(30, TimeUnit.SECONDS)' NetClient.kt
