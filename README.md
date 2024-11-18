@@ -36,7 +36,7 @@
 
 > **作者的话：因为电脑认证通道和手机认证通道并不冲突，所以理论上是可以实现一个账号双倍宽带速率的** | 🤣☞ **（理论上）**
 
-# 推荐搭配openwrt食用
+# 推荐搭配openwrt&docker食用
 
 # 如果没有合适的硬件路由器，一台x86双网口主机&虚拟机也是一个不错的选择
 
@@ -45,12 +45,14 @@
 # Docker镜像使用方法
 **与Rsplwe大佬的项目相似**
 
-### ***openwrt带有docker使用ssh可按教程无脑食用*** 
+### 如openwrt带有docker使用ssh可按教程无脑食用
 
 ### 1.使用ESurfingDockerPhoneDocker镜像（推荐使用）
-#### 任意使用以下3种之一方法拉取镜像
+#### 提供三种方法拉取镜像
 
 ##### A:从Github拉取镜像
+
+ssh连接到你的openwrt主机，输入以下代码👇 **（不必带上"<>"）**
 
 ```shell
 docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码> --name dialer-client --network host --restart=always ghcr.io/liu23zhi/esurfingdockerphonedocker:latest
@@ -58,7 +60,7 @@ docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码>
 <details>
 <summary>使用示例</summary>
 
-**假设账号为123，密码为456。则应该执行(一定要把＜＞去掉)**
+**假设账号为123，密码为456，则应该执行👇**
 
 ```shell
 docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client --network host --restart=always ghcr.io/liu23zhi/esurfingdockerphonedocker:latest
@@ -66,7 +68,9 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 </details>
 
-##### B:**从Docker Hub**拉取镜像
+##### B:从<ins>Docker Hub</ins>拉取镜像
+
+ssh连接到你的openwrt主机，输入以下代码👇 **（不必带上"<>"）**
 
 ```shell
 docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码> --name dialer-client --network host --restart=always xenlia/esurfingdockerphonedocker:latest
@@ -74,7 +78,7 @@ docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码>
 <details>
 <summary>使用示例</summary>
 
-**假设账号为123，密码为456。则应该执行**
+**假设账号为123，密码为456，则应该执行👇**
 
 ```shell
 docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client --network host --restart=always xenlia/esurfingdockerphonedocker:latest
@@ -82,9 +86,9 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 </details>
 
-##### C:（1）从Github Release下载，后本地导入（记住导入文件的位置）
+##### C:本地导入（记住导入文件的位置）
 
-[前往Release](https://github.com/liu23zhi/ESurfingDialerDocker/releases)下载ESurfingDockerPhone.tar.gz。
+前往[Release](releases/latest)下载ESurfingDockerPhone.tar.gz。
 
 **（2）执行列代码导入镜像文件**
 
