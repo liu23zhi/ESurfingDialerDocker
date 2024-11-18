@@ -1,42 +1,40 @@
 # 本docker镜像适用于广东地区使用天翼校园上网的方案
 
-# 经过验证 电子科技大学中山学院 可用
+# 经过验证 <ins>"电子科技大学中山学院"</ins> 可用
 
-># 本项目Phone版本是指占用手机资格进行连接，不是用于手机上的。pc版本是占用电脑上网资格。pc和phone都可拉取使用，目前推荐使用phone
+## 基于Rsplwe大佬的项目 ☞[[传送门](https://github.com/Rsplwe/ESurfingDialer)] 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
 
+># Phone版本占用手机认证通道进行网络认证
+># ~~PC版本占用电脑认证通道进行网络认证~~（PC的docker版本现在已经炸了）
 
-
-# 这一个基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
-目前貌似只能在广东省使用。
-
-## **目前PC版本只支持amd64架构，目前正在努力兼容Arm64架构中**。
-
-## Phone版本已经兼容amd64和arm64了
-
-# PC版本存在严重BUG，正在修复，请勿使用
+## Phone版本已经兼容amd64和arm64架构设备
 
 **此项目利用了Github action自动拉取源码进行构建**
 
-可以尝试在使用本镜像的基础上，使用 [watchover](https://github.com/containrrr/watchtower "watchover") 进行自动更新Docker镜像，确保该镜像为最新镜像。 
-### 目前提供两种Docker镜像；
-1. ESurfingDockerPc（目前兼容性不好）
-此镜像占用电脑设备上网资格进行网络认证
+可以尝试在使用本镜像的基础上，使用 **[watchtower](https://github.com/containrrr/watchtower "watchover")** 进行自动更新Docker镜像，确保该镜像为最新镜像。 
+### 目前提供~~两种~~一种Docker镜像；
 
-2. ESurfingDockerPhoneDocker（目前推荐使用）
-此镜像占用手机设备上网资格进行网络认证
+~~1. ESurfingDockerPc~~ **（炸了）**
+
+此镜像占用电脑认证通道进行网络认证
+
+2. ESurfingDockerPhone **（强烈推荐！！）**
+
+此镜像占用手机上网资格进行网络认证
 
 ### 此外还提供免docker直接运行版本（支持Linux和windows）
-1. ESurfingDialer.zip（[前往Release下载](https://github.com/liu23zhi/ESurfingDialerDocker/releases)）
-基于Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer 编译而成。
+
+1. ESurfingDialer.zip **☞[[传送门](releases/latest)]**
 **此方案占用手机设备上网资格**进行网络认证。
 
-~~2. ESurfingOffice.zip（[前往Release下载](/releases/latest/ "Release")）
+~~2. ESurfingOffice.zip **☞[[传送门](releases/latest)]**
 基于中国电信官方客户端 编译而成。
-此方案占用电脑设备上网资格进行网络认证。~~（我还没写好呢！）
+此方案占用电脑设备上网资格进行网络认证。~~ **（都说炸了咯）**
 
 **镜像会在编译时同时上传到Github和Docker Hub**
 
-**有能力者，可以尝试进行双线叠加。**~~*不建议使用OpenWrt进行叠加，因为我尝试了很多很多次，都没成功。*~~
+**小声巴巴：因为电脑认证通道和手机认证通道并不冲突，所以理论上是可以实现一个账号双倍宽带速率的** | 🤣☞ **（理论上）**
+
 # 这里有[虚拟机安装openwrt](/QWE.md)的方法
 # Docker镜像使用方法
 **与Rsplwe大佬的项目相似**
@@ -46,7 +44,7 @@
 ### 1.使用ESurfingDockerPhoneDocker镜像（推荐使用）
 #### 任意使用以下3种之一方法拉取镜像
 
-##### A:从Githu拉取镜像
+##### A:从Github拉取镜像
 
 ```shell
 docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码> --name dialer-client --network host --restart=always ghcr.io/liu23zhi/esurfingdockerphonedocker:latest
