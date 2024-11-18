@@ -1,6 +1,6 @@
 # 本docker镜像适用于广东地区使用天翼校园上网的方案
 
-# 经过验证 <ins>"电子科技大学中山学院"</ins> 可用
+# 经过验证 <ins>"电子科技大学中山学院"</ins> 可用！🙌
 
 ## 基于Rsplwe大佬的项目 ☞[[传送门](https://github.com/Rsplwe/ESurfingDialer)] 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
 
