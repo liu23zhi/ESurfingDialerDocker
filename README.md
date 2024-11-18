@@ -29,11 +29,11 @@
 ### 此外还提供免docker直接运行版本（支持Linux和windows）
 
 1. ESurfingDialer.zip **☞[[传送门](github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
-**此方案占用手机设备上网资格**进行网络认证。
+**此方案占用手机认证通道进行网络认证**
 
 ~~2. ESurfingOffice.zip **☞[[传送门](github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
-基于中国电信官方客户端 编译而成。
-此方案占用电脑设备上网资格进行网络认证。~~ **（都说炸了咯）**
+基于中国电信官方客户端 编译而成
+**此方案占用电脑认证通道进行网络认证**~~ **（都说炸了咯）**
 
 **镜像会在编译时同时上传到Github和Docker Hub**
 
