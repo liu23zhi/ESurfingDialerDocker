@@ -4,7 +4,7 @@
 
 **经过验证 <ins>"电子科技大学中山学院"</ins> 可用！（掌声祝贺👏）**
 
-## 基于Rsplwe大佬的项目 ☞[[传送门](https://github.com/Rsplwe/ESurfingDialer)] 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
+## 本项目基于Rsplwe大佬的项目 ☞[[传送门](https://github.com/Rsplwe/ESurfingDialer)] 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建
 
 **Phone版本占用手机认证通道进行网络认证**
 
