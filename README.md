@@ -1,6 +1,8 @@
-# 本docker镜像适用于广东地区使用天翼校园上网的方案
+# 本docker镜像适用于广东地区使用天翼校园网的自动认证方案
 
-# 经过验证 <ins>"电子科技大学中山学院"</ins> 可用！🙌
+**本项目并不提供任何反检测手段，如果需要，请移步至[此视频](https://b23.tv/XFgF5hd)**
+
+**经过验证 <ins>"电子科技大学中山学院"</ins> 可用！（掌声祝贺👏）**
 
 ## 基于Rsplwe大佬的项目 ☞[[传送门](https://github.com/Rsplwe/ESurfingDialer)] 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
 
@@ -11,7 +13,7 @@
 ## Phone版本已经兼容amd64和arm64架构设备
 ## 随缘修复PC版本（最近不大可能会）
 
-**此项目利用了Github action自动拉取源码进行构建**
+## 此项目利用了Github action自动拉取源码进行构建
 
 可以尝试在使用本镜像的基础上，使用 **[watchtower](https://github.com/containrrr/watchtower "watchover")** 进行自动更新Docker镜像，确保该镜像为最新镜像。 
 ### 目前提供 ~~两种~~ 一种 Docker镜像；
@@ -42,29 +44,30 @@
 # 如果没有合适的硬件路由器，一台x86双网口主机&虚拟机也是一个不错的选择
 **要是想直接用x86主机装openwrt我也不拦着你**
 
-**好奢侈啊（小声）**
+>好奢侈啊（小声）
 
 **[这里](/QWE.md)有虚拟机安装openwrt的方法**
 
 # Docker镜像使用方法
 **与Rsplwe大佬的项目相似**
 
-### 如openwrt带有docker使用ssh可按教程无脑食用
+>[!TIP]
+>如openwrt带有docker使用ssh可按教程无脑食用
 
 ### 1. 使用ESurfingDockerPhoneDocker镜像（强烈推荐！！！）
 #### 提供三种方法拉取镜像（openwrt主机有网环境&无网环境）
 
 ##### A:从<ins>Github</ins>拉取镜像（适用于openwrt主机有网环境）
 
-ssh连接到openwrt主机，输入以下代码👇 **（不必带上"<>"）**
+>[!NOTE]
+>ssh连接到openwrt主机，输入以下代码👇 **（不必带上"<>"）**
 
 ```shell
 docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码> --name dialer-client --network host --restart=always ghcr.io/liu23zhi/esurfingdockerphonedocker:latest
 ```
 
-<summary>使用示例</summary>
-
-**假设账号为123，密码为456，则应该执行👇**
+>[!TIP]
+>假设账号为123，密码为456，则应该执行👇
 
 ```shell
 docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client --network host --restart=always ghcr.io/liu23zhi/esurfingdockerphonedocker:latest
@@ -72,15 +75,15 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 ##### B:从<ins>Docker Hub</ins>拉取镜像（适用于openwrt主机有网环境）
 
-ssh连接到openwrt主机，输入以下代码👇 **（不必带上"<>"）**
+>[!NOTE]
+>ssh连接到openwrt主机，输入以下代码👇 **（不必带上"<>"）**
 
 ```shell
 docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码> --name dialer-client --network host --restart=always xenlia/esurfingdockerphonedocker:latest
 ```
 
-<summary>使用示例</summary>
-
-**假设账号为123，密码为456，则应该执行👇**
+>[!TIP]
+>假设账号为123，密码为456，则应该执行👇
 
 ```shell
 docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client --network host --restart=always xenlia/esurfingdockerphonedocker:latest
@@ -88,20 +91,24 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 ##### C:从<ins>本地</ins>导入镜像（适用于openwrt主机无网环境）
 
-**（1）前往[Release](github.com/liu23zhi/ESurfingDialerDocker/releases/latest)下载ESurfingDockerPhone.tar.gz**
+**（1）前往[Releases](github.com/liu23zhi/ESurfingDialerDocker/releases/latest)处下载最新镜像文件<ins>ESurfingDockerPhone.tar.gz</ins>**
 
 **（2）把镜像文件以任何方式传到openwrt主机比如/tmp什么的里面（找得着就行）**
 
-**（3）执行下列代码导入镜像文件👇**
+**（3）导入镜像文件**
+
+>[!NOTE]
+>ssh连接到openwrt主机，输入以下代码👇
 
 ```shell
 docker load -i ESurfingDockerPhone.tar.gz
 ```
 
->[!WARNING]
+>[!NOTE]
 >**docker load -i 后面要填写你放置ESurfingDockerPhone.tar.gz文件的位置**
 
-以下是镜像文件存在/tmp里时的导入示例👇
+>[!TIP]
+>以下是镜像文件存在/tmp里时的导入示例👇
 
 ```shell
 docker load -i /tmp/ESurfingDockerPhone.tar.gz
@@ -109,15 +116,15 @@ docker load -i /tmp/ESurfingDockerPhone.tar.gz
 
 **（4）创建并启动容器**
 
-ssh连接到openwrt主机，输入以下代码👇 **（不必带上"<>"）**
+>[!NOTE]
+>ssh连接到openwrt主机，输入以下代码👇 **（不必带上"<>"）**
 
 ```shell
 docker run -itd -e DIALER_USER=<用户名/手机号> -e DIALER_PASSWORD=<密码> --name dialer-client --network host --restart=always xenlia/esurfingdockerphonedocker:latest
 ```
 
-<summary>使用示例</summary>
-
-**假设账号为123，密码为456，则应该执行👇**
+>[!TIP]
+>假设账号为123，密码为456，则应该执行👇
 
 ```shell
 docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client --network host --restart=always xenlia/esurfingdockerphonedocker:latest
