@@ -83,8 +83,8 @@ jobs:
         cd ${{ github.workspace }}/ESurfingDialer
         cd ./src/main/kotlin/com/rsplwe/esurfing/
         ls -l
-        sed -i '/\Xiaomi 6/c\Xiaomi 15 pro' Constants.kt
-        sed -i '/\DEBUG = false/c\DEBUG = true' Constants.kt
+        sed -i '/\const val HOST_NAME/c\    const val HOST_NAME = "Xiaomi 15 Pro"' Constants.kt
+        sed -i '/\const val DEBUG/c\    const val DEBUG = true' Constants.kt
         echo ------line-------
         cat Constants.kt
 
