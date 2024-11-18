@@ -66,7 +66,7 @@ jobs:
       run: |
         java -version
 
-    - name: 进入 ESurfingDialer/.../network 目录并修改 okhttpclient timeout 时间
+    - name: 进入 ESurfingDialer/.../network 目录并修改奇奇怪怪的内容
       run: |
         cd ${{ github.workspace }}/ESurfingDialer
         cd ./src/main/kotlin/com/rsplwe/esurfing/network
@@ -77,6 +77,16 @@ jobs:
         sed -i '/\.writeTimeout/c\        .writeTimeout(60, TimeUnit.SECONDS)' NetClient.kt
         echo ------line-------
         cat NetClient.kt
+
+    - name: 进入 ESurfingDialer/.../esurfing 目录并修改奇奇怪怪的内容
+      run: |
+        cd ${{ github.workspace }}/ESurfingDialer
+        cd ./src/main/kotlin/com/rsplwe/esurfing/
+        ls -l
+        sed -i '/\Xiaomi 6/c\Xiaomi 15 pro' Constants.kt
+        sed -i '/\DEBUG = false/c\DEBUG = true' Constants.kt
+        echo ------line-------
+        cat Constants.kt
 
     - name: 进入 ESurfingDialer 目录并执行构建
       run: |
