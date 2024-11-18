@@ -31,7 +31,7 @@
 1. ESurfingDialer.zip **☞[[传送门](https://github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
 **此方案占用手机认证通道进行网络认证**
 
-~~2. ESurfingOffice.zip **☞[[传送门](github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
+~~2. ESurfingOffice.zip **☞[[传送门](https://github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
 基于中国电信官方客户端 编译而成
 **此方案占用电脑认证通道进行网络认证**~~ **（都说炸了咯）**
 
@@ -91,7 +91,7 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 ##### C:从<ins>本地</ins>导入镜像（适用于openwrt主机无网环境）
 
-**（1）前往[Releases](github.com/liu23zhi/ESurfingDialerDocker/releases/latest)处下载最新镜像文件<ins>ESurfingDockerPhone.tar.gz</ins>**
+**（1）前往[Releases](https://github.com/liu23zhi/ESurfingDialerDocker/releases/latest)处下载最新镜像文件<ins>ESurfingDockerPhone.tar.gz</ins>**
 
 **（2）把镜像文件以任何方式传到openwrt主机比如/tmp什么的里面（找得着就行）**
 
@@ -193,16 +193,21 @@ docker run -itd -e DIALER_USER=123 -e DIALER_PASSWORD=456 --name dialer-client -
 
 #### [点击此查看pc运行错误代码详解](/PC.md)-->
 
-## 以上两种镜像选择任意一个操作完成后
+## 以上操作完成后
 
-#### **输入**
+**ssh连接到openwrt主机，输入以下代码👇**
 
 ```shell
 docker logs -f dialer-client
 ```
-如果显示出以下信息代表成功了
+
+>[!NOTE]
+>如果日志输出如下，就代表网络已经成功认证
+>将宿舍其他的电脑插入openwrt主机的物理LAN口就可以愉快地上网了
+
 ```shell
 INFO [com.rsplwe.esurfing.Client] (Client:82) - The login has been authorized.
 ```
 
-## 所有弄完后把网线插入软路由的LAN口就可以上网
+>[!WARNING]
+>如果日志提示"keep.url"和"term.url"为空，则需要进行重新连接WAN口或重启docker容器等操作
