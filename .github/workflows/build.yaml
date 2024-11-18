@@ -66,6 +66,18 @@ jobs:
       run: |
         java -version
 
+    - name: 进入 ESurfingDialer/.../network 目录并修改 okhttpclient timeout 时间
+      run: |
+        cd ${{ github.workspace }}/ESurfingDialer
+        cd ./src/main/kotlin/com/rsplwe/esurfing/network
+        ls -l
+        apt install -y sed
+        sed -i '/\.connectTimeout/c\ .connectTimeout(30, TimeUnit.SECONDS)' NetClient.kt
+        sed -i '/\.readTimeout/c\ .readTimeout(30, TimeUnit.SECONDS)' NetClient.kt
+        sed -i '/\.writeTimeout/c\ .writeTimeout(30, TimeUnit.SECONDS)' NetClient.kt
+        echo ------line-------
+        cat NetClient.kt
+
     - name: 进入 ESurfingDialer 目录并执行构建
       run: |
         cd ${{ github.workspace }}/ESurfingDialer
