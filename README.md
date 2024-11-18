@@ -28,7 +28,7 @@
 
 ### 此外还提供免docker直接运行版本（支持Linux和windows）
 
-1. ESurfingDialer.zip **☞[[传送门](github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
+1. ESurfingDialer.zip **☞[[传送门](https://github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
 **此方案占用手机认证通道进行网络认证**
 
 ~~2. ESurfingOffice.zip **☞[[传送门](github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
