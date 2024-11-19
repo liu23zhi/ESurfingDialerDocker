@@ -72,9 +72,9 @@ jobs:
         cd ./src/main/kotlin/com/rsplwe/esurfing/network
         ls -l
         sudo apt install -y sed
-        sed -i '/\.connectTimeout/c\        .connectTimeout(60, TimeUnit.SECONDS)' NetClient.kt
-        sed -i '/\.readTimeout/c\        .readTimeout(60, TimeUnit.SECONDS)' NetClient.kt
-        sed -i '/\.writeTimeout/c\        .writeTimeout(60, TimeUnit.SECONDS)' NetClient.kt
+        sed -i '/\.connectTimeout/c\        .connectTimeout(60000, TimeUnit.SECONDS)' NetClient.kt
+        sed -i '/\.readTimeout/c\        .readTimeout(60000, TimeUnit.SECONDS)' NetClient.kt
+        sed -i '/\.writeTimeout/c\        .writeTimeout(60000, TimeUnit.SECONDS)' NetClient.kt
         echo ------line-------
         cat NetClient.kt
 
@@ -350,7 +350,7 @@ jobs:
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
     - name: 生成 ESurfingDockerPhone 相关更新日志
-      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+      run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/blob/main/%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.md) \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 生成 ESurfingDialerPhone 的 Amd64 Docker 镜像证明
       uses: actions/attest-build-provenance@v1
