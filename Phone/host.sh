@@ -21,15 +21,15 @@ while true; do
     # check IP1
     if check_ip $IP1; then
 	{
-	    sed -i "/^$IP1 $DOMAIN/d" /etc/hosts
-	    sed -i "/^$IP2 $DOMAIN/d" /etc/hosts
+	    echo "$(sed '/^$IP1 $DOMAIN/d' /etc/hosts)" > /etc/hosts.tmp && mv /etc/hosts.tmp /etc/hosts
+	    echo "$(sed '/^$IP2 $DOMAIN/d' /etc/hosts)" > /etc/hosts.tmp && mv /etc/hosts.tmp /etc/hosts
             PRIMARY_IP=$IP1
 	    update_hosts "$PRIMARY_IP"
 	}
     else
 	{
-	    sed -i "/^$IP1 $DOMAIN/d" /etc/hosts
-            sed -i "/^$IP2 $DOMAIN/d" /etc/hosts
+	    echo "$(sed '/^$IP1 $DOMAIN/d' /etc/hosts)" > /etc/hosts.tmp && mv /etc/hosts.tmp /etc/hosts
+            echo "$(sed '/^$IP2 $DOMAIN/d' /etc/hosts)" > /etc/hosts.tmp && mv /etc/hosts.tmp /etc/hosts
 	    PRIMARY_IP=$IP2
 	    update_hosts "$PRIMARY_IP"
 	}
