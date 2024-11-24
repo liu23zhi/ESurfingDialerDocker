@@ -66,23 +66,12 @@ jobs:
       run: |
         java -version
 
-    - name: 进入 ESurfingDialer/.../network 目录并修改奇奇怪怪的内容
-      run: |
-        cd ${{ github.workspace }}/ESurfingDialer
-        cd ./src/main/kotlin/com/rsplwe/esurfing/network
-        ls -l
-        sudo apt install -y sed
-        sed -i '/\.connectTimeout/c\        .connectTimeout(60000, TimeUnit.SECONDS)' NetClient.kt
-        sed -i '/\.readTimeout/c\        .readTimeout(60000, TimeUnit.SECONDS)' NetClient.kt
-        sed -i '/\.writeTimeout/c\        .writeTimeout(60000, TimeUnit.SECONDS)' NetClient.kt
-        echo ------line-------
-        cat NetClient.kt
-
     - name: 进入 ESurfingDialer/.../esurfing 目录并修改奇奇怪怪的内容
       run: |
         cd ${{ github.workspace }}/ESurfingDialer
         cd ./src/main/kotlin/com/rsplwe/esurfing/
         ls -l
+        sudo apt install -y sed
         sed -i '/\HOST_NAME/c\    const val HOST_NAME = "Xiaomi 15 Pro"' Constants.kt
         sed -i '/\DEBUG/c\    const val DEBUG = true' Constants.kt
         echo ------line-------
