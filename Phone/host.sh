@@ -13,7 +13,7 @@ check_ip() {
 
 # update hosts function
 update_hosts() {
-    echo "$1 $DOMAIN" | tee -a /etc/hosts > /dev/null
+    echo "$1 $DOMAIN" | tee -a /etc/hosts.tmp > /dev/null
 }
 
 # infinity check
@@ -21,15 +21,15 @@ while true; do
     # check IP1
     if check_ip $IP1; then
 	{
-	    echo "$(sed '/^$IP1 $DOMAIN/d' /etc/hosts)" > /etc/hosts.tmp && mv /etc/hosts.tmp /etc/hosts
-	    echo "$(sed '/^$IP2 $DOMAIN/d' /etc/hosts)" > /etc/hosts.tmp && mv /etc/hosts.tmp /etc/hosts
+	    echo "$(sed '/^$IP1 $DOMAIN/d' /etc/hosts)" > /etc/hosts
+	    echo "$(sed '/^$IP2 $DOMAIN/d' /etc/hosts)" > /etc/hosts
             PRIMARY_IP=$IP1
 	    update_hosts "$PRIMARY_IP"
 	}
     else
 	{
-	    echo "$(sed '/^$IP1 $DOMAIN/d' /etc/hosts)" > /etc/hosts.tmp && mv /etc/hosts.tmp /etc/hosts
-            echo "$(sed '/^$IP2 $DOMAIN/d' /etc/hosts)" > /etc/hosts.tmp && mv /etc/hosts.tmp /etc/hosts
+	    echo "$(sed '/^$IP1 $DOMAIN/d' /etc/hosts)" > /etc/hosts
+            echo "$(sed '/^$IP2 $DOMAIN/d' /etc/hosts)" > /etc/hosts
 	    PRIMARY_IP=$IP2
 	    update_hosts "$PRIMARY_IP"
 	}
