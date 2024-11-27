@@ -45,7 +45,7 @@
 
 1. PC通道版本（至少现在不整）
 
-# 已解决
+# 已解决的问题
 
 1.openwrt搭配docker运行认证程序报No route to host或Network unreachable错误
 >详细见[[解决方法](/No_route_to_host报错解决方法.md)]
