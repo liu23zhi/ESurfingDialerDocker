@@ -1,4 +1,4 @@
-# 本文用于解决openwrt搭配docker运行认证程序时报No route to host错误导致断网的问题
+# 解决openwrt搭配docker运行认证程序时报No route to host错误导致断网的问题
 
 ## No route to host报错原因（如不想看可以跳过此节）
 
