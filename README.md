@@ -43,7 +43,11 @@
 
 # 暂未解决的问题
 
-1. 由于未知原因导致的no route to host报错（仍在修改）
-2. PC通道版本（至少现在不整）
+1. PC通道版本（至少现在不整）
+
+# 已解决
+
+1.openwrt搭配docker运行认证程序报No route to host或Network unreachable错误
+>详细见[[解决方法](/No_route_to_host报错解决方法.md)]
 
 # [[更新日志](/更新日志.md)]（24/11/25新增）
