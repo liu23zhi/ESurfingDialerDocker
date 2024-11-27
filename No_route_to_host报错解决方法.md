@@ -21,12 +21,12 @@
 
 使用ssh连接到openwrt主机并输入以下指令查看docker日志👇
 
->[!WARNING]
->至少运行一次docker并且连接到openwrt主机的设备都正常联网之后再输入该指令
 
 ```shell
 docker logs dialer-client 2>&1 | grep Url
 ```
+>[!WARNING]
+>至少运行一次docker并且连接到openwrt主机的设备都正常联网之后再输入该指令
 
 >[!TIP]
 >"dialer-client"是存有认证程序的docker容器的默认名称，按实际情况填写
