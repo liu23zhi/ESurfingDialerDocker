@@ -32,7 +32,7 @@
 **此方案占用手机认证通道进行网络认证**
 
 ~~2. ESurfingOffice.zip **☞[[传送门](https://github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
-基于中国电信官方客户端 编译而成
+基于中国电信官方客户端 编译而成   作者还没写
 **此方案占用电脑认证通道进行网络认证**~~ **（都说炸了咯）**
 
 **镜像会在编译时同时上传到Github和Docker Hub**
