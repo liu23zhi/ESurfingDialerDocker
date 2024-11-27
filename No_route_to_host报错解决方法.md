@@ -67,7 +67,7 @@ docker logs dialer-client 2>&1 | grep Url
 3. 在 **"外部端口"** 处填入刚刚获取到的端口（要放行多少个端口就填多少次）并添加规则
 
 >[!TIP]
->如下图所示即为添加成功
+>如下图所示即为添加成功（别忘了保存&应用）
 
 ![image](/images/Port3.png)
 
