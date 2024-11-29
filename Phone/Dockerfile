@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk:21-jdk-crac-latest
+FROM oracle/jdk:21-ol9
 CMD ["exit"]
 WORKDIR /app
 COPY host.sh /app
