@@ -81,7 +81,7 @@ jobs:
       run: |
         cd ${{ github.workspace }}/ESurfingDialer
         ls -l
-        sed -i '/\kotlin("jvm")/c\    kotlin("jvm") version "2.1.0"' build.gradle.kts
+        sed -i '/\kotlin("jvm")/c\    kotlin("jvm") version "2.0.21"' build.gradle.kts
         echo ------line-------
         cat build.gradle.kts
 
