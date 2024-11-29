@@ -76,6 +76,14 @@ jobs:
         sed -i '/\DEBUG/c\    const val DEBUG = true' Constants.kt
         echo ------line-------
         cat Constants.kt
+        
+    - name: 进入 ESurfingDialer 根目录并修改奇奇怪怪的内容
+      run: |
+        cd ${{ github.workspace }}/ESurfingDialer
+        ls -l
+        sed -i '/\kotlin("jvm")/c\    kotlin("jvm") version "2.1.0"' build.gradle.kts
+        echo ------line-------
+        cat build.gradle.kts
 
     - name: 进入 ESurfingDialer 目录并执行构建
       run: |
