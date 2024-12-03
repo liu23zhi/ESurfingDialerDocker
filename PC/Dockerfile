@@ -1,5 +1,5 @@
-FROM ubuntu
-#FROM python:latest
+#FROM ubuntu
+FROM python:latest
 WORKDIR /app
 
 # COPY ./ubuntu-base/ /app/ubuntu-base/
@@ -31,12 +31,12 @@ WORKDIR /app
 
 # X86 架构可以直接运行
 RUN apt update && apt install -y python3 python3-dev python3-pip sudo python3-full
-# 安装python3-venv包，如果还没安装的话
+# 安装python3-venv包
 RUN sudo apt install python3-venv
 # 创建一个新的虚拟环境
-RUN python3 -m venv myenv
+#RUN python3 -m venv myenv
 # 激活虚拟环境
-RUN source myenv/bin/activatr
+#RUN source myenv/bin/activatr
 
 COPY ./ESurfingDialerClient/ /app/ESurfingDialerClient/
 # 奇奇怪怪的文件夹复制BUG
