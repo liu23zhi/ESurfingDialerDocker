@@ -1,4 +1,4 @@
-FROM oracle/jdk:21-ol9
+FROM oracle/jdk:23-ol9
 CMD ["exit"]
 WORKDIR /app
 COPY run.sh /app

@@ -56,10 +56,10 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}/ESurfingDialer
 
-    - name: 下载 JDK 20 并设置环境变量
+    - name: 下载 JDK 23 并设置环境变量
       uses: actions/setup-java@v4
       with:
-        java-version: '20'
+        java-version: '23'
         distribution: 'zulu'
 
     - name: 查看 Java 版本
@@ -76,14 +76,6 @@ jobs:
         sed -i '/\DEBUG/c\    const val DEBUG = true' Constants.kt
         echo ------line-------
         cat Constants.kt
-        
-    - name: 进入 ESurfingDialer 根目录并修改奇奇怪怪的内容
-      run: |
-        cd ${{ github.workspace }}/ESurfingDialer
-        ls -l
-        sed -i '/\kotlin("jvm")/c\    kotlin("jvm") version "2.0.21"' build.gradle.kts
-        echo ------line-------
-        cat build.gradle.kts
 
     - name: 进入 ESurfingDialer 目录并执行构建
       run: |
@@ -356,9 +348,9 @@ jobs:
 
     - name: 下载 Java21
       run: |
-        chmod +x ${{ github.workspace }}/Phone/Download_jdk21.sh
+        chmod +x ${{ github.workspace }}/Phone/Download_jdk.sh
         cd ${{ github.workspace }}/Phone/ 
-        ./Download_jdk21.sh
+        ./Download_jdk.sh
 
     - name: 查看 Java21 下载结果确保其在期待预期文件夹
       run: |
@@ -954,9 +946,9 @@ jobs:
 
     - name: 下载 Java21
       run: |
-        chmod +x ${{ github.workspace }}/Phone/Download_jdk21-arm.sh
+        chmod +x ${{ github.workspace }}/Phone/Download_jdk-arm.sh
         cd ${{ github.workspace }}/Phone/ 
-        ./Download_jdk21-arm.sh
+        ./Download_jdk-arm.sh
 
     - name: 查看 Java21 下载结果确保其在期待预期文件夹
       run: |
