@@ -8,7 +8,10 @@
 # 打印环境变量
 echo "账号用户名（DIALER_USER）: ${DIALER_USER}"
 echo "账号密码（DIALER_PASSWORD）: ${DIALER_PASSWORD}"
+
+if [ "$system" ]; then
 echo "当前系统为：${system}"
+fi
 
 # echo "执行前"
 #/usr/bin/qemu-x86_64-static /usr/bin/bash -c /usr/bin/python3 /app/ESurfingDialerClient/run.py ${DIALER_USER} ${DIALER_PASSWORD} --use_qemu
