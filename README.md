@@ -2,12 +2,12 @@
 
 **本项目并不提供任何反检测手段，如果需要，请移步至[此视频](https://b23.tv/XFgF5hd)**
 
-**经过验证 <mark><font color="red"><ins>"电子科技大学中山学院"</ins></font></mark> 可用！（掌声祝贺👏）**
+**经过验证 <mark><font color="red"><ins>"[电子科技大学中山学院](https://www.zsc.edu.cn/)"</ins></font></mark> 可用！（掌声祝贺👏）**
 
-**根据B站UP主 [柒星隐天鱼](https://b23.tv/4cEgANf "柒星隐天鱼") 的反馈 <mark><font color="red"><ins>"惠州工程职业学院"</ins></font></mark> 可用**
+**根据B站UP主 [柒星隐天鱼](https://b23.tv/4cEgANf) 的反馈 <mark><font color="red"><ins>"[惠州工程职业学院](https://zs.hzevc.edu.cn/)"</ins></font></mark> 可用**
 
 
-## 本项目基于Rsplwe大佬的项目 ☞[[传送门](https://github.com/Rsplwe/ESurfingDialer)] 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建
+## 本项目基于Rsplwe大佬的项目 ☞[[传送门](https://github.com/Rsplwe/ESurfingDialer)] 和中国电信官方客户端（天翼校园）搭建的Docker镜像自动构建项目
 
 **Phone版本占用手机认证通道进行网络认证**
 
