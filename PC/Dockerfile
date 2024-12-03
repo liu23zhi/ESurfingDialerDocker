@@ -1,5 +1,5 @@
-# FROM ubuntu
-FROM python:latest
+FROM ubuntu
+#FROM python:latest
 WORKDIR /app
 
 # COPY ./ubuntu-base/ /app/ubuntu-base/
@@ -30,6 +30,7 @@ WORKDIR /app
 
 
 # X86 架构可以直接运行
+RUN apt update && apt install -y python3 python3-dev python3-pip sudo
 COPY ./ESurfingDialerClient/ /app/ESurfingDialerClient/
 # 奇奇怪怪的文件夹复制BUG
 COPY ./run.py /app/ESurfingDialerClient/
