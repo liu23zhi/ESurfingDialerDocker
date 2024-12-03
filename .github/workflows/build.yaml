@@ -957,7 +957,7 @@ jobs:
         ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/bin/
         ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/bin/java
 
-    - name: Java21 对 Arm64 的 Windows 不兼容 ， 移除多余文件
+    - name: Java 对 Arm64 的 Windows 不兼容 ， 移除多余文件
       run: |
         rm -rf ${{ github.workspace }}/Phone/Direct/Start.bat
 
