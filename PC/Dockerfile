@@ -29,10 +29,14 @@ WORKDIR /app
 
 
 # X86 架构可以直接运行
-COPY ./ESurfingDialerClient /app/
+COPY ./ESurfingDialerClient/ /app/ESurfingDialerClient/
+# 奇奇怪怪的文件夹复制BUG
 COPY ./run.py /app/ESurfingDialerClient/
 COPY ./run.sh /app/
 RUN chmod -R 777 /app/	
+RUN ls -l /
+RUN ls -l /app/
+RUN ls -l /app/ESurfingDialerClient/
 RUN cd /app/ESurfingDialerClient/ && ./tyxy
 RUN apt-get update && apt-get install iproute2 -y
 RUN pip3 install netifaces
