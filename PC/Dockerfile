@@ -1,4 +1,5 @@
-FROM ubuntu
+# FROM ubuntu
+FROM python:latest
 WORKDIR /app
 
 # COPY ./ubuntu-base/ /app/ubuntu-base/
