@@ -346,21 +346,21 @@ jobs:
       with:
         subject-path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
-    - name: 下载 Java21
+    - name: 下载 Java 免安装版本
       run: |
         chmod +x ${{ github.workspace }}/Phone/Download_jdk.sh
         cd ${{ github.workspace }}/Phone/ 
         ./Download_jdk.sh
 
-    - name: 查看 Java21 下载结果确保其在期待预期文件夹
+    - name: 查看 Java 免安装版本 下载结果 并 确保其在期待预期文件夹
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/bin/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/bin/java
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/bin/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_windows-x64/bin/java.exe
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/bin/java
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_windows-x64/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_windows-x64/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_windows-x64/bin/java.exe
 
     - name: 修改 Phone 下的 Direct 文件夹为 ESurfingDialer
       run: |
@@ -944,18 +944,18 @@ jobs:
       with:
         subject-path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
-    - name: 下载 Java21
+    - name: 下载 Java 免安装版本
       run: |
         chmod +x ${{ github.workspace }}/Phone/Download_jdk-arm.sh
         cd ${{ github.workspace }}/Phone/ 
         ./Download_jdk-arm.sh
 
-    - name: 查看 Java21 下载结果确保其在期待预期文件夹
+    - name: 查看 Java 免安装版本 下载结果 并 确保其在期待预期文件夹
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/bin/
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/bin/java
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/bin/java
 
     - name: Java21 对 Arm64 的 Windows 不兼容 ， 移除多余文件
       run: |
@@ -964,7 +964,7 @@ jobs:
     - name: 查看 Java21 多余文件移除结果
       run: |
         ls -l ${{ github.workspace }}/Phone/Direct
-        ls -l ${{ github.workspace }}/Phone/Direct/jdk-21_linux-x64/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/
 
     - name: 修改 Phone 下的 Direct 文件夹为 ESurfingDialer
       run: |
