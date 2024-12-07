@@ -33,7 +33,7 @@ jobs:
         echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" > ${{ github.workspace }}/GITHUB_ENV.txt
         echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> ${{ github.workspace }}/GITHUB_ENV.txt
         echo "TIMESTAMP3=$(date +'%Y年%m月%d日')" >> ${{ github.workspace }}/GITHUB_ENV.txt
-        echo "VersionNum=$(cat ${{ github.workspace }}/NewestVersionNum.txt)" >> ${{ github.workspace }}/GITHUB_ENV.txt
+        echo "VersionNum=$(cat ${{ github.workspace }}/ReleaseTagName.txt)" >> ${{ github.workspace }}/GITHUB_ENV.txt
 
     # - name: 生成 编译日期 相关更新日志
     #   run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
