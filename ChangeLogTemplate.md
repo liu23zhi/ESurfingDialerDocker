@@ -1,5 +1,7 @@
 # 根据设备架构选择合适的离线包下载
 
+## 这里是时间菌，我来告诉你我是什么时候点的Action ☞ ${{ env.TIMESTAMP3 }}
+
 >[!NOTE]
 >**Docker版使用方法在此 ☞[[传送门](https://github.com/liu23zhi/ESurfingDialerDocker/blob/main/%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.md)]**
 >
