@@ -32,6 +32,7 @@ jobs:
         echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> $GITHUB_ENV
         echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" > ${{ github.workspace }}/GITHUB_ENV.txt
         echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> ${{ github.workspace }}/GITHUB_ENV.txt
+        echo "TIMESTAMP3=$(date +'%Y年%m月%d日')" >> ${{ github.workspace }}/GITHUB_ENV.txt
 
     # - name: 生成 编译日期 相关更新日志
     #   run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
@@ -555,10 +556,10 @@ jobs:
       name: ESurfingDialer
 
     steps:
-    # - name: 下载本项目所有代码
-    #   uses: actions/checkout@v4
-    #   with:
-    #     path: '${{ github.workspace }}'
+    - name: 下载本项目所有代码
+      uses: actions/checkout@v4
+      with:
+        path: '${{ github.workspace }}'
 
     # - name: 下载时间戳和相关环境变量缓存文件
     #   uses: actions/download-artifact@v4
@@ -1844,41 +1845,49 @@ jobs:
       run: |
         mv ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
 
-    - name: 生成 编译日期 相关更新日志
-      run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: 生成时间菌
+      run: |
+        sed -i '/\## 这里是时间菌，我来告诉你我是什么时候点的Action/c\## 这里是时间菌，我来告诉你我是什么时候点的Action ☞ ${{ env.TIMESTAMP3 }}' ${{ github.workspace }}/ChangeLogTemplate.md
 
-    - name: 生成 最新Jar编译 相关更新日志
-      run:  |
-        echo -e "${{ env.LatestJarFilename }}  此文件为Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer  的最新编译文件。\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    - name: 标明Release文件生成时间
+      run: |
+        sed -i '/\## Release文件生成时间/c\## Release文件生成时间:${{ env.TIMESTAMP2 }}' ${{ github.workspace }}/ChangeLogTemplate.md
+        
+    # - name: 生成 编译日期 相关更新日志
+    #   run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: 生成 ESurfingDockerPhone 相关更新日志
-      run: echo -e "ESurfingDockerPhone 镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n\n离线镜像文件 （能在线拉取就在线拉取吧）\n\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")\n[Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    # - name: 生成 最新Jar编译 相关更新日志
+    #   run:  |
+    #     echo -e "${{ env.LatestJarFilename }}  此文件为Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer  的最新编译文件。\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: 生成 ESurfingDockerPc 相关更新日志
-      run: echo -e "ESurfingDockerPc 镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n\n离线镜像文件 （能在线拉取就在线拉取吧）\n\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")\n[Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    # - name: 生成 ESurfingDockerPhone 相关更新日志
+    #   run: echo -e "ESurfingDockerPhone 镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n\n离线镜像文件 （能在线拉取就在线拉取吧）\n\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")\n[Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
-    - name: 生成 免 Docker 直接运行版本 相关更新日志
-      run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+    # - name: 生成 ESurfingDockerPc 相关更新日志
+    #   run: echo -e "ESurfingDockerPc 镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n\n离线镜像文件 （能在线拉取就在线拉取吧）\n\n[Amd64镜像文件下载](${{ env.Amd64_Release_Url }} \"Amd64镜像文件下载\")\n[Arm64镜像文件下载](${{ env.Arm64_Release_Url }} \"Arm64镜像文件下载\")\n\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    # - name: 生成 免 Docker 直接运行版本 相关更新日志
+    #   run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 创建 Release
       uses: softprops/action-gh-release@v2
       with:
-        body_path: ${{ github.workspace }}/CHANGELOG.txt
-        tag_name: ${{ env.TIMESTAMP }}
+        body_path: ${{ github.workspace }}/ChangeLogTemplate.md
+        tag_name: ${{ github.workspace }}/NewestVersionNum.txt
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
-          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
           ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64.tar.gz
           ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64.tar.gz
           ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDialer-Amd64.zip
           ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64.tar.gz
           ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64.tar.gz
           ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
-
-        #  ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
-        #  ${{ github.workspace }}/ESurfingDockerPc.tar.gz
-        #  ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
+          
+        # ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
+        # ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
+        # ${{ github.workspace }}/ESurfingDockerPc.tar.gz
+        # ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
 
     - name: 删除 时间戳和相关环境变量 缓存文件
       uses: geekyeggo/delete-artifact@v5
