@@ -687,9 +687,9 @@ def main():
     ESurfingSvr_password={args.password}
     # 打印输入的账号和密码
     # 特别提醒，python在print之后会自动添加一个\n进行换行
-    logging.info(f'已从启动参数读取到以下信息：')
-    logging.info(f'账号: {args.account}')
-    logging.info(f'密码: {args.password}')
+    # logging.info(f'已从启动参数读取到以下信息：')
+    # logging.info(f'账号: {args.account}')
+    # logging.info(f'密码: {args.password}')
 
     #添加默认标记
     global esurfing_svr_pid
