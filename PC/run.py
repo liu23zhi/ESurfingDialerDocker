@@ -458,10 +458,10 @@ def start_esurfing_svr(ESurfingSvr_account, ESurfingSvr_password):
     else:
         command = [ESURFING_SVR_PATH, ESurfingSvr_account, ESurfingSvr_password]
     # print("开始启动 ESurfingSvr。")
-    logging.info(f"执行命令： {' '.join(command)}")
-    logging.info(f'已从启动参数读取到以下信息：')
-    logging.info(f'账号: {ESurfingSvr_account}')
-    logging.info(f'密码: {ESurfingSvr_password}')
+    # logging.info(f"执行命令： {' '.join(command)}")
+    # logging.info(f'已从启动参数读取到以下信息：')
+    # logging.info(f'账号: {ESurfingSvr_account}')
+    # logging.info(f'密码: {ESurfingSvr_password}')
     
     # 启动ESurfingSvr进程，将stdout和stderr设置为PIPE以便捕获输出
     global esurfing_svr_process
