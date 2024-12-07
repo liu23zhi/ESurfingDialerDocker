@@ -726,19 +726,19 @@ jobs:
       with:
         path: '${{ github.workspace }}'
 
-    # - name: 下载时间戳和相关环境变量缓存文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: TimeStampForGithubEnv
-    #     path: ${{ github.workspace }}/
+    - name: 下载时间戳和相关环境变量缓存文件
+      uses: actions/download-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/
 
-    # - name: 重新写入时间戳变量
-    #   run: |
-    #     TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
-    #     echo "$TIMESTAMP" >> $GITHUB_ENV
+    - name: 重新写入时间戳变量
+      run: |
+        TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        echo "$TIMESTAMP" >> $GITHUB_ENV
 
-    # - name: 删除 时间戳和相关环境变量 缓存文件
-    #   run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
+    - name: 删除 时间戳和相关环境变量 缓存文件
+      run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 创建 下载已编译的Jar文件 所需文件夹
       run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
