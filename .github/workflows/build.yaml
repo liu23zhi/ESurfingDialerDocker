@@ -1782,7 +1782,7 @@ jobs:
       run: mkdir -p ${{ github.workspace }}/ESurfingDialer/Phone/
 
     - name: 下载 ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest）
-      uses: actions/upload-artifact@v4
+      uses: actions/download-artifact@v4
       with:
         name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest）
         path: ${{ github.workspace }}/ESurfingDialer/Phone/
