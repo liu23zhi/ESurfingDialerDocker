@@ -1,4 +1,4 @@
-FROM oracle/jdk:23-ol9
+FROM ghcr.io/graalvm/jdk-community:23.0.1
 CMD ["exit"]
 WORKDIR /app
 COPY run.sh /app
