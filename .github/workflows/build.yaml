@@ -39,8 +39,8 @@ jobs:
       id: version
       run: |
         chmod +x ChangeVersion.sh
-        echo "VERSION=$(./ChangeVersion.sh)" >> $GITHUB_ENV
-        echo "版本号：$VERSION"
+        echo "VERSION=$(./ChangeVersion.sh)" >> ${{ github.workspace }}/GITHUB_ENV.txt
+        echo "版本号：${{ env.VERSION }}
 
     #- name: 发布包
     #  run: npm publish
@@ -62,8 +62,6 @@ jobs:
         echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" > ${{ github.workspace }}/GITHUB_ENV.txt
         echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> ${{ github.workspace }}/GITHUB_ENV.txt
         echo "TIMESTAMP3=$(date +'%Y年%m月%d日')" >> ${{ github.workspace }}/GITHUB_ENV.txt
-        echo "VERSION=$(npm view . version)" >> ${{ github.workspace }}/GITHUB_ENV.txt
-        echo "版本号：${{ env.VERSION }}"
 
     # - name: 生成 编译日期 相关更新日志
     #   run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
