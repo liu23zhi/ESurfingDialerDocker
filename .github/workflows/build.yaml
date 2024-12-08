@@ -1870,11 +1870,30 @@ jobs:
     # - name: 生成 免 Docker 直接运行版本 相关更新日志
     #   run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
+    - name: 安装 Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: 安装 npm
+      run: npm install
+
+    - name: 更新版本号
+      id: version
+      run: ./ChangeVersion.sh
+
+    - name: 创建 tag
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag -a v${{ steps.version.outputs.version }} -m "Version ${{ steps.version.outputs.version }}"
+        git push origin v${{ steps.version.outputs.version }}
+    
     - name: 创建 Release
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/ChangeLogTemplate.md
-        tag_name: ${{ env.VersionNum }}
+        tag_name: v$VERSION
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
