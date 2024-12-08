@@ -1872,7 +1872,8 @@ jobs:
     - name: 安装 Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '20.x'
+        registry-url: 'https://registry.npmjs.org'
 
     - name: 安装 npm
       run: npm install
@@ -1883,7 +1884,13 @@ jobs:
         chmod 777 ChangeVersion.sh
         ./ChangeVersion.sh
         echo "VERSION=$(npm view esurfingdialerdocker version)" >> ${{ github.workspace }}/GITHUB_ENV.txt
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+    - name: 发布包
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: 创建 tag
       run: |
