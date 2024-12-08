@@ -1881,10 +1881,10 @@ jobs:
     - name: 更新版本号
       id: version
       run: |
-        chmod 777 ChangeVersion.sh
+        chmod +x ChangeVersion.sh
         ./ChangeVersion.sh
-        echo "VERSION=$(npm view esurfingdialerdocker version)" >> ${{ github.workspace }}/GITHUB_ENV.txt
-        echo "${{ env.VERSION }}"
+        echo "VERSION=$(npm view . version)" >> $GITHUB_ENV
+        echo "版本号：$VERSION"
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -1905,7 +1905,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/ChangeLogTemplate.md
-        tag_name: ${{ env.VERSION }}
+        tag_name: $VERSION
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
