@@ -4,6 +4,3 @@
 #npm version major -no-git-tag-version
 #npm version minor -no-git-tag-version
 npm version patch -no-git-tag-version
-
-# 将版本号输出到环境变量
-echo "VERSION=$(npm view . version)" >> ${{ github.workspace }}/GITHUB_ENV.txt
