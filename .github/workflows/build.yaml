@@ -39,8 +39,8 @@ jobs:
       id: version
       run: |
         chmod +x ChangeVersion.sh
-        echo "VERSION=$(./ChangeVersion.sh)" >> ${{ github.workspace }}/GITHUB_ENV.txt
-        echo "版本号：${{ env.VERSION }}"
+        VERSION=$(./ChangeVersion.sh)
+        echo "版本号：$VERSION"
 
     #- name: 发布包
     #  run: npm publish
