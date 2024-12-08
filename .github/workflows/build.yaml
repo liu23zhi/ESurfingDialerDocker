@@ -1887,10 +1887,10 @@ jobs:
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    - name: 发布包
-      run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    #- name: 发布包
+    #  run: npm publish
+    #  env:
+    #    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: 创建 tag
       run: |
