@@ -1,6 +1,6 @@
 {
   "name": "esurfingdialerdocker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Docker-Image-for-ESurfingDialer",
   "main": "index.js",
   "scripts": {
