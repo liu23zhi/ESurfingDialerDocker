@@ -1883,9 +1883,8 @@ jobs:
       run: |
         chmod 777 ChangeVersion.sh
         ./ChangeVersion.sh
-        VERSION=$(npm view . version)
-        echo "VERSION=$VERSION" >> ${{ github.workspace }}/GITHUB_ENV.txt
-        echo "$VERSION"
+        echo "VERSION=$(npm view esurfingdialerdocker version)" >> ${{ github.workspace }}/GITHUB_ENV.txt
+        echo "${{ env.VERSION }}"
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
