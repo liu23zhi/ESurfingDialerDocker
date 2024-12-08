@@ -1887,8 +1887,8 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git tag -a v${{ env.VERSION }} -m "Version ${{ env.VERSION }}"
-        git push origin v${{ env.VERSION }}
+        git tag -a ${{ env.VERSION }} -m "Version ${{ env.VERSION }}"
+        git push origin ${{ env.VERSION }}
     
     - name: 创建 Release
       uses: softprops/action-gh-release@v2
