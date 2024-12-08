@@ -1896,8 +1896,9 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git tag -a ${{ env.VERSION }} -m "Version ${{ env.VERSION }}"
-        git push origin ${{ env.VERSION }}
+        git add ${{ github.workspace }}/package.json
+        git commit -m "Update file via GitHub Actions"
+        git push
     
     - name: 创建 Release
       uses: softprops/action-gh-release@v2
