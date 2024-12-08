@@ -1883,7 +1883,9 @@ jobs:
       run: |
         chmod 777 ChangeVersion.sh
         ./ChangeVersion.sh
-        echo "VERSION=$(npm view esurfingdialerdocker version)" >> ${{ github.workspace }}/GITHUB_ENV.txt
+        VERSION=$(npm view . version)
+        echo "VERSION=$VERSION" >> ${{ github.workspace }}/GITHUB_ENV.txt
+        echo "$VERSION"
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -1892,7 +1894,7 @@ jobs:
     #  env:
     #    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    - name: 创建 tag
+    - name: push 新的package.json
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
