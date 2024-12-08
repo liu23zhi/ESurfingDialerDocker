@@ -26,23 +26,6 @@ jobs:
       with:
         path: '${{ github.workspace }}'
 
-    - name: 安装 Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20.x'
-
-    - name: 安装 npm
-      run: npm install
-
-    - name: 更新版本号
-      run: |
-        chmod +x ChangeVersion.sh
-        output=$(./ChangeVersion.sh)
-        echo "VERSION=$output" >> $GITHUB_ENV
-
-    - name: 查看版本号
-      run: echo "版本号：$VERSION"
-    
     - name: 生成时间戳
       run: |
         echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
@@ -1915,8 +1898,8 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/ChangeLogTemplate.md
-        tag_name: $VERSION
-        release_name: Release $VERSION
+        tag_name: ${{ env.VERSION }}
+        release_name: Release ${{ env.VERSION }}
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
