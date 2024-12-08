@@ -6,5 +6,4 @@
 npm version patch -no-git-tag-version
 
 # 将版本号输出到环境变量
-VERSION=$(npm view . version)
-echo "VERSION=$VERSION" >> $GITHUB_ENV
+echo "VERSION=$(npm view . version)" >> ${{ github.workspace }}/GITHUB_ENV.txt
