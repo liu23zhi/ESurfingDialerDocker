@@ -1894,7 +1894,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/ChangeLogTemplate.md
-        tag_name: v$VERSION
+        tag_name: ${{ env.VERSION }}
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
