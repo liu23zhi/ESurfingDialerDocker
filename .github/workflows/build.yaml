@@ -1882,6 +1882,9 @@ jobs:
       run: |
         chmod 777 ChangeVersion.sh
         ./ChangeVersion.sh
+        VERSION=$(npm view . version)
+        echo "VERSION=$VERSION" >> ${{ github.workspace }}/GITHUB_ENV.txt
+
 
     - name: 创建 tag
       run: |
