@@ -26,35 +26,6 @@ jobs:
       with:
         path: '${{ github.workspace }}'
     
-    - name: 安装 Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20.x'
-        registry-url: 'https://registry.npmjs.org'
-
-    - name: 安装 npm
-      run: npm install
-
-    - name: 更新版本号
-      id: version
-      run: |
-        chmod +x ChangeVersion.sh
-        VERSION=$(./ChangeVersion.sh)
-        echo "版本号：$VERSION"
-
-    #- name: 发布包
-    #  run: npm publish
-    #  env:
-    #    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-    - name: push 新的package.json
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add ${{ github.workspace }}/package.json
-        git commit -m "Update file via GitHub Actions"
-        git push
-
     - name: 生成时间戳
       run: |
         echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
@@ -1898,11 +1869,39 @@ jobs:
     # - name: 生成 免 Docker 直接运行版本 相关更新日志
     #   run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
     
+    - name: 安装 Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.x'
+
+    - name: 安装 npm
+      run: npm install
+
+    - name: 更新版本号
+      id: version
+      run: |
+        chmod +x ChangeVersion.sh
+        VERSION=$(./ChangeVersion.sh)
+        echo "版本号：$VERSION"
+
+    #- name: 发布包
+    #  run: npm publish
+    #  env:
+    #    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: push 新的package.json
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add ${{ github.workspace }}/package.json
+        git commit -m "Update file via GitHub Actions"
+        git push
+    
     - name: 创建 Release
       uses: softprops/action-gh-release@v2
       with:
         body_path: ${{ github.workspace }}/ChangeLogTemplate.md
-        tag_name: ${{ env.VERSION }}
+        tag_name: $VERSION
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/build/libs/*
