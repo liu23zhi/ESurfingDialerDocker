@@ -39,8 +39,7 @@ jobs:
       id: version
       run: |
         chmod +x ChangeVersion.sh
-        ./ChangeVersion.sh
-        echo "VERSION=$(npm view . version)" >> $GITHUB_ENV
+        echo "VERSION=$(./ChangeVersion.sh)" >> $GITHUB_ENV
         echo "版本号：$VERSION"
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
