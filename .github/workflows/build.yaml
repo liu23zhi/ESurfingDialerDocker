@@ -41,8 +41,6 @@ jobs:
         chmod +x ChangeVersion.sh
         echo "VERSION=$(./ChangeVersion.sh)" >> $GITHUB_ENV
         echo "版本号：$VERSION"
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     #- name: 发布包
     #  run: npm publish
