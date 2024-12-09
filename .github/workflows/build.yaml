@@ -1948,7 +1948,8 @@ jobs:
           ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64.tar.gz
           ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64.tar.gz
           ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
-        # ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
+          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
+
         # ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
         # ${{ github.workspace }}/ESurfingDockerPc.tar.gz
         # ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
