@@ -158,6 +158,10 @@ jobs:
       run: |
         echo "LatestJarFilename=${{ env.LatestJarFilename }}" >> ${{ github.workspace }}/GITHUB_ENV.txt
 
+    - name: 查看时间戳和相关环境变量缓存文件
+      run: |
+        cat ${{ github.workspace }}/GITHUB_ENV.txt
+
     - name: 上传时间戳和相关环境变量缓存文件
       uses: actions/upload-artifact@v4
       with:
