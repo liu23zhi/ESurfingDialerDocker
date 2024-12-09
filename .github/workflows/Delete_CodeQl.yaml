@@ -13,10 +13,15 @@ jobs:
         id: get_runs
         run: |
           runs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/actions/runs?status=completed&per_page=100" | jq -r '.workflow_runs[] | select(.name=="CodeQL") | .id')
-          echo "::set-output name=run_ids::$runs"
+          if [ -z "$runs" ]; then
+            echo "No completed CodeQL runs found."
+            exit 0
+          fi
+          echo "run_ids=$runs" >> $GITHUB_ENV
       - name: 删除 CodeQL 工作流程运行
         run: |
-          for run_id in ${{ steps.get_runs.outputs.run_ids }}; do
+          for run_id in ${{ env.run_ids }}; do
             echo "Deleting run $run_id"
-            curl -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id"
+            response=$(curl -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id")
+            echo "Response: $response"
           done
