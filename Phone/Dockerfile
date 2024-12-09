@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/jdk-community:23.0.1
+FROM azul/zulu-openjdk:23-latest
 CMD ["exit"]
 WORKDIR /app
 COPY run.sh /app
