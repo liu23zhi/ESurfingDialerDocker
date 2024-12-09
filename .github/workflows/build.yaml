@@ -54,9 +54,11 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add ./version
+        git add ${{ github.workspace }}/version
         git commit -m "上传新的版本号到Github"
         git push --force
+  #      git config --local user.email "action@github.com"
+  #      git config --local user.name "GitHub Action"
 
     - name: 获取 程序版本号
       run: |
