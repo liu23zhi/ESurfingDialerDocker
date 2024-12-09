@@ -1660,7 +1660,7 @@ jobs:
     - name: 解压 ESurfingDialer 的 Amd64 免 Docker 直接运行版本
       run: |
         cd ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd
-        unzip -ov ESurfingDialer.zip && rm ESurfingDialer.zip
+        unzip -ov ESurfingDialer.zip -d ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd && rm ESurfingDialer.zip
 
     - name: 查看 ESurfingDialer 的 Amd64 免 Docker 直接运行版本 解压后的目录
       run: |
@@ -1676,7 +1676,7 @@ jobs:
     - name: 解压 ESurfingDialer 的 Arm64 免 Docker 直接运行版本
       run: |
         cd ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm
-        unzip -ov ESurfingDialer.zip && rm ESurfingDialer.zip
+        unzip -ov ESurfingDialer.zip -d ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm && rm ESurfingDialer.zip
 
     - name: 查看 ESurfingDialer 的 Arm64 免 Docker 直接运行版本 解压后的目录
       run: |
