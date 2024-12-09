@@ -8,8 +8,8 @@ URL_WINDOWS="https://download.oracle.com/java/23/latest/jdk-23_windows-x64_bin.z
 FILE_NAME_LINUX="jdk-23_linux-x64_bin.tar.gz"
 FILE_NAME_WINDOWS="jdk-23_windows-x64_bin.zip"
 # 设置目标文件夹
-TARGET_FOLDER_LINUX="./Direct/jdk_linux-x64"
-TARGET_FOLDER_WINDOWS="./Direct/jdk_windows-x64"
+TARGET_FOLDER_LINUX="./Direct/jdk-linux"
+TARGET_FOLDER_WINDOWS="./Direct/jdk-windows"
 # 设置下载文件夹
 DOWNLOAD_FOLDER="./Direct"
 
