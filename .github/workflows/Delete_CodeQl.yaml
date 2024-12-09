@@ -9,24 +9,9 @@ jobs:
       actions: write
       contents: read
     steps:
-      - name: 获取 CodeQL 工作流程运行的ID
-        id: get_runs
-        run: |
-          runs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/actions/runs?status=completed&per_page=100" | jq -r '.workflow_runs[] | select(.name=="CodeQL" or .name=="Push on main") | .id')
-          if [ -z "$runs" ]; then
-            echo "No completed CodeQL or Push on main runs found."
-            exit 0
-          fi
-          echo "run_ids=$(echo $runs | tr '\n' ' ')" >> $GITHUB_ENV
-      - name: 删除 CodeQL 工作流程运行记录
-        run: |
-          for run_id in ${{ env.run_ids }}; do
-            echo "Deleting run $run_id"
-            response=$(curl -v -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id")
-            echo "Response: $response"
-            if [[ $response == *"204 No Content"* ]]; then
-              echo "Run $run_id deleted successfully."
-            else
-              echo "Failed to delete run $run_id. Response: $response"
-            fi
-          done
+      - name: Delete workflow runs for remote repo
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          workflow_name: CodeQL
+          repository: ${{ github.repository }}
