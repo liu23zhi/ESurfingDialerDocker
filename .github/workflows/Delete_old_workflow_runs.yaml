@@ -88,7 +88,7 @@ jobs:
           if [[ ${{ github.event.inputs.dry_run }} == "是" ]]; then
               echo "dry_run=true" >> $GITHUB_ENV
           elif [[ ${{ github.event.inputs.dry_run }} == "否" ]]; then
-              echo "dry_run=false" >> $GITHUB_ENV
+              echo "dry_run=" >> $GITHUB_ENV
           fi
 
           if [[ ${{ github.event.inputs.delete_workflow_pattern }} == "所有" ]] || [[ ${{ github.event.inputs.delete_workflow_pattern }} == "all" ]] || [[ ${{ github.event.inputs.delete_workflow_pattern }} == "All" ]] || [[ ${{ github.event.inputs.delete_workflow_pattern }} == "ALl" ]] || [[ ${{ github.event.inputs.delete_workflow_pattern }} == "ALL" ]]; then
