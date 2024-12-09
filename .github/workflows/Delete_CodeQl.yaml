@@ -17,7 +17,7 @@ jobs:
             echo "No completed CodeQL or Push on main runs found."
             exit 0
           fi
-          echo "run_ids=$runs" >> $GITHUB_ENV
+          echo "run_ids=$(echo $runs | tr '\n' ' ')" >> $GITHUB_ENV
       - name: 删除 CodeQL 工作流程运行记录
         run: |
           for run_id in ${{ env.run_ids }}; do
