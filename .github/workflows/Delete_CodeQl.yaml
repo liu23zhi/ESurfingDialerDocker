@@ -1,30 +1,22 @@
-name: 删除CodeQL的所有记录
+name: 删除GitHub Action中CodeQL的所有记录
 on:
   workflow_dispatch: # 手动触发
 
 jobs:
-  del_codeql_runs:
+  Delete_CodeQL_workflow_runs:
     runs-on: ubuntu-latest
     permissions:
       actions: write
       contents: read
     steps:
-      - name: 列出 CodeQL 工作流程运行
-        id: list_runs
-        uses: actions/github-script@v6
-        with:
-          script: |
-            // 列出所有 CodeQL 工作流程运行ID
-            const runs = await github.actions.listWorkflowRunsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'CodeQL'
-            });
-            return runs.data.workflow_runs.map(run => run.id);
-      - name: 删除 CodeQL 工作流程运行
-        if: ${{ steps.list_runs.outputs.length > 0 }}
+      - name: 获取 CodeQL 工作流程运行
+        id: get_runs
         run: |
-          // 删除列出的 CodeQL 工作流程运行
-          for run_id in ${{ steps.list_runs.outputs }}; do
-            curl -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id
+          runs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/actions/runs?status=completed&per_page=100" | jq -r '.workflow_runs[] | select(.name=="CodeQL") | .id')
+          echo "::set-output name=run_ids::$runs"
+      - name: 删除 CodeQL 工作流程运行
+        run: |
+          for run_id in ${{ steps.get_runs.outputs.run_ids }}; do
+            echo "Deleting run $run_id"
+            curl -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id"
           done
