@@ -55,7 +55,7 @@ jobs:
     steps:
       - name: 对用户提交的数据进行处理，使其能够被正确识别
         run: |
-          mkdor -p ${{ github.workspace }}
+          mkdir -p ${{ github.workspace }}
           touch ${{ github.workspace }}/Change_Github_Enviroment.sh
           cat << EOF > ${{ github.workspace }}/Change_Github_Enviroment.sh
 
