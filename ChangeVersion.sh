@@ -3,6 +3,8 @@
 # 读取当前版本号
 VERSION=$(cat ./version)
 
+echo "当前版本号为：$VERSION"
+
 # 解析版本号
 IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
 

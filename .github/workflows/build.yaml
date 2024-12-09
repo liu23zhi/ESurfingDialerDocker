@@ -44,6 +44,9 @@ jobs:
     #     cat ${{ github.workspace }}/version
     #     VERSION=$(cat "${{ github.workspace }}/version")
 
+    - name: 查看版本号
+      run: echo "当前版本号：{{ env.VERSION }}"
+
     - name: 更新程序版本号
       run: |
         chmod +x ChangeVersion.sh
@@ -61,15 +64,13 @@ jobs:
   #      git config --local user.email "action@github.com"
   #      git config --local user.name "GitHub Action"
 
-    - name: 获取 程序版本号
+    - name: 获取 程序版本号 并 写入版本号到缓存文件
       run: |
         VERSION=$(cat "${{ github.workspace }}/version")
+        echo "VERSION=$VERSION" >> ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 查看版本号
-      run: echo "当前版本号：$VERSION"
-
-    - name: 写入版本号到缓存文件
-      run: echo "VERSION=$VERSION" >> ${{ github.workspace }}/GITHUB_ENV.txt
+      run: echo "当前版本号：{{ env.VERSION }}"
 
     - name: 生成时间戳
       run: |
