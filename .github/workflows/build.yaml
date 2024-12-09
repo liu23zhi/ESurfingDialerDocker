@@ -50,6 +50,10 @@ jobs:
 
     - name: 上传新的版本号存储文件
       run: |
+        # 好家伙，还无法删除
+        git config --local user.email "action@github.com"
+        # 好家伙，还无法删除
+        git config --local user.name "GitHub Action"
         git add ${{ github.workspace }}/version
         git commit -m "上传新的版本号到Github"
         git push --force
