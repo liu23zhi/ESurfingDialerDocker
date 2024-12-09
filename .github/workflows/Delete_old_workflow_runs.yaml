@@ -47,7 +47,7 @@ on:
         default: "所有"
 
 jobs:
-  del_runs:
+  Dele_Old_Github_Action:
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -55,9 +55,8 @@ jobs:
     steps:
       - name: 对用户提交的数据进行处理，使其能够被正确识别
         run: |
-          // 写入脚本的${{ github.workspace }}
           mkdor -p ${{ github.workspace }}
-          // 确保目录存在
+          touch ${{ github.workspace }}/Change_Github_Enviroment.sh
           cat << EOF > ${{ github.workspace }}/Change_Github_Enviroment.sh
 
           if [[ ${{ github.event.inputs.delete_workflow_by_state_pattern }} == '所有' ]]; then
