@@ -47,9 +47,14 @@ jobs:
     - name: 更新程序版本号
       run: |
         chmod +x ChangeVersion.sh
+        ${{ github.workspace }}/ChangeVersion.sh
+
+  # 好家伙，非要进行git config
 
     - name: 上传新的版本号存储文件
       run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
         git add ${{ github.workspace }}/version
         git commit -m "上传新的版本号到Github"
         git push --force
