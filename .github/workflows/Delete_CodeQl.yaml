@@ -1,24 +1,25 @@
-name: 删除GitHub Action中CodeQL的所有记录
+name: 删除GitHub Action中CodeQL和
+所有记录
 on:
   workflow_dispatch: # 手动触发
 
 jobs:
-  Delete_CodeQL_workflow_runs:
+  Delete_CodeQL_and_Push_runs:
     runs-on: ubuntu-latest
     permissions:
       actions: write
       contents: read
     steps:
-      - name: 获取 CodeQL 工作流程运行
+      - name: 获取 CodeQL 工作流程运行的ID
         id: get_runs
         run: |
-          runs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/actions/runs?status=completed&per_page=100" | jq -r '.workflow_runs[] | select(.name=="CodeQL") | .id')
+          runs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/actions/runs?status=completed&per_page=100" | jq -r '.workflow_runs[] | select(.name=="CodeQL" or .name=="Push on main") | .id')
           if [ -z "$runs" ]; then
-            echo "No completed CodeQL runs found."
+            echo "No completed CodeQL or Push on main runs found."
             exit 0
           fi
           echo "run_ids=$runs" >> $GITHUB_ENV
-      - name: 删除 CodeQL 工作流程运行
+      - name: 删除 CodeQL 工作流程运行记录
         run: |
           for run_id in ${{ env.run_ids }}; do
             echo "Deleting run $run_id"
