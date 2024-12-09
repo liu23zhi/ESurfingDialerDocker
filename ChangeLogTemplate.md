@@ -9,7 +9,7 @@
 
 ## Release文件说明：
 
-### 1. ESurfingDialer-1.7.0-all.jar
+### 1. ESurfingDialer
 
 [Rsplwe](https://github.com/Rsplwe)大佬代码构建的最新Release
 
