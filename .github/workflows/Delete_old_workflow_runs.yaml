@@ -92,9 +92,9 @@ jobs:
           fi
 
           if [[ ${{ github.event.inputs.delete_workflow_pattern }} == "所有" ]] || [[ ${{ github.event.inputs.delete_workflow_pattern }} == "all" ]] || [[ ${{ github.event.inputs.delete_workflow_pattern }} == "All" ]] || [[ ${{ github.event.inputs.delete_workflow_pattern }} == "ALl" ]] || [[ ${{ github.event.inputs.delete_workflow_pattern }} == "ALL" ]]; then
-              echo "delete_workflow_pattern=\"\"" >> $GITHUB_ENV
+              echo "delete_workflow_pattern=" >> $GITHUB_ENV
           else 
-              echo "delete_workflow_pattern=\"${{ github.event.inputs.delete_workflow_pattern }}\"" >> $GITHUB_ENV
+              echo "delete_workflow_pattern=${{ github.event.inputs.delete_workflow_pattern }}" >> $GITHUB_ENV
           fi
           EOF
           chmod +x ${{ github.workspace }}/Change_Github_Enviroment.sh
