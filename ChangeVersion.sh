@@ -1,6 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
-# 更新 package.json 中的版本号，但不生成 git 标签
-#npm version major -no-git-tag-version
-#npm version minor -no-git-tag-version
-npm version patch -no-git-tag-version
+# 读取当前版本号
+VERSION=$(cat ./version)
+
+# 解析版本号
+IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
+
+# 增加补丁版本号
+PATCH_VERSION=$((VERSION_PARTS[2] + 1))
+
+# 组装新的版本号
+NEW_VERSION="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$PATCH_VERSION"
+
+# 更新 ./version 文件中的版本号
+echo "$NEW_VERSION" > ./version
+
+# 输出新的版本号
+echo "修改版本号为： $NEW_VERSION"

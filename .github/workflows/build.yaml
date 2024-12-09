@@ -21,41 +21,56 @@ jobs:
       name: ESurfingDialer
 
     steps:
+    - name: 创建环境变量缓存文件
+      run: |
+        mkdir -p ${{ github.workspace }}/
+        touch ${{ github.workspace }}/GITHUB_ENV.txt
+
     - name: 下载本项目所有代码
       uses: actions/checkout@v4
       with:
         path: '${{ github.workspace }}'
 
-    - name: 安装 Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20.x'
+    # - name: 安装 Node.js
+    #   uses: actions/setup-node@v2
+    #   with:
+    #     node-version: '20.x'
 
-    - name: 安装 npm
-      run: npm install
+    # - name: 安装 npm
+    #   run: npm install
 
-    - name: 更新版本号
+    # - name: 获取 程序版本号
+    #   run: |
+    #     cat ${{ github.workspace }}/version
+    #     VERSION=$(cat "${{ github.workspace }}/version")
+
+    - name: 更新程序版本号
       run: |
         chmod +x ChangeVersion.sh
-        output=$(./ChangeVersion.sh)
-        echo "VERSION=$output" > ${{ github.workspace }}/GITHUB_ENV.txt
-        echo "VERSION=$output" >> $GITHUB_ENV
+
+    - name: 上传新的版本号存储文件
+      run: |
+        git add ${{ github.workspace }}/version
+        git commit -m "上传新的版本号到Github"
+        git push --force
+  #      git config --local user.email "action@github.com"
+  #      git config --local user.name "GitHub Action"
+
+    - name: 获取 程序版本号
+      run: |
+        VERSION=$(cat "${{ github.workspace }}/version")
 
     - name: 查看版本号
-      run: echo "版本号：$VERSION"
+      run: echo "当前版本号：$VERSION"
 
-    - name: push 新的package.json
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add ${{ github.workspace }}/package.json
-        git commit -m "Update file via GitHub Actions"
-        git push --force
+    - name: 写入版本号到缓存文件
+      run: echo "VERSION=$VERSION" >> ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 生成时间戳
       run: |
         echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
         echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> $GITHUB_ENV
+        echo "TIMESTAMP3=$(date +'%Y年%m月%d日')" >> $GITHUB_ENV
         echo "TIMESTAMP=$(date +'%Y.%m.%d.%H.%M.%S')" >> ${{ github.workspace }}/GITHUB_ENV.txt
         echo "TIMESTAMP2=$(date +'%Y年%m月%d日%H时%M分%S秒')" >> ${{ github.workspace }}/GITHUB_ENV.txt
         echo "TIMESTAMP3=$(date +'%Y年%m月%d日')" >> ${{ github.workspace }}/GITHUB_ENV.txt
