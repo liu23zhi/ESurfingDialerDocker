@@ -16,7 +16,7 @@ COMPLETENESS=true
 SCRIPT_DIR=$(dirname "$0")
 
 # 设置Java Home路径
-JAVA_HOME=$SCRIPT_DIR/jdk_linux-x64/
+JAVA_HOME=$SCRIPT_DIR/jdk-linux/
 
 # 设置Java路径
 JAVA_PATH=$JAVA_HOME/bin/java
