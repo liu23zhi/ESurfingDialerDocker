@@ -47,7 +47,7 @@ jobs:
     - name: 查看版本号
       run: |
         VERSION=$(cat "${{ github.workspace }}/version")
-        echo "当前版本号：$version"
+        echo "当前版本号：$VERSION"
 
     - name: 更新程序版本号
       run: |
@@ -73,7 +73,10 @@ jobs:
         echo "VERSION=$VERSION" >> ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 查看版本号
-      run: echo "当前版本号：{{ env.VERSION }}"
+      run: |
+        VERSION=$(cat "${{ github.workspace }}/version")
+        echo "当前版本号：$VERSION"
+
 
     - name: 生成时间戳
       run: |
