@@ -1,5 +1,4 @@
-name: 删除GitHub Action中CodeQL和
-所有记录
+name: 删除GitHub Action中CodeQL的所有记录
 on:
   workflow_dispatch: # 手动触发
 
