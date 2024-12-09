@@ -20,7 +20,7 @@
 可以尝试在使用本镜像的基础上，使用 **[watchtower](https://github.com/containrrr/watchtower "watchover")** 进行自动更新Docker镜像，确保该镜像为最新镜像。 
 ### 目前提供 ~~两种~~ 一种 Docker镜像；
 
-~~1. ESurfingDockerPc~~ **（炸了）**
+1. ~~ESurfingDockerPc~~ **（炸了）**
 
 此镜像占用电脑认证通道进行网络认证
 
@@ -33,7 +33,7 @@
 1. ESurfingDialer.zip **☞[[传送门](https://github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
 **此方案占用手机认证通道进行网络认证**
 
-~~2. ESurfingOffice.zip **☞[[传送门](https://github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
+2. ~~ESurfingOffice.zip **☞[[传送门](https://github.com/liu23zhi/ESurfingDialerDocker/releases/latest)]**
 基于中国电信官方客户端 编译而成   作者还没写
 **此方案占用电脑认证通道进行网络认证**~~ **（都说炸了咯）**
 
