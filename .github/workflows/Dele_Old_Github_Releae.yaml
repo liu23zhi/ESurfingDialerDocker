@@ -151,4 +151,5 @@ jobs:
           draft-drop-count: ${{ env.draft_drop_count }}
         env:
           #认证令牌
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           token: ${{ github.token }}
