@@ -75,7 +75,7 @@ jobs:
           fi
 
           # 检查 release_keep_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 15
-          if [[ ${{ github.event.inputs.release_keep_count }} >= "0" ]] ; then
+          if [[ ${{ github.event.inputs.release_keep_count }} >= 0 ]] ; then
               release_keep_count=${{ github.event.inputs.release_keep_count }}-1
               echo "release_keep_count=$release_keep_count" >> $GITHUB_ENV
           else 
@@ -97,7 +97,7 @@ jobs:
           fi
 
           # 检查 pre_release_keep_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 -1
-          if [[ ${{ github.event.inputs.pre_release_keep_count }} >= "0" ]] ; then
+          if [[ ${{ github.event.inputs.pre_release_keep_count }} >= 0 ]] ; then
               pre_release_keep_count=${{ github.event.inputs.pre_release_keep_count }}-1
               echo "pre_release_keep_count=$pre_release_keep_count" >> $GITHUB_ENV
           else 
@@ -119,7 +119,7 @@ jobs:
           fi
 
           # 检查 draft_drop_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 -1
-          if [[ ${{ github.event.inputs.draft_drop_count }} >= "0" ]] ; then
+          if [[ ${{ github.event.inputs.draft_drop_count }} >= 0 ]] ; then
               draft_drop_count=${{ github.event.inputs.draft_drop_count }}-1
               echo "draft_drop_count=$draft_drop_count" >> $GITHUB_ENV
           else 

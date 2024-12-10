@@ -2,6 +2,11 @@ name: 随缘构建
 
 on:
   workflow_dispatch:  # 允许手动触发
+    inputs:
+      Change_Version:
+        description: '构建类型'
+        required: true
+        default: '15'
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
