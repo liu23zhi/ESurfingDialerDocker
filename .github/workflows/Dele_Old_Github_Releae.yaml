@@ -66,6 +66,7 @@ jobs:
         run: |
           mkdir -p ${{ github.workspace }}
           touch ${{ github.workspace }}/Change_Github_Enviroment.sh
+          cat << EOF > ${{ github.workspace }}/Change_Github_Enviroment.sh
           # 检查 release_drop 输入，如果是 "是"，则设置为 true，否则设置为 false
           if [[ ${{ github.event.inputs.release_drop }} == "是" ]] ; then
               echo "release_drop=true" >> $GITHUB_ENV
