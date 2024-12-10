@@ -67,79 +67,90 @@ jobs:
           mkdir -p ${{ github.workspace }}
           touch ${{ github.workspace }}/Change_Github_Enviroment.sh
           cat << EOF > ${{ github.workspace }}/Change_Github_Enviroment.sh
+          # 显示所有输入参数的原始值
+          echo "原始输入参数:"
+          echo "release_drop=${{ github.event.inputs.release_drop }}"
+          echo "release_keep_count=${{ github.event.inputs.release_keep_count }}"
+          echo "release_drop_tag=${{ github.event.inputs.release_drop_tag }}"
+          echo "pre_release_drop=${{ github.event.inputs.pre_release_drop }}"
+          echo "pre_release_keep_count=${{ github.event.inputs.pre_release_keep_count }}"
+          echo "pre_release_drop_tag=${{ github.event.inputs.pre_release_drop_tag }}"
+          echo "draft_drop=${{ github.event.inputs.draft_drop }}"
+          echo "draft_drop_count=${{ github.event.inputs.draft_drop_count }}"
+
           # 检查 release_drop 输入，如果是 "是"，则设置为 true，否则设置为 false
           if [[ ${{ github.event.inputs.release_drop }} == "是" ]] ; then
               echo "release_drop=true" >> $GITHUB_ENV
-              echo "release_drop set to true"
+              echo "设置 release_drop 为 true"
           else 
               echo "release_drop=false" >> $GITHUB_ENV
-              echo "release_drop set to false"
+              echo "设置 release_drop 为 false"
           fi
 
           # 检查 release_keep_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 15
           if [[ ${{ github.event.inputs.release_keep_count }} -ge 0 ]] ; then
               release_keep_count=$(( ${{ github.event.inputs.release_keep_count }} - 1 ))
               echo "release_keep_count=$release_keep_count" >> $GITHUB_ENV
-              echo "release_keep_count set to $release_keep_count"
+              echo "设置 release_keep_count 为 $release_keep_count"
           else 
               echo "release_keep_count=15" >> $GITHUB_ENV
-              echo "release_keep_count set to 15"
+              echo "设置 release_keep_count 为 15"
           fi
 
           # 检查 release_drop_tag 输入，如果是 "是"，则设置为 true，否则设置为 false
           if [[ ${{ github.event.inputs.release_drop_tag }} == "是" ]] ; then
               echo "release_drop_tag=true" >> $GITHUB_ENV
-              echo "release_drop_tag set to true"
+              echo "设置 release_drop_tag 为 true"
           else 
               echo "release_drop_tag=false" >> $GITHUB_ENV
-              echo "release_drop_tag set to false"
+              echo "设置 release_drop_tag 为 false"
           fi
 
           # 检查 pre_release_drop 输入，如果是 "是"，则设置为 true，否则设置为 false
           if [[ ${{ github.event.inputs.pre_release_drop }} == "是" ]] ; then
               echo "pre_release_drop=true" >> $GITHUB_ENV
-              echo "pre_release_drop set to true"
+              echo "设置 pre_release_drop 为 true"
           else 
               echo "pre_release_drop=false" >> $GITHUB_ENV
-              echo "pre_release_drop set to false"
+              echo "设置 pre_release_drop 为 false"
           fi
 
           # 检查 pre_release_keep_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 -1
           if [[ ${{ github.event.inputs.pre_release_keep_count }} -ge 0 ]] ; then
               pre_release_keep_count=$(( ${{ github.event.inputs.pre_release_keep_count }} - 1 ))
               echo "pre_release_keep_count=$pre_release_keep_count" >> $GITHUB_ENV
-              echo "pre_release_keep_count set to $pre_release_keep_count"
+              echo "设置 pre_release_keep_count 为 $pre_release_keep_count"
           else 
               echo "pre_release_keep_count=-1" >> $GITHUB_ENV
-              echo "pre_release_keep_count set to -1"
+              echo "设置 pre_release_keep_count 为 -1"
           fi
 
           # 检查 pre_release_drop_tag 输入，如果是 "是"，则设置为 true，否则设置为 false
           if [[ ${{ github.event.inputs.pre_release_drop_tag }} == "是" ]] ; then
               echo "pre_release_drop_tag=true" >> $GITHUB_ENV
-              echo "pre_release_drop_tag set to true"
+              echo "设置 pre_release_drop_tag 为 true"
           else 
               echo "pre_release_drop_tag=false" >> $GITHUB_ENV
-              echo "pre_release_drop_tag set to false"
+              echo "设置 pre_release_drop_tag 为 false"
           fi
 
           # 检查 draft_drop 输入，如果是 "是"，则设置为 true，否则设置为 false
           if [[ ${{ github.event.inputs.draft_drop }} == "是" ]] ; then
               echo "draft_drop=true" >> $GITHUB_ENV
-              echo "draft_drop set to true"
+              echo "设置 draft_drop 为 true"
           else 
               echo "draft_drop=false" >> $GITHUB_ENV
-              echo "draft_drop set to false"
+              echo "设置 draft_drop 为 false"
           fi
 
           # 检查 draft_drop_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 -1
           if [[ ${{ github.event.inputs.draft_drop_count }} -ge 0 ]] ; then
               draft_drop_count=$(( ${{ github.event.inputs.draft_drop_count }} - 1 ))
               echo "draft_drop_count=$draft_drop_count" >> $GITHUB_ENV
-              echo "draft_drop_count set to $draft_drop_count"
+              echo "设置 draft_drop_count 为 $draft_drop_count"
           else 
               echo "draft_drop_count=-1" >> $GITHUB_ENV
-              echo "draft_drop_count set to -1"
+              echo "设置 draft_drop_count 为 -1"
           fi
           EOF
           chmod +x ${{ github.workspace }}/Change_Github_Enviroment.sh
