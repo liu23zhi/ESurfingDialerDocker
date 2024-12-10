@@ -56,3 +56,12 @@
 >详细见[[解决方法](/No_route_to_host报错解决方法.md)]
 
 # [[更新日志](/更新日志.md)]（24/11/25新增）
+
+# 参考Action配置文件
+
+###### 1. 删除过于陈旧的Action
+复制.github\workflows\Delete_old_workflow_runs.yaml到需要的项目，并在
+Settings->Actions->General->Actions permissions->Allow specified actions and reusable workflows
+填入`mattraks/delete-workflow-runs@*,`
+
+![rubbish](images\temp.png "rubbish")
