@@ -67,6 +67,22 @@ jobs:
           mkdir -p ${{ github.workspace }}
           touch ${{ github.workspace }}/Change_Github_Enviroment.sh
           cat << EOF > ${{ github.workspace }}/Change_Github_Enviroment.sh
+          #!/bin/bash
+
+          # 检查 bc 是否安装
+          if ! command -v bc &> /dev/null
+          then
+              echo "bc 未安装，正在尝试安装..."
+              # 尝试安装 bc，这里以 Ubuntu 系统为例，其他系统可能需要不同的包管理器
+              sudo apt-get update && sudo apt-get install -y bc
+              if [ $? -ne 0 ]; then
+                  echo "bc 安装失败，请手动安装 bc。"
+                  exit 1
+              fi
+          else
+              echo "bc 已安装。"
+          fi
+
           # 显示所有输入参数的原始值
           echo "原始输入参数:"
           echo "release_drop=${{ github.event.inputs.release_drop }}"
@@ -88,11 +104,10 @@ jobs:
           fi
 
           # 检查 release_keep_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 15
-          release_keep_count_input=${{ github.event.inputs.release_keep_count }}
-          if [[ $release_keep_count_input -ge 0 ]] ; then
-              release_keep_count=$(( release_keep_count_input - 1 ))
+          release_keep_count=$(echo "${{ github.event.inputs.release_keep_count }}" | bc)
+          if [ $release_keep_count -ge 0 ]; then
+              release_keep_count=$(echo "$release_keep_count - 1" | bc)
               echo "release_keep_count=$release_keep_count" >> $GITHUB_ENV
-              echo "原始 release_keep_count 为 $release_keep_count_input"
               echo "设置 release_keep_count 为 $release_keep_count"
           else 
               echo "release_keep_count=15" >> $GITHUB_ENV
@@ -118,11 +133,10 @@ jobs:
           fi
 
           # 检查 pre_release_keep_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 -1
-          pre_release_keep_count_input=${{ github.event.inputs.pre_release_keep_count }}
-          if [[ $pre_release_keep_count_input -ge 0 ]] ; then
-              pre_release_keep_count=$(( pre_release_keep_count_input - 1 ))
+          pre_release_keep_count=$(echo "${{ github.event.inputs.pre_release_keep_count }}" | bc)
+          if [ $pre_release_keep_count -ge 0 ]; then
+              pre_release_keep_count=$(echo "$pre_release_keep_count - 1" | bc)
               echo "pre_release_keep_count=$pre_release_keep_count" >> $GITHUB_ENV
-              echo "原始 pre_release_keep_count 为 $pre_release_keep_count_input"
               echo "设置 pre_release_keep_count 为 $pre_release_keep_count"
           else 
               echo "pre_release_keep_count=-1" >> $GITHUB_ENV
@@ -148,11 +162,10 @@ jobs:
           fi
 
           # 检查 draft_drop_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 -1
-          draft_drop_count_input=${{ github.event.inputs.draft_drop_count }}
-          if [[ $draft_drop_count_input -ge 0 ]] ; then
-              draft_drop_count=$(( draft_drop_count_input - 1 ))
+          draft_drop_count=$(echo "${{ github.event.inputs.draft_drop_count }}" | bc)
+          if [ $draft_drop_count -ge 0 ]; then
+              draft_drop_count=$(echo "$draft_drop_count - 1" | bc)
               echo "draft_drop_count=$draft_drop_count" >> $GITHUB_ENV
-              echo "原始 draft_drop_count 为 $draft_drop_count_input"
               echo "设置 draft_drop_count 为 $draft_drop_count"
           else 
               echo "draft_drop_count=-1" >> $GITHUB_ENV
