@@ -104,7 +104,7 @@ jobs:
         uses: Mattraks/delete-workflow-runs@v2
         with:
           #认证令牌
-          token: ${{ github.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           #操作仓库
           repository: ${{ github.repository }}
           #每个Action工作流的运行数据保留天数
