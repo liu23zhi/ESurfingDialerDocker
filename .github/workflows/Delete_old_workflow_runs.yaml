@@ -103,11 +103,19 @@ jobs:
       - name: 删除过于陈旧的Action运行数据
         uses: Mattraks/delete-workflow-runs@v2
         with:
+          #认证令牌
           token: ${{ github.token }}
+          #操作仓库
           repository: ${{ github.repository }}
+          #每个Action工作流的运行数据保留天数
           retain_days: ${{ github.event.inputs.days }}
+          #每个Action工作流至少需要保留的运行数据个数
           keep_minimum_runs: ${{ github.event.inputs.minimum_runs }}
+          #删除特定名字或是文件名的工作流
           delete_workflow_pattern: ${{ env.delete_workflow_pattern}}
+          #删除特定状态的Action工作流
           delete_workflow_by_state_pattern: ${{ env.delete_workflow_by_state_pattern }}
+          #删除特定运行结果的工作流
           delete_run_by_conclusion_pattern: ${{ env.delete_run_by_conclusion_pattern }}
+          #是否模拟操作
           dry_run: ${{ env.dry_run }}
