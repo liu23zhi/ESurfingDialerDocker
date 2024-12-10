@@ -60,7 +60,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       actions: write
-      contents: read
+      contents: write
+      pull-requests: write
     steps:
       - name: 对用户提交的数据进行处理，使其能够被正确识别
         run: |
