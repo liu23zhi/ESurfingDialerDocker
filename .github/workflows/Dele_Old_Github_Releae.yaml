@@ -105,7 +105,7 @@ jobs:
 
           # 检查 release_keep_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 15
           release_keep_count=$(echo "${{ github.event.inputs.release_keep_count }}" | bc)
-          echo""环境变量release_keep_count=$release_keep_count"
+          echo "环境变量 release_keep_count=$release_keep_count"
           if [ $release_keep_count -ge 0 ]; then
               release_keep_count_2=$(echo "$release_keep_count - 1" | bc)
               echo "release_keep_count=$release_keep_count_2" >> $GITHUB_ENV
@@ -135,7 +135,7 @@ jobs:
 
           # 检查 pre_release_keep_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 -1
           pre_release_keep_count=$(echo "${{ github.event.inputs.pre_release_keep_count }}" | bc)
-          echo""环境变量pre_release_keep_count=$pre_release_keep_count"
+          echo "环境变量 pre_release_keep_count=$pre_release_keep_count"
           if [ $pre_release_keep_count -ge 0 ]; then
               pre_release_keep_count_2=$(echo "$pre_release_keep_count - 1" | bc)
               echo "pre_release_keep_count=$pre_release_keep_count_2" >> $GITHUB_ENV
@@ -165,7 +165,7 @@ jobs:
 
           # 检查 draft_drop_count 输入，如果大于等于 0，减 1 并写入环境变量，否则设置为 -1
           draft_drop_count=$(echo "${{ github.event.inputs.draft_drop_count }}" | bc)
-          echo""环境变量draft_drop_count=$draft_drop_count"
+          echo "环境变量 draft_drop_count=$draft_drop_count"
           if [ $draft_drop_count -ge 0 ]; then
               draft_drop_count_2=$(echo "$draft_drop_count - 1" | bc)
               echo "draft_drop_count=$draft_drop_count_2" >> $GITHUB_ENV
