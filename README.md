@@ -64,4 +64,4 @@
 Settings->Actions->General->Actions permissions->Allow specified actions and reusable workflows
 填入`mattraks/delete-workflow-runs@*,`
 
-![rubbish](images\temp.png "rubbish")
+![rubbish](images/temp.png "rubbish")
