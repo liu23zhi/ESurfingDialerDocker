@@ -55,13 +55,16 @@ on:
           required: true
           default: '0'
 
+permissions:
+  contents: write
+  discussions: write
+  packages: write
+  id-token: write
+  attestations: write
+
 jobs:
   Dele_Old_Github_Releae:
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: write
-      pull-requests: write
     steps:
       - name: 对用户提交的数据进行处理，使其能够被正确识别
         run: |
@@ -176,7 +179,7 @@ jobs:
       - uses: sgpublic/delete-release-action@v1.1
         with:
           #操作仓库
-          # repo: ${{ github.repository }}
+          repo: ${{ github.repository }}
           #是否删除Release
           release-drop: ${{ env.release_drop }}
           #保留Release个数
