@@ -252,7 +252,7 @@ jobs:
     - name: 下载 从原作者的 Rlease 下载 最新 已编译的Jar 文件
       run: |
         cd ${{ github.workspace }}/
-        python ${{ github.workspace }}/Download_Jar_Releae_Frome_Original_Author.py
+        python ${{ github.workspace }}/Download_Jar_Releae_Frome_Original_Author.py --token ${{ secrets.GITHUB_TOKEN }}
 
     - name: 查看 已编译的Jar文件 下载结果
       run: ls -l ${{ github.workspace }}/ESurfingDialer/build/libs/
