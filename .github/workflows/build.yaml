@@ -2425,6 +2425,9 @@ jobs:
       name: ESurfingDialer
 
     steps:
+    - name: 创建 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/Phone/
+
     - name: 拉取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       run: |
          docker pull --platform linux/arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
