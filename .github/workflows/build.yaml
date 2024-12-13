@@ -255,7 +255,7 @@ jobs:
         python ${{ github.workspace }}/Download_Jar_Releae_Frome_Original_Author.py --token ${{ secrets.GITHUB_TOKEN }}
 
     - name: 查看 已编译的Jar文件 下载结果
-      run: ls -l ${{ github.workspace }}/ESurfingDialer/build/libs/
+      run: ls -l ${{ github.workspace }}/
       
     - name: 上传 Jar 缓存文件
       uses: actions/upload-artifact@v4
