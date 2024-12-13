@@ -1816,7 +1816,7 @@ jobs:
 
     needs:
       - Build_Arm64_Canary
-      - Combine-Amd64-And-Arm64
+      - Combine-Amd64-And-Arm64_Canary
 
     environment:
       name: ESurfingDialer
@@ -1991,7 +1991,7 @@ jobs:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
     needs:
-      - Creative_Enviroment_File_And_Build_Canary_Jar
+      - Download_Jar_Releae_Frome_Original_Author
 
     environment:
       name: ESurfingDialer
