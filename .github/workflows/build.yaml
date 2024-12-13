@@ -6,7 +6,13 @@ on:
       Change_Version:
         description: '构建类型'
         required: true
-        default: '15'
+        default: "小版本更新"
+        type: choice
+        options:
+          - "大版本更新"
+          - "普通版本更新"
+          - "小版本更新"
+          - "预览版本更新"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
@@ -19,7 +25,7 @@ permissions:
   attestations: write
 
 jobs:
-  Build_Jar:
+  Creative_Enviroment_File_And_Build_Canary_Jar:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
     environment:
@@ -54,13 +60,35 @@ jobs:
         VERSION=$(cat "${{ github.workspace }}/version")
         echo "当前版本号：$VERSION"
 
+    # - name: 更新程序版本号
+    #   run: |
+    #     chmod +x ChangeVersion.sh
+    #     ${{ github.workspace }}/ChangeVersion.sh
+
     - name: 更新程序版本号
       run: |
-        chmod +x ChangeVersion.sh
-        ${{ github.workspace }}/ChangeVersion.sh
+        mkdir -p ${{ github.workspace }}
+        touch ${{ github.workspace }}/Change_Github_Enviroment_From_Action_Workflow_Dispatch_Inputs_And_Run_Change_Version.sh
+        cat << EOF > ${{ github.workspace }}/Change_Github_Enviroment_From_Action_Workflow_Dispatch_Inputs_And_Run_Change_Version.sh
+        #!/bin/bash
+        if [[ ${{ github.event.inputs.Change_Version }} == '大版本更新' ]]; then
+            chmod +x ${{ github.workspace }}/ChangeVersion.sh
+            ${{ github.workspace }}/ChangeVersion.sh major
+        elif [[ ${{ github.event.inputs.Change_Version }} == '普通版本更新' ]]; then
+            chmod +x ${{ github.workspace }}/ChangeVersion.sh
+            ${{ github.workspace }}/ChangeVersion.sh normal
+        elif [[ ${{ github.event.inputs.Change_Version }} == '小版本更新' ]]; then
+            chmod +x ${{ github.workspace }}/ChangeVersion.sh
+            ${{ github.workspace }}/ChangeVersion.sh minor
+        elif [[ ${{ github.event.inputs.Change_Version }} == '预览版本更新' ]]; then
+            chmod +x ${{ github.workspace }}/ChangeVersion.sh
+            ${{ github.workspace }}/ChangeVersion.sh preview
+        fi
+        EOF
+        chmod +x ${{ github.workspace }}/Change_Github_Enviroment_From_Action_Workflow_Dispatch_Inputs_And_Run_Change_Version.sh
+        ${{ github.workspace }}/Change_Github_Enviroment_From_Action_Workflow_Dispatch_Inputs_And_Run_Change_Version.sh
 
-  # 好家伙，非要进行git config
-
+    # 好家伙，非要进行git config
     - name: 上传新的版本号存储文件
       run: |
         git config --local user.email "action@github.com"
@@ -68,8 +96,6 @@ jobs:
         git add ${{ github.workspace }}/version
         git commit -m "上传新的版本号到Github"
         git push --force
-  #      git config --local user.email "action@github.com"
-  #      git config --local user.name "GitHub Action"
 
     - name: 获取 程序版本号 并 写入版本号到缓存文件
       run: |
@@ -81,7 +107,6 @@ jobs:
       run: |
         VERSION=$(cat "${{ github.workspace }}/version")
         echo "当前版本号：$VERSION"
-
 
     - name: 生成时间戳
       run: |
@@ -123,7 +148,7 @@ jobs:
       run: |
         java -version
 
-    - name: 进入 ESurfingDialer/.../esurfing 目录并修改奇奇怪怪的内容
+    - name: 修改 src/main/kotlin/com/rsplwe/esurfing/Client.kt 以更改设备名为 ""Xiaomi 15 Pro" 开启 DeBug
       run: |
         cd ${{ github.workspace }}/ESurfingDialer
         cd ./src/main/kotlin/com/rsplwe/esurfing/
@@ -132,7 +157,20 @@ jobs:
         sed -i '/\HOST_NAME/c\    const val HOST_NAME = "Xiaomi 15 Pro"' Constants.kt
         sed -i '/\DEBUG/c\    const val DEBUG = true' Constants.kt
         echo ------line-------
+
+    - name: 查看 src/main/kotlin/com/rsplwe/esurfing/Client.kt
+      run: |
+        cd ${{ github.workspace }}/ESurfingDialer
+        cd ./src/main/kotlin/com/rsplwe/esurfing/
         cat Constants.kt
+
+    - name: 为 Gradle 注册缓存
+      uses: actions/cache@v3
+      with:
+        key: Build_ESurfingDialer_Canary_Jar
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
 
     - name: 进入 ESurfingDialer 目录并执行构建
       run: |
@@ -146,10 +184,10 @@ jobs:
     - name: 上传 ESurfingDialer 的 JAR 构建产物
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialer 的通用 JAR 构建产物
+        name: ESurfingDialer 的 最新 JAR 通用 构建产物
         path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
 
-    - name: 生成 ESurfingDialer 的通用 JAR 构建产物 证明
+    - name: 生成 ESurfingDialer 的 最新 JAR 通用 构建产物 证明
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
@@ -176,11 +214,60 @@ jobs:
     # - name: 删除 时间戳和相关环境变量 缓存文件
     #   run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
 
-  Build_Amd64:
+  Download_Jar_Releae_Frome_Original_Author:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
     needs:
-      - Build_Jar
+      - Creative_Enviroment_File_And_Build_Canary_Jar
+
+    environment:
+      name: ESurfingDialer
+
+    steps:
+    - name: 下载本项目所有代码
+      uses: actions/checkout@v4
+      with:
+        path: '${{ github.workspace }}'
+
+    - name: 下载时间戳和相关环境变量缓存文件
+      uses: actions/download-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/
+
+    - name: 重新写入 时间戳 变量
+      run: |
+        TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        echo "$TIMESTAMP" >> $GITHUB_ENV
+
+    - name: 删除 时间戳和相关环境变量 缓存文件
+      run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 创建 下载已编译的Jar文件 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/
+
+    - name: 安装 所需要的 Python 非标准库
+      run: pip install requests beautifulsoup4
+
+    - name: 下载 从原作者的 Rlease 下载 最新 已编译的Jar 文件
+      run: |
+        cd ${{ github.workspace }}/
+        python ${{ github.workspace }}/Download_Jar_Releae_Frome_Original_Author.py
+
+    - name: 查看 已编译的Jar文件 下载结果
+      run: ls -l ${{ github.workspace }}/ESurfingDialer/build/libs/
+      
+    - name: 上传 Jar 缓存文件
+      uses: actions/upload-artifact@v4
+      with:
+        name: Download_Jar_Releae_Frome_Original_Author
+        path: ${{ github.workspace }}/ESurfingDialer_Releae_By_Original_Author.jar
+
+  Build_Amd64_Canary:
+    runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
+
+    needs:
+      - Creative_Enviroment_File_And_Build_Canary_Jar
 
     environment:
       name: ESurfingDialer
@@ -211,9 +298,12 @@ jobs:
     - name: 下载 已编译的Jar 文件
       uses: actions/download-artifact@v4
       with:
-        name: ESurfingDialer 的通用 JAR 构建产物
+        name: ESurfingDialer 的 最新 JAR 通用 构建产物
         path: ${{ github.workspace }}/ESurfingDialer/build/libs/
 
+    - name: 查看 已编译的Jar文件 下载结果
+      run: ls -l ${{ github.workspace }}/ESurfingDialer/build/libs/
+        
     # - name: 生成 编译日期 相关更新日志
     #   run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
@@ -239,28 +329,623 @@ jobs:
       with:
         subject-path: '${{ github.workspace }}/Phone/client.jar'
 
-    - name: 下载 Oracle-Docker-images 项目代码
+    # - name: 下载 Oracle-Docker-images 项目代码
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: 'oracle/docker-images'
+    #     path: '${{ github.workspace }}/Oracle-Docker-images'
+
+    # - name: 查看工作目录
+    #   run: |
+    #     ls -l ${{ github.workspace }}
+
+    # - name: 查看 Oracle-Docker-images 目录
+    #   run: |
+    #     ls -l ${{ github.workspace }}/Oracle-Docker-images
+
+    # - name: 编译 OracleJava 镜像
+    #   run: |
+    #     chmod +x ${{ github.workspace }}/OracleJava.sh
+    #     ${{ github.workspace }}/OracleJava.sh
+
+    # - name: 查看当前可用的Docker本地镜像
+    #   run: |
+    #     docker image ls
+
+    - name: 编译 ESurfingDockerPhone 镜像
+      run: |
+        cd ${{ github.workspace }}/Phone
+        chmod +x ./build.sh
+        ./build.sh
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 登录到 GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 登录 DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ vars.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 GitHub Container Registry 版本号 标签
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPhoneDocker 带版本号 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPhoneDocker 的 GitHub Container Registry 带版本号镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary | cut -d '@' -f 2)
+        echo "DIGEST=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker 的 GitHub Container Registry 带版本号镜像的证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+        subject-digest: ${{ env.DIGEST }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPhoneDocker 打 DockerHub 版本号 标签
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPhoneDocker 带版本号 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPhoneDocker 的 DockerHub 带版本号镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary | cut -d '@' -f 2)
+        echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker 的 DockerHub 带版本号镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+        subject-digest: ${{ env.DIGEST2 }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPhoneDocker  镜像打 DockerHub latest-amd64-canary 标签
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPhoneDocker:latest-amd64-canary 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPhoneDocker:latest-amd64-canary 的 GitHub Container Registry 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64-canary | cut -d '@' -f 2)
+        echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker:latest-amd64-canary 的 GitHub Container Registry 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64-canary
+        subject-digest: ${{ env.DIGEST3 }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 DockerHub latest-amd64-canary 标签
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPhoneDocker:latest-amd64-canary 的 DockerHub 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPhoneDocker:latest-amd64-canary 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64-canary | cut -d '@' -f 2)
+        echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker:latest-amd64-canary 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64-canary
+        subject-digest: ${{ env.DIGEST4 }}
+        push-to-registry: false
+
+    - name: 下载 ESurfingDockerPhoneDocker:latest-amd64-canary 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64-canary -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+
+    - name: 上传 ESurfingDockerPhoneDocker:latest-amd64-canary 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-amd64-canary）
+        path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
+
+    # - name: 生成 ESurfingDockerPhone 相关更新日志
+    #   run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/blob/main/%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.md) \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    - name: 生成 ESurfingDialerPhone 的 Amd64 Docker 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
+
+    - name: 下载 Java 免安装版本
+      run: |
+        chmod +x ${{ github.workspace }}/Phone/Download_jdk.sh
+        cd ${{ github.workspace }}/Phone/ 
+        ./Download_jdk.sh
+
+    - name: 查看 Java 免安装版本 下载结果 并 确保其在期待预期文件夹
+      run: |
+        ls -l ${{ github.workspace }}/Phone/Direct
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-linux/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-linux/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-linux/bin/java
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-windows/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-windows/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-windows/bin/java.exe
+
+    - name: 修改 Phone 下的 Direct 文件夹为 ESurfingDialer
+      run: |
+        cd ${{ github.workspace }}/Phone/
+        mv ./Direct ./ESurfingDialer
+
+    - name: 查看修改后的 ESurfingDialer 文件夹
+      run: |
+        ls -l ${{ github.workspace }}/Phone/ESurfingDialer
+
+    - name: 修改 ESurfingDialer 文件夹下所有文件的权限
+      run: |
+        chmod -R 777 ${{ github.workspace }}/Phone/ESurfingDialer/
+
+    - name: 压缩 ESurfingDialer 文件夹为 zip 格式
+      run: |
+        cd ${{ github.workspace }}/Phone/
+        zip -r ESurfingDialer.zip ESurfingDialer
+
+    - name: 查看压缩后的 ESurfingDialer.zip 文件
+      run: |
+        ls -l ${{ github.workspace }}/Phone/ESurfingDialer.zip
+
+    - name: 上传 ESurfingDialer 的免 Docker 金丝雀 直接运行版本
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本
+        path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
+
+    # - name: 生成 免 Docker 直接运行版本 相关更新日志
+    #   run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。 ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    - name: 为 ESurfingDialer 的免 Docker 直接运行版本生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
+
+    - name: 获取天翼校园网官方 Linux 版本下载地址并下载，不能获取则使用预下载文件
+      run: |
+        cd ${{ github.workspace }}/PC/
+        pip3 install requests beautifulsoup4 lxml
+        python3 ./Get_ESurfingDialerClient.py
+
+    - name: 检查天翼校园网官方 Linux 版本下载结果
+      run: |
+        ls -l ${{ github.workspace }}/PC
+
+    - name: 编译 ESurfingDockerPC 镜像
+      run: |
+        cd ${{ github.workspace }}/PC
+        chmod +x ./build.sh
+        ./build.sh
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 为 ESurfingDockerPc 镜像 打 GitHub Container Registry  版本号 标签
+      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPc 带版本号 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPc 的 GitHub Container Registry 带版本号镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary | cut -d '@' -f 2)
+        echo "DIGEST=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc 的 GitHub Container Registry 带版本号镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+        subject-digest: ${{ env.DIGEST }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPc 镜像打 GitHub Container Registry  版本号 标签
+      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPc 的带版本号 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPc 的 DockerHub 带版本号的镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary | cut -d '@' -f 2)
+        echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+        subject-digest: ${{ env.DIGEST2 }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPc 镜像打 GitHub Container Registry latest-amd64-canary 标签
+      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPc:latest-amd64-canary 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPc:latest-amd64-canary 的 GitHub Container Registry 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64-canary | cut -d '@' -f 2)
+        echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest-amd64-canary 的 GitHub Container Registry 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64-canary
+        subject-digest: ${{ env.DIGEST3 }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPc 镜像打 DockerHub latest-amd64-canary 标签
+      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPc:latest-amd64-canary 的 DockerHub 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPc:latest-amd64-canary 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64-canary | cut -d '@' -f 2)
+        echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest-amd64-canary 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64-canary
+        subject-digest: ${{ env.DIGEST4 }}
+        push-to-registry: false
+
+    - name: 下载 ESurfingDockerPc:latest-amd64-canary 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64-canary -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 上传 ESurfingDockerPc:latest-amd64-canary 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-amd64-canary）
+        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+
+    # - name: 生成 ESurfingDockerPc 相关更新日志
+    #   run: echo -e "ESurfingDockerPc.tar.gz 此镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    - name: 生成  ESurfingDockerPc:latest-amd64-canary 的 DockerHub 证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+
+    # - name: 上传 Amd64平台的更新日志
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: Amd64-ChangeLog
+    #     path: '${{ github.workspace }}/CHANGELOG.txt'
+
+  Prepare_For_Amd64_Release_Canary:
+    runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
+
+    needs:
+      - Build_Amd64_Canary
+      - Combine-Amd64-And-Arm64_Canary
+
+    environment:
+      name: ESurfingDialer
+
+    steps:
+    - name: 下载本项目所有代码
       uses: actions/checkout@v4
       with:
-        repository: 'oracle/docker-images'
-        path: '${{ github.workspace }}/Oracle-Docker-images'
+        path: '${{ github.workspace }}'
+
+    # - name: 下载时间戳和相关环境变量缓存文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: TimeStampForGithubEnv
+    #     path: ${{ github.workspace }}/
+
+    # - name: 重新写入 时间戳 变量
+    #   run: |
+    #     TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+    #     echo "$TIMESTAMP" >> $GITHUB_ENV
+
+    # - name: 删除 时间戳和相关环境变量 缓存文件
+    #   run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
+
+    # - name: 创建 下载已编译的Jar文件 所需文件夹
+    #   run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    # - name: 下载 已编译的Jar 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialer 的 最新 JAR 通用 构建产物
+    #     path: ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    # - name: 下载 Amd64平台的更新日志
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: Amd64-ChangeLog
+    #     path: ${{ github.workspace }}/
+
+    # - name: 删除 Amd64平台的更新日志
+    #   uses: geekyeggo/delete-artifact@v5
+    #   with:
+    #     name: Amd64-ChangeLog
+
+    - name: 创建 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/Phone/
+
+    # - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-amd64-canary）
+    #     path: ${{ github.workspace }}/Phone/
+
+    - name: 拉取 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像
+      run: |
+         docker pull --platform linux/amd64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+
+    - name: 获取 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary | cut -d '@' -f 2)
+        echo "DIGEST1=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary
+        subject-digest: ${{ env.DIGEST1 }}
+        push-to-registry: false
+
+    - name: 上传 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-canary）
+        path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
+
+    - name: 创建 ESurfingDockerPc:latest 的 DockerHub 镜像 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/PC/
+
+    # - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-amd64-canary）
+    #     path: ${{ github.workspace }}/PC/
+
+    - name: 拉取 ESurfingDockerPc:latest 的 DockerHub 镜像
+      run: |
+         docker pull --platform linux/amd64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 ESurfingDockerPc:latest-canary 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 获取 ESurfingDockerPc:latest-canary 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary | cut -d '@' -f 2)
+        echo "DIGEST1=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest-canary 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary
+        subject-digest: ${{ env.DIGEST1 }}
+        push-to-registry: false
+
+    - name: 上传 ESurfingDockerPc:latest-canary 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-canary）
+        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+
+    # - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
+    #   run: mkdir -p ${{ github.workspace }}/Phone/
+
+    # - name: 下载 ESurfingDialer 的免 Docker 直接运行版本 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本
+    #     path: ${{ github.workspace }}/Phone/
+
+    # - name: 生成更新日志
+    #   run: echo "### 好的更新已经到来（更新日志生成测试）" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    # - name: 创建 Release
+    #   id: Amd64-Release
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     body_path: ${{ github.workspace }}/CHANGELOG.txt
+    #     tag_name: V${{ env.TIMESTAMP }}-Amd64
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     files: |
+    #       ${{ github.workspace }}/ESurfingDialer/build/libs/*
+    #       ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+    #       ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+    #       ${{ github.workspace }}/Phone/ESurfingDialer.zip
+
+    # - name: 写入 Amd64-Release-Url 等相关环境变量到缓存文件
+    #   run: |
+    #     echo -e "\"${{ steps.Amd64-Release.outputs.url }}\"" >> ${{ github.workspace }}/Amd64-Release-Url.txt
+    #     echo "Amd64-Release-Url=${{ steps.Amd64-Release.outputs.url }}" >> $GITHUB_ENV
+
+    # - name: 上传 Amd64-Release-Url 环境变量缓存文件
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: Amd64-Release-UrlForGithubEnv
+    #     path: ${{ github.workspace }}/Amd64-Release-Url.txt
+
+    # - name: 删除 Amd64-Release-Url 环境变量 缓存文件
+    #   run: rm -rf ${{ github.workspace }}/Amd64-Release-Url.txt
+
+
+  Build_Amd64:
+    runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
+
+    needs:
+      - Download_Jar_Releae_Frome_Original_Author
+
+    environment:
+      name: ESurfingDialer
+
+    steps:
+    - name: 下载本项目所有代码
+      uses: actions/checkout@v4
+      with:
+        path: '${{ github.workspace }}'
+
+    - name: 下载时间戳和相关环境变量缓存文件
+      uses: actions/download-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/
+
+    - name: 重新写入 时间戳 变量
+      run: |
+        TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        echo "$TIMESTAMP" >> $GITHUB_ENV
+
+    - name: 删除 时间戳和相关环境变量 缓存文件
+      run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 创建 下载已编译的Jar文件 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 下载 已编译的Jar 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: Download_Jar_Releae_Frome_Original_Author
+        path: ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 查看 已编译的Jar文件 下载结果
+      run: ls -l ${{ github.workspace }}/ESurfingDialer/build/libs/
 
     - name: 查看工作目录
       run: |
         ls -l ${{ github.workspace }}
 
-    - name: 查看 Oracle-Docker-images 目录
+    - name: 查找最新构建的 Jar 文件并复制
       run: |
-        ls -l ${{ github.workspace }}/Oracle-Docker-images
+        chmod +x ${{ github.workspace }}/FindLasterBuildJar.sh
+        ${{ github.workspace }}/FindLasterBuildJar.sh
 
-    - name: 编译 OracleJava 镜像
+    - name: 查看 Jar 文件复制结果
       run: |
-        chmod +x ${{ github.workspace }}/OracleJava.sh
-        ${{ github.workspace }}/OracleJava.sh
+        ls -l ${{ github.workspace }}/Phone
 
-    - name: 查看当前可用的Docker本地镜像
-      run: |
-        docker image ls
+    - name: 为 ESurfingDialer 的 JAR 构建产物 生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/Phone/client.jar'
+
+    # - name: 下载 Oracle-Docker-images 项目代码
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: 'oracle/docker-images'
+    #     path: '${{ github.workspace }}/Oracle-Docker-images'
+
+    # - name: 查看工作目录
+    #   run: |
+    #     ls -l ${{ github.workspace }}
+
+    # - name: 查看 Oracle-Docker-images 目录
+    #   run: |
+    #     ls -l ${{ github.workspace }}/Oracle-Docker-images
+
+    # - name: 编译 OracleJava 镜像
+    #   run: |
+    #     chmod +x ${{ github.workspace }}/OracleJava.sh
+    #     ${{ github.workspace }}/OracleJava.sh
+
+    # - name: 查看当前可用的Docker本地镜像
+    #   run: |
+    #     docker image ls
 
     - name: 编译 ESurfingDockerPhone 镜像
       run: |
@@ -399,9 +1084,6 @@ jobs:
         name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-amd64）
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
-    # - name: 生成 ESurfingDockerPhone 相关更新日志
-    #   run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/blob/main/%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.md) \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
-
     - name: 生成 ESurfingDialerPhone 的 Amd64 Docker 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
@@ -450,9 +1132,6 @@ jobs:
       with:
         name: ESurfingDialer 的 Amd64 免 Docker 直接运行版本
         path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
-
-    # - name: 生成 免 Docker 直接运行版本 相关更新日志
-    #   run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。 ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 为 ESurfingDialer 的免 Docker 直接运行版本生成证明
       uses: actions/attest-build-provenance@v1
@@ -593,19 +1272,10 @@ jobs:
         name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-amd64）
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
-    # - name: 生成 ESurfingDockerPc 相关更新日志
-    #   run: echo -e "ESurfingDockerPc.tar.gz 此镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
-
-    - name: 生成 ESurfingDockerPc:latest 的 DockerHub 证明
+    - name: 生成  ESurfingDockerPc:latest-amd64-canary 的 DockerHub 证明
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
-
-    # - name: 上传 Amd64平台的更新日志
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: Amd64-ChangeLog
-    #     path: '${{ github.workspace }}/CHANGELOG.txt'
 
   Prepare_For_Amd64_Release:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
@@ -623,52 +1293,16 @@ jobs:
       with:
         path: '${{ github.workspace }}'
 
-    # - name: 下载时间戳和相关环境变量缓存文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: TimeStampForGithubEnv
-    #     path: ${{ github.workspace }}/
-
-    # - name: 重新写入 时间戳 变量
-    #   run: |
-    #     TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
-    #     echo "$TIMESTAMP" >> $GITHUB_ENV
-
-    # - name: 删除 时间戳和相关环境变量 缓存文件
-    #   run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
-
-    # - name: 创建 下载已编译的Jar文件 所需文件夹
-    #   run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
-
-    # - name: 下载 已编译的Jar 文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: ESurfingDialer 的通用 JAR 构建产物
-    #     path: ${{ github.workspace }}/ESurfingDialer/build/libs/
-
-    # - name: 下载 Amd64平台的更新日志
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: Amd64-ChangeLog
-    #     path: ${{ github.workspace }}/
-
-    # - name: 删除 Amd64平台的更新日志
-    #   uses: geekyeggo/delete-artifact@v5
-    #   with:
-    #     name: Amd64-ChangeLog
-
     - name: 创建 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 所需文件夹
       run: mkdir -p ${{ github.workspace }}/Phone/
-
-    # - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-amd64）
-    #     path: ${{ github.workspace }}/Phone/
 
     - name: 拉取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       run: |
          docker pull --platform linux/amd64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
 
     - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       run: |
@@ -695,15 +1329,13 @@ jobs:
     - name: 创建 ESurfingDockerPc:latest 的 DockerHub 镜像 所需文件夹
       run: mkdir -p ${{ github.workspace }}/PC/
 
-    # - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像 文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-amd64）
-    #     path: ${{ github.workspace }}/PC/
-
     - name: 拉取 ESurfingDockerPc:latest 的 DockerHub 镜像
       run: |
          docker pull --platform linux/amd64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
 
     - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像
       run: |
@@ -727,50 +1359,11 @@ jobs:
         name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest）
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
-    # - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
-    #   run: mkdir -p ${{ github.workspace }}/Phone/
-
-    # - name: 下载 ESurfingDialer 的免 Docker 直接运行版本 文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: ESurfingDialer 的 Amd64 免 Docker 直接运行版本
-    #     path: ${{ github.workspace }}/Phone/
-
-    # - name: 生成更新日志
-    #   run: echo "### 好的更新已经到来（更新日志生成测试）" >> ${{ github.workspace }}/CHANGELOG.txt
-
-    # - name: 创建 Release
-    #   id: Amd64-Release
-    #   uses: softprops/action-gh-release@v2
-    #   with:
-    #     body_path: ${{ github.workspace }}/CHANGELOG.txt
-    #     tag_name: V${{ env.TIMESTAMP }}-Amd64
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-    #     files: |
-    #       ${{ github.workspace }}/ESurfingDialer/build/libs/*
-    #       ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
-    #       ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
-    #       ${{ github.workspace }}/Phone/ESurfingDialer.zip
-
-    # - name: 写入 Amd64-Release-Url 等相关环境变量到缓存文件
-    #   run: |
-    #     echo -e "\"${{ steps.Amd64-Release.outputs.url }}\"" >> ${{ github.workspace }}/Amd64-Release-Url.txt
-    #     echo "Amd64-Release-Url=${{ steps.Amd64-Release.outputs.url }}" >> $GITHUB_ENV
-
-    # - name: 上传 Amd64-Release-Url 环境变量缓存文件
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: Amd64-Release-UrlForGithubEnv
-    #     path: ${{ github.workspace }}/Amd64-Release-Url.txt
-
-    # - name: 删除 Amd64-Release-Url 环境变量 缓存文件
-    #   run: rm -rf ${{ github.workspace }}/Amd64-Release-Url.txt
-
-  Build_Arm64:
+  Build_Arm64_Canary:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
     needs:
-      - Build_Jar
+      - Creative_Enviroment_File_And_Build_Canary_Jar
 
     environment:
       name: ESurfingDialer
@@ -809,8 +1402,11 @@ jobs:
     - name: 下载已编译的Jar文件
       uses: actions/download-artifact@v4
       with:
-        name: ESurfingDialer 的通用 JAR 构建产物
+        name: ESurfingDialer 的 最新 JAR 通用 构建产物
         path: ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 查看 已编译的Jar文件 下载结果
+      run: ls -l ${{ github.workspace }}/ESurfingDialer/build/libs/
 
     # - name: 生成 编译日期 相关更新日志
     #   run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
@@ -837,28 +1433,650 @@ jobs:
       with:
         subject-path: '${{ github.workspace }}/Phone/client.jar'
 
-    - name: 下载 Oracle-Docker-images 项目代码
+    # - name: 下载 Oracle-Docker-images 项目代码
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: 'oracle/docker-images'
+    #     path: '${{ github.workspace }}/Oracle-Docker-images'
+
+    # - name: 查看工作目录
+    #   run: |
+    #     ls -l ${{ github.workspace }}
+
+    # - name: 查看 Oracle-Docker-images 目录
+    #   run: |
+    #     ls -l ${{ github.workspace }}/Oracle-Docker-images
+
+    # - name: 编译 OracleJava 镜像
+    #   run: |
+    #     chmod +x ${{ github.workspace }}/OracleJava.sh
+    #     ${{ github.workspace }}/OracleJava.sh
+
+    # - name: 查看当前可用的Docker本地镜像
+    #   run: |
+    #     docker image ls
+
+
+    - name: 编译 ESurfingDockerPhone 镜像
+      run: |
+        cd ${{ github.workspace }}/Phone
+        chmod +x ./build-arm.sh
+        ./build-arm.sh
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 登录到 GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 登录 DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ vars.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 GitHub Container Registry 版本号 标签
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPhoneDocker 带版本号 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPhoneDocker 的 Github 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary | cut -d '@' -f 2)
+        echo "DIGEST=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker 的 Github 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary
+        subject-digest: ${{ env.DIGEST }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 DockerHub 版本号 标签
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPhoneDocker 带版本号 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPhoneDocker 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary | cut -d '@' -f 2)
+        echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary
+        subject-digest: ${{ env.DIGEST2 }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 GitHub Container Registry latest-arm64-canary 标签
+      run: docker tag esurfingdockerphone ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPhoneDocker:latest-arm64-canary 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPhoneDocker:latest-arm64-canary 的 Github 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-arm64-canary | cut -d '@' -f 2)
+        echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker:latest-arm64-canary 的 Github 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-arm64-canary
+        subject-digest: ${{ env.DIGEST3 }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPhoneDocker 镜像打 DockerHub latest-arm64-canary 标签
+      run: docker tag esurfingdockerphone ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPhoneDocker:latest-arm64-canary 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPhoneDocker:latest-arm64-canary 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64-canary | cut -d '@' -f 2)
+        echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker:latest-arm64-canary 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64-canary
+        subject-digest: ${{ env.DIGEST4 }}
+        push-to-registry: false
+
+    - name: 下载 ESurfingDockerPhoneDocker:latest-arm64-canary 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64-canary -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+
+    - name: 上传 ESurfingDockerPhoneDocker:latest-arm64-canary 镜像
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest-amd64-canary）
+        path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
+
+    # - name: 生成 ESurfingDockerPhone 相关更新日志
+    #   run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    - name: 生成 ESurfingDockerPhone:latest 的 DockerHub 证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
+
+    - name: 下载 Java 免安装版本
+      run: |
+        chmod +x ${{ github.workspace }}/Phone/Download_jdk-arm.sh
+        cd ${{ github.workspace }}/Phone/ 
+        ./Download_jdk-arm.sh
+
+    - name: 查看 Java 免安装版本 下载结果 并 确保其在期待预期文件夹
+      run: |
+        ls -l ${{ github.workspace }}/Phone/Direct
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-linux/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-linux/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-linux/bin/java
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-windows/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-windows/bin/
+        ls -l ${{ github.workspace }}/Phone/Direct/jdk-windows/bin/java.exe
+
+    #- name: Java 对 Arm64 的 Windows 不兼容 ， 移除多余文件
+    #  run: |
+    #    rm -rf ${{ github.workspace }}/Phone/Direct/Start.bat
+
+    #- name: 查看 Java21 多余文件移除结果
+    #  run: |
+    #    ls -l ${{ github.workspace }}/Phone/Direct
+    #    ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/
+
+    - name: 修改 Phone 下的 Direct 文件夹为 ESurfingDialer
+      run: |
+        cd ${{ github.workspace }}/Phone/
+        mv ./Direct ./ESurfingDialer
+
+    - name: 查看修改后的 ESurfingDialer 文件夹
+      run: |
+        ls -l ${{ github.workspace }}/Phone/ESurfingDialer
+
+    - name: 修改 ESurfingDialer 文件夹下所有文件的权限
+      run: |
+        chmod -R 777 ${{ github.workspace }}/Phone/ESurfingDialer/
+
+    - name: 压缩 ESurfingDialer 文件夹为 zip 格式
+      run: |
+        cd ${{ github.workspace }}/Phone/
+        zip -r ESurfingDialer.zip ESurfingDialer
+
+    - name: 查看压缩后的 ESurfingDialer.zip 文件
+      run: |
+        ls -l ${{ github.workspace }}/Phone/ESurfingDialer.zip
+
+    - name: 上传 ESurfingDialer 的免 Docker 金丝雀 直接运行版本
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialer 的 Arm64 免 Docker 金丝雀 直接运行版本
+        path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
+
+    # - name: 生成 免 Docker 直接运行版本 相关更新日志
+    #   run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    - name: 为 ESurfingDialer 的免 Docker 直接运行版本生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
+
+    - name: 获取天翼校园网官方 Linux 版本下载地址并下载，不能获取则使用预下载文件
+      run: |
+        cd ${{ github.workspace }}/PC/
+        pip3 install requests beautifulsoup4 lxml
+        python3 ./Get_ESurfingDialerClient.py
+
+    - name: 检查天翼校园网官方 Linux 版本下载结果
+      run: |
+        ls -l ${{ github.workspace }}/PC
+
+    - name: 编译 ESurfingDockerPC 镜像
+      run: |
+        cd ${{ github.workspace }}/PC
+        chmod +x ./build-arm.sh
+        ./build-arm.sh
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 为 ESurfingDockerPc 镜像打 GitHub Container Registry 版本号 标签
+      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPc 带版本号 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPc 的 Github 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary | cut -d '@' -f 2)
+        echo "DIGEST=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc 的 Github 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary
+        subject-digest: ${{ env.DIGEST }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPc 镜像打 DockerHub 版本号 标签
+      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPc 带版本号 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPc 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary | cut -d '@' -f 2)
+        echo "DIGEST2=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary
+        subject-digest: ${{ env.DIGEST2 }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPc 镜像打 GitHub Container Registry Latest 标签
+      run: docker tag esurfingdockerpc ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPc:latest 镜像到 GitHub Container Registry
+      run: docker push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPc:latest 的 Github 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64-canary | cut -d '@' -f 2)
+        echo "DIGEST3=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest 的 Github 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64-canary
+        subject-digest: ${{ env.DIGEST3 }}
+        push-to-registry: false
+
+    - name: 为 ESurfingDockerPc 镜像打 DockerHub Latest 标签
+      run: docker tag esurfingdockerpc ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 推送 ESurfingDockerPc:latest 镜像到 DockerHub
+      run: docker push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 获取 ESurfingDockerPc:latest 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64-canary | cut -d '@' -f 2)
+        echo "DIGEST4=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64-canary
+        subject-digest: ${{ env.DIGEST4 }}
+        push-to-registry: false
+
+    - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64-canary -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 上传 ESurfingDockerPc:latest 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-arm64-canary）
+        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+
+    # - name: 生成 ESurfingDockerPc 相关更新日志
+    #   run: echo -e "ESurfingDockerPc.tar.gz 此镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    - name: 生成 ESurfingDockerPc:latest 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+
+    # - name: 上传 Arm64平台的更新日志
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: Arm64-ChangeLog
+    #     path: '${{ github.workspace }}/CHANGELOG.txt'
+
+  Prepare_For_Arm64_Release_canary:
+    runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
+
+    needs:
+      - Build_Arm64_Canary
+      - Combine-Amd64-And-Arm64
+
+    environment:
+      name: ESurfingDialer
+
+    steps:
+    # - name: 下载本项目所有代码
+    #   uses: actions/checkout@v4
+    #   with:
+    #     path: '${{ github.workspace }}'
+
+    # - name: 下载时间戳和相关环境变量缓存文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: TimeStampForGithubEnv
+    #     path: ${{ github.workspace }}/
+
+    # - name: 重新写入 时间戳 变量
+    #   run: |
+    #     TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+    #     echo "$TIMESTAMP" >> $GITHUB_ENV
+
+    # - name: 删除 时间戳和相关环境变量 缓存文件
+    #   run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
+
+    # - name: 创建 下载已编译的Jar文件 所需文件夹
+    #   run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    # - name: 下载 已编译的Jar 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialer 的 最新 JAR 通用 构建产物
+    #     path: ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    # - name: 下载 Arm64平台的更新日志
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: Arm64-ChangeLog
+    #     path: ${{ github.workspace }}/
+
+    # - name: 删除 Arm64平台的更新日志
+    #   uses: geekyeggo/delete-artifact@v5
+    #   with:
+    #     name: Arm64-ChangeLog
+
+    - name: 创建 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/Phone/
+
+    # - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialerPhone 的 Arm64 Docker 镜像
+    #     path: ${{ github.workspace }}/Phone/
+
+    - name: 拉取 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像
+      run: |
+         docker pull --platform linux/arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+
+    - name: 获取 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary | cut -d '@' -f 2)
+        echo "DIGEST1=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary
+        subject-digest: ${{ env.DIGEST1 }}
+        push-to-registry: false
+
+    - name: 上传 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest-canary）
+        path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
+
+    - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/Phone/
+
+    - name: 下载 ESurfingDialer 的免 Docker 直接运行版本 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本
+        path: ${{ github.workspace }}/Phone/
+
+    - name: 创建 ESurfingDockerPc:latest 的 DockerHub 镜像 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/PC/
+
+    # - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-arm64）
+    #     path: ${{ github.workspace }}/PC/
+
+    - name: 拉取 ESurfingDockerPc:latest-canary 的 DockerHub 镜像
+      run: |
+         docker pull --platform linux/arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 ESurfingDockerPc:latest-canary 的 DockerHub 镜像
+      run: |
+        docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary -o ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+
+    - name: 获取 ESurfingDockerPc:latest-canary 的 DockerHub 镜像的 sha256
+      run: |
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary | cut -d '@' -f 2)
+        echo "DIGEST1=$DIGEST" >> $GITHUB_ENV
+
+    - name: 生成 ESurfingDockerPc:latest-canary 的 DockerHub 镜像证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary
+        subject-digest: ${{ env.DIGEST1 }}
+        push-to-registry: false
+
+    - name: 上传 ESurfingDockerPc:latest-canary 的 DockerHub 镜像
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-canary）
+        path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
+
+    # - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
+    #   run: mkdir -p ${{ github.workspace }}/Phone/
+
+    # - name: 下载 ESurfingDialer 的免 Docker 直接运行版本 文件
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: ESurfingDialer 的 Arm64 免 Docker 直接运行版本
+    #     path: ${{ github.workspace }}/Phone/
+
+    # - name: 生成更新日志
+    #   run: echo "### 好的更新已经到来（更新日志生成测试）" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    # - name: 创建 Release
+    #   id: Arm64-Release
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     body_path: ${{ github.workspace }}/CHANGELOG.txt
+    #     tag_name: V${{ env.TIMESTAMP }}-Arm64
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     files: |
+    #       ${{ github.workspace }}/ESurfingDialer/build/libs/*
+    #       ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
+    #       ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
+    #       ${{ github.workspace }}/Phone/ESurfingDialer.zip
+
+    # - name: 写入 Arm64-Release-Url 等相关环境变量到缓存文件
+    #   run: |
+    #     echo -e "\"${{ steps.Arm64-Release.outputs.url }}\"" >> ${{ github.workspace }}/Arm64-Release-Url.txt
+    #     echo "Arm64-Release-Url=${{ steps.Arm64-Release.outputs.url }}" >> $GITHUB_ENV
+
+    # - name: 上传 Arm64-Release-Url 环境变量缓存文件
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: Arm64-Release-UrlForGithubEnv
+    #     path: ${{ github.workspace }}/Arm64-Release-Url.txt
+
+    # - name: 删除 Arm64-Release-Url 环境变量 缓存文件
+    #   run: rm -rf ${{ github.workspace }}/Arm64-Release-Url.txt
+
+  Build_Arm64:
+    runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
+
+    needs:
+      - Creative_Enviroment_File_And_Build_Canary_Jar
+
+    environment:
+      name: ESurfingDialer
+
+    steps:
+    - name: 初始化 QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: 初始化 Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      with:
+        driver: docker
+      
+    - name: 下载本项目所有代码
       uses: actions/checkout@v4
       with:
-        repository: 'oracle/docker-images'
-        path: '${{ github.workspace }}/Oracle-Docker-images'
+        path: '${{ github.workspace }}'
+
+    - name: 下载时间戳和相关环境变量缓存文件
+      uses: actions/download-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/
+
+    - name: 重新写入时间戳变量
+      run: |
+        TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        echo "$TIMESTAMP" >> $GITHUB_ENV
+
+    - name: 删除 时间戳和相关环境变量 缓存文件
+      run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
+
+    - name: 创建 下载已编译的Jar文件 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 下载已编译的Jar文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的 最新 JAR 通用 构建产物
+        path: ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 查看 已编译的Jar文件 下载结果
+      run: ls -l ${{ github.workspace }}/ESurfingDialer/build/libs/
 
     - name: 查看工作目录
       run: |
         ls -l ${{ github.workspace }}
 
-    - name: 查看 Oracle-Docker-images 目录
+    - name: 查找最新构建的 Jar 文件并复制
       run: |
-        ls -l ${{ github.workspace }}/Oracle-Docker-images
+        chmod +x ${{ github.workspace }}/FindLasterBuildJar.sh
+        ${{ github.workspace }}/FindLasterBuildJar.sh
 
-    - name: 编译 OracleJava 镜像
+    - name: 查看 Jar 文件复制结果
       run: |
-        chmod +x ${{ github.workspace }}/OracleJava-arm.sh
-        ${{ github.workspace }}/OracleJava-arm.sh
+        ls -l ${{ github.workspace }}/Phone
 
-    - name: 查看当前可用的Docker本地镜像
-      run: |
-        docker image ls
+    - name: 为 ESurfingDialer 的 JAR 构建产物 生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/Phone/client.jar'
+
+    # - name: 下载 Oracle-Docker-images 项目代码
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: 'oracle/docker-images'
+    #     path: '${{ github.workspace }}/Oracle-Docker-images'
+
+    # - name: 查看工作目录
+    #   run: |
+    #     ls -l ${{ github.workspace }}
+
+    # - name: 查看 Oracle-Docker-images 目录
+    #   run: |
+    #     ls -l ${{ github.workspace }}/Oracle-Docker-images
+
+    # - name: 编译 OracleJava 镜像
+    #   run: |
+    #     chmod +x ${{ github.workspace }}/OracleJava.sh
+    #     ${{ github.workspace }}/OracleJava.sh
+
+    # - name: 查看当前可用的Docker本地镜像
+    #   run: |
+    #     docker image ls
+
 
     - name: 编译 ESurfingDockerPhone 镜像
       run: |
@@ -997,9 +2215,6 @@ jobs:
         name: ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest-amd64）
         path: '${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz'
 
-    # - name: 生成 ESurfingDockerPhone 相关更新日志
-    #   run: echo -e "ESurfingDockerPhone.tar.gz 此镜像占用手机设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
-
     - name: 生成 ESurfingDockerPhone:latest 的 DockerHub 证明
       uses: actions/attest-build-provenance@v1
       with:
@@ -1020,15 +2235,6 @@ jobs:
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-windows/
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-windows/bin/
         ls -l ${{ github.workspace }}/Phone/Direct/jdk-windows/bin/java.exe
-
-    #- name: Java 对 Arm64 的 Windows 不兼容 ， 移除多余文件
-    #  run: |
-    #    rm -rf ${{ github.workspace }}/Phone/Direct/Start.bat
-
-    #- name: 查看 Java21 多余文件移除结果
-    #  run: |
-    #    ls -l ${{ github.workspace }}/Phone/Direct
-    #    ls -l ${{ github.workspace }}/Phone/Direct/jdk_linux-x64/
 
     - name: 修改 Phone 下的 Direct 文件夹为 ESurfingDialer
       run: |
@@ -1057,9 +2263,6 @@ jobs:
       with:
         name: ESurfingDialer 的 Arm64 免 Docker 直接运行版本
         path: '${{ github.workspace }}/Phone/ESurfingDialer.zip'
-
-    # - name: 生成 免 Docker 直接运行版本 相关更新日志
-    #   run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
 
     - name: 为 ESurfingDialer 的免 Docker 直接运行版本生成证明
       uses: actions/attest-build-provenance@v1
@@ -1200,9 +2403,6 @@ jobs:
         name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-arm64）
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
-    # - name: 生成 ESurfingDockerPc 相关更新日志
-    #   run: echo -e "ESurfingDockerPc.tar.gz 此镜像占用电脑设备上网资格进行网络认证。 [使用方法](https://github.com/liu23zhi/ESurfingDialerDocker/?tab=readme-ov-file#3%E4%BB%8Egithub-release%E4%B8%8B%E8%BD%BD%E5%90%8E%E6%9C%AC%E5%9C%B0%E5%AF%BC%E5%85%A5-1 \"使用方法\") \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
-
     - name: 生成 ESurfingDockerPc:latest 的 DockerHub 镜像证明
       uses: actions/attest-build-provenance@v1
       with:
@@ -1225,57 +2425,13 @@ jobs:
       name: ESurfingDialer
 
     steps:
-    # - name: 下载本项目所有代码
-    #   uses: actions/checkout@v4
-    #   with:
-    #     path: '${{ github.workspace }}'
-
-    # - name: 下载时间戳和相关环境变量缓存文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: TimeStampForGithubEnv
-    #     path: ${{ github.workspace }}/
-
-    # - name: 重新写入 时间戳 变量
-    #   run: |
-    #     TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
-    #     echo "$TIMESTAMP" >> $GITHUB_ENV
-
-    # - name: 删除 时间戳和相关环境变量 缓存文件
-    #   run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
-
-    # - name: 创建 下载已编译的Jar文件 所需文件夹
-    #   run: mkdir -p ${{ github.workspace }}/ESurfingDialer/build/libs/
-
-    # - name: 下载 已编译的Jar 文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: ESurfingDialer 的通用 JAR 构建产物
-    #     path: ${{ github.workspace }}/ESurfingDialer/build/libs/
-
-    # - name: 下载 Arm64平台的更新日志
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: Arm64-ChangeLog
-    #     path: ${{ github.workspace }}/
-
-    # - name: 删除 Arm64平台的更新日志
-    #   uses: geekyeggo/delete-artifact@v5
-    #   with:
-    #     name: Arm64-ChangeLog
-
-    - name: 创建 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 所需文件夹
-      run: mkdir -p ${{ github.workspace }}/Phone/
-
-    # - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像 文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: ESurfingDialerPhone 的 Arm64 Docker 镜像
-    #     path: ${{ github.workspace }}/Phone/
-
     - name: 拉取 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       run: |
          docker pull --platform linux/arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
 
     - name: 下载 ESurfingDockerPhoneDocker:latest 的 DockerHub 镜像
       run: |
@@ -1305,21 +2461,19 @@ jobs:
     - name: 下载 ESurfingDialer 的免 Docker 直接运行版本 文件
       uses: actions/download-artifact@v4
       with:
-        name: ESurfingDialer 的 Amd64 免 Docker 直接运行版本
+        name: ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本
         path: ${{ github.workspace }}/Phone/
 
     - name: 创建 ESurfingDockerPc:latest 的 DockerHub 镜像 所需文件夹
       run: mkdir -p ${{ github.workspace }}/PC/
 
-    # - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像 文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-arm64）
-    #     path: ${{ github.workspace }}/PC/
-
     - name: 拉取 ESurfingDockerPc:latest 的 DockerHub 镜像
       run: |
          docker pull --platform linux/arm64 ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
 
     - name: 下载 ESurfingDockerPc:latest 的 DockerHub 镜像
       run: |
@@ -1343,51 +2497,12 @@ jobs:
         name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest）
         path: '${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz'
 
-    # - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
-    #   run: mkdir -p ${{ github.workspace }}/Phone/
-
-    # - name: 下载 ESurfingDialer 的免 Docker 直接运行版本 文件
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: ESurfingDialer 的 Arm64 免 Docker 直接运行版本
-    #     path: ${{ github.workspace }}/Phone/
-
-    # - name: 生成更新日志
-    #   run: echo "### 好的更新已经到来（更新日志生成测试）" >> ${{ github.workspace }}/CHANGELOG.txt
-
-    # - name: 创建 Release
-    #   id: Arm64-Release
-    #   uses: softprops/action-gh-release@v2
-    #   with:
-    #     body_path: ${{ github.workspace }}/CHANGELOG.txt
-    #     tag_name: V${{ env.TIMESTAMP }}-Arm64
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-    #     files: |
-    #       ${{ github.workspace }}/ESurfingDialer/build/libs/*
-    #       ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
-    #       ${{ github.workspace }}/PC/ESurfingDockerPc.tar.gz
-    #       ${{ github.workspace }}/Phone/ESurfingDialer.zip
-
-    # - name: 写入 Arm64-Release-Url 等相关环境变量到缓存文件
-    #   run: |
-    #     echo -e "\"${{ steps.Arm64-Release.outputs.url }}\"" >> ${{ github.workspace }}/Arm64-Release-Url.txt
-    #     echo "Arm64-Release-Url=${{ steps.Arm64-Release.outputs.url }}" >> $GITHUB_ENV
-
-    # - name: 上传 Arm64-Release-Url 环境变量缓存文件
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: Arm64-Release-UrlForGithubEnv
-    #     path: ${{ github.workspace }}/Arm64-Release-Url.txt
-
-    # - name: 删除 Arm64-Release-Url 环境变量 缓存文件
-    #   run: rm -rf ${{ github.workspace }}/Arm64-Release-Url.txt
-
-  Combine-Amd64-And-Arm64:
+  Combine-Amd64-And-Arm64_Canary:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
     
     needs:
-      - Build_Amd64
-      - Build_Arm64
+      - Build_Amd64_Canary
+      - Build_Arm64_Canary
 
     environment:
       name: ESurfingDialer
@@ -1418,8 +2533,337 @@ jobs:
     # - name: 下载已编译的Jar文件
     #   uses: actions/download-artifact@v4
     #   with:
-    #     name: ESurfingDialer 的通用 JAR 构建产物
+    #     name: ESurfingDialer 的 最新 JAR 通用 构建产物
     #     path: ${{ github.workspace }}/ESurfingDialer/build/libs/
+
+    - name: 查看工作目录
+      run: |
+        ls -l ${{ github.workspace }}
+
+    - name: 查看工作目录
+      run: |
+        ls -l ${{ github.workspace }}
+
+    - name: 登录到 GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 登录 DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ vars.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: 下载 esurfingdockerphonedocker 的 Amd64 Github 镜像
+      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 esurfingdockerphonedocker 的 Arm64 Github 镜像
+      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 对镜像进行合并
+      run: |
+        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-canary ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看镜像的 manifest 列表结构
+      run: |
+        docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-canary
+
+    - name: 推送 esurfingdockerphonedocker 带版本号 镜像到 GitHub Container Registry
+      run: docker manifest  push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-canary
+
+    - name: 下载 esurfingdockerphonedocker 的 Amd64 Github 镜像
+      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 esurfingdockerphonedocker 的 Amd64 Github 镜像
+      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 对镜像进行合并
+      run: |
+        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-canary ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-arm64-canary ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-amd64-canary
+
+    - name: 查看镜像的 manifest 列表结构
+      run: |
+        docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-canary
+
+    - name: 推送 esurfingdockerphonedocker:latest-canary 镜像到 GitHub Container Registry
+      run: docker manifest  push ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:latest-canary
+
+    - name: 下载 esurfingdockerphonedocker 的 Amd64 Docker 镜像
+      run: docker pull ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 esurfingdockerphonedocker 的 Amd64 Docker 镜像
+      run: docker pull ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 对镜像进行合并
+      run: |
+        docker manifest create ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-canary ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64-canary ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看镜像的 manifest 列表结构
+      run: |
+        docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-canary
+
+    - name: 推送 esurfingdockerphonedocker 带版本号 镜像到 DockerHub
+      run: docker manifest  push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:${{ env.VERSION }}-canary
+
+    - name: 下载 esurfingdockerphonedocker 的 Amd64 Docker 镜像
+      run: docker pull ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 esurfingdockerphonedocker 的 Amd64 Docker 镜像
+      run: docker pull ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 对镜像进行合并
+      run: |
+        docker manifest create ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-arm64-canary ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-amd64-canary
+
+    - name: 查看镜像的 manifest 列表结构
+      run: |
+        docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary
+
+    - name: 推送 esurfingdockerphonedocker:latest 镜像到 DockerHub
+      run: docker manifest  push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary
+
+    - name: 下载 esurfingdockerpc 的 Amd64 Github 镜像
+      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 esurfingdockerpc 的 Amd64 Github 镜像
+      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 对镜像进行合并
+      run: |
+        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-canary ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看镜像的 manifest 列表结构
+      run: |
+        docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-canary
+
+    - name: 推送 esurfingdockerpc 带版本号 镜像到 GitHub Container Registry
+      run: docker manifest  push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:${{ env.VERSION }}-canary
+
+    - name: 下载 esurfingdockerpc 的 Amd64 Github 镜像
+      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 esurfingdockerpc 的 Amd64 Github 镜像
+      run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 对镜像进行合并
+      run: |
+        docker manifest create ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-canary ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-arm64-canary ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-amd64-canary
+
+    - name: 查看镜像的 manifest 列表结构
+      run: |
+        docker manifest inspect ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-canary
+
+    - name: 推送 esurfingdockerpc:latest-canary 镜像到 GitHub Container Registry
+      run: docker manifest  push ghcr.io/${{ github.repository_owner }}/esurfingdockerpc:latest-canary
+
+    - name: 下载 esurfingdockerpc 的 Amd64 Docker 镜像
+      run: docker pull ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 esurfingdockerpc 的 Amd64 Docker 镜像
+      run: docker pull ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 对镜像进行合并
+      run: |
+        docker manifest create ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-canary ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-arm64-canary ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-amd64-canary
+
+    - name: 查看镜像的 manifest 列表结构
+      run: |
+        docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-canary
+
+    - name: 推送 esurfingdockerpc 带版本号 镜像到 DockerHub
+      run: docker manifest  push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:${{ env.VERSION }}-canary
+
+    - name: 下载 esurfingdockerpc 的 Amd64 Docker 镜像
+      run: docker pull ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 下载 esurfingdockerpc 的 Amd64 Docker 镜像
+      run: docker pull ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64-canary
+
+    - name: 查看当前可用的Docker本地镜像
+      run: |
+        docker image ls
+
+    - name: 对镜像进行合并
+      run: |
+        docker manifest create ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-arm64-canary ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-amd64-canary
+
+    - name: 查看镜像的 manifest 列表结构
+      run: |
+        docker manifest inspect ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary
+
+    - name: 推送 esurfingdockerpc:latest 镜像到 DockerHub
+      run: docker manifest  push ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerpc:latest-canary
+
+    - name: 新建文件夹用于储存免Docker执行版本
+      run:  |
+        mkdir -p ${{ github.workspace }}/ESurfingDialer
+        mkdir -p ${{ github.workspace }}/ESurfingDialer/Amd
+        mkdir -p ${{ github.workspace }}/ESurfingDialer/Arm
+  
+    - name: 修改 ESurfingDialer 文件夹下所有文件的权限
+      run: |
+        chmod -R 777 ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 为 ESurfingDialer 免DOcker版本 的下载做准备
+      run: |
+        sudo apt install -y unzip
+
+    - name: 下载 ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本
+        path: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd
+
+    - name: 解压 ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本
+      run: |
+        cd ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd
+        unzip -v ESurfingDialer.zip -d ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd && rm ESurfingDialer.zip
+
+    - name: 查看 ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本 解压后的目录
+      run: |
+        cd ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd
+        ls -l
+
+    - name: 下载 ESurfingDialer 的 Arm64 免 Docker 金丝雀 直接运行版本
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的 Arm64 免 Docker 金丝雀 直接运行版本
+        path: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm
+
+    - name: 解压 ESurfingDialer 的 Arm64 免 Docker 金丝雀 直接运行版本
+      run: |
+        cd ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm
+        unzip -v ESurfingDialer.zip -d ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm && rm ESurfingDialer.zip
+
+    - name: 查看 ESurfingDialer 的 Arm64 免 Docker 金丝雀 直接运行版本 解压后的目录
+      run: |
+        cd ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm
+        ls -l
+
+    - name: 修改 ESurfingDialer 文件夹下所有文件的权限
+      run: |
+        chmod -R 777 ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/
+
+    - name: 压缩 ESurfingDialer 文件夹为 zip 格式
+      run: |
+        cd ${{ github.workspace }}/ESurfingDialer/
+        zip -r ESurfingDialer.zip ESurfingDialer
+
+    - name: 查看压缩后的 ESurfingDialer.zip 文件
+      run: |
+        ls -l ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
+
+    - name: 上传 ESurfingDialer 的免 Docker 直接运行版本
+      uses: actions/upload-artifact@v4
+      with:
+        name: ESurfingDialer 的 通用 免 Docker 金丝雀 直接运行 版本
+        path: '${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip'
+
+    - name: 为 ESurfingDialer 的免 Docker 直接运行版本 生成证明
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip'
+
+    # - name: 生成 编译日期 相关更新日志
+    #   run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    # - name: 生成 最新Jar编译 相关更新日志
+    #   run:  |
+    #     echo -e "${{ env.LatestJarFilename }}  此文件为Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer  的最新编译文件。\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
+
+    # - name: 上传 Amd64平台和Arm64平台结合 的更新日志
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: Combine-Amd64-And-Arm64-ChangeLog
+    #     path: '${{ github.workspace }}/CHANGELOG.txt'
+
+  Combine-Amd64-And-Arm64:
+    runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
+    
+    needs:
+      - Build_Amd64
+      - Build_Arm64
+
+    environment:
+      name: ESurfingDialer
+
+    steps:
+    - name: 下载时间戳和相关环境变量缓存文件
+      uses: actions/download-artifact@v4
+      with:
+        name: TimeStampForGithubEnv
+        path: ${{ github.workspace }}/
+
+    - name: 重新写入时间戳变量
+      run: |
+        TIMESTAMP=$(cat ${{ github.workspace }}/GITHUB_ENV.txt)
+        echo "$TIMESTAMP" >> $GITHUB_ENV
+
+    - name: 删除 时间戳和相关环境变量 缓存文件
+      run: rm -rf ${{ github.workspace }}/GITHUB_ENV.txt
 
     - name: 查看工作目录
       run: |
@@ -1449,7 +2893,7 @@ jobs:
       run: |
         docker image ls
 
-    - name: 下载 esurfingdockerphonedocker 的 Amd64 Github 镜像
+    - name: 下载 esurfingdockerphonedocker 的 Arm64 Github 镜像
       run: docker pull ghcr.io/${{ github.repository_owner }}/esurfingdockerphonedocker:${{ env.VERSION }}-arm64
 
     - name: 查看当前可用的Docker本地镜像
@@ -1665,7 +3109,7 @@ jobs:
     - name: 解压 ESurfingDialer 的 Amd64 免 Docker 直接运行版本
       run: |
         cd ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd
-        unzip -ov ESurfingDialer.zip -d ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd && rm ESurfingDialer.zip
+        unzip -v ESurfingDialer.zip -d ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Amd && rm ESurfingDialer.zip
 
     - name: 查看 ESurfingDialer 的 Amd64 免 Docker 直接运行版本 解压后的目录
       run: |
@@ -1681,7 +3125,7 @@ jobs:
     - name: 解压 ESurfingDialer 的 Arm64 免 Docker 直接运行版本
       run: |
         cd ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm
-        unzip -ov ESurfingDialer.zip -d ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm && rm ESurfingDialer.zip
+        unzip -v ESurfingDialer.zip -d ${{ github.workspace }}/ESurfingDialer/ESurfingDialer/Arm && rm ESurfingDialer.zip
 
     - name: 查看 ESurfingDialer 的 Arm64 免 Docker 直接运行版本 解压后的目录
       run: |
@@ -1704,7 +3148,7 @@ jobs:
     - name: 上传 ESurfingDialer 的免 Docker 直接运行版本
       uses: actions/upload-artifact@v4
       with:
-        name: ESurfingDialer 的 通用 免 Docker 直接运行版本
+        name: ESurfingDialer 的 通用 免 Docker 直接运行 版本
         path: '${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip'
 
     - name: 为 ESurfingDialer 的免 Docker 直接运行版本 生成证明
@@ -1712,25 +3156,13 @@ jobs:
       with:
         subject-path: '${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip'
 
-    # - name: 生成 编译日期 相关更新日志
-    #   run: echo -e "# 编译日期：${{ env.TIMESTAMP2 }} \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
-
-    # - name: 生成 最新Jar编译 相关更新日志
-    #   run:  |
-    #     echo -e "${{ env.LatestJarFilename }}  此文件为Rsplwe大佬的项目  https://github.com/Rsplwe/ESurfingDialer  的最新编译文件。\n\n" >> ${{ github.workspace }}/CHANGELOG.txt
-
-    # - name: 上传 Amd64平台和Arm64平台结合 的更新日志
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: Combine-Amd64-And-Arm64-ChangeLog
-    #     path: '${{ github.workspace }}/CHANGELOG.txt'
-
-  Release-Combine-Amd64-And-Arm64:
+  Release-ALL:
     runs-on: ubuntu-latest  # 在最新的 Ubuntu 环境中运行
 
     needs:
-      - Combine-Amd64-And-Arm64
+      - Prepare_For_Amd64_Release_Canary
       - Prepare_For_Amd64_Release
+      - Prepare_For_Arm64_Release_canary
       - Prepare_For_Arm64_Release
 
     environment:
@@ -1762,7 +3194,7 @@ jobs:
     - name: 下载 已编译的Jar 文件
       uses: actions/download-artifact@v4
       with:
-        name: ESurfingDialer 的通用 JAR 构建产物
+        name: ESurfingDialer 的 最新 JAR 通用 构建产物
         path: ${{ github.workspace }}/ESurfingDialer/build/libs/
 
     # - name: 下载 Amd64平台和Arm64平台结合 的更新日志
@@ -1776,16 +3208,81 @@ jobs:
     #   with:
     #     name: Combine-Amd64-And-Arm64-ChangeLog
 
-    - name: 创建 ESurfingDialer 的免 Docker 直接运行版本 所需文件夹
+    - name: 创建 ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本 所需文件夹
       run: mkdir -p ${{ github.workspace }}/ESurfingDialer/
 
-    - name: 下载 ESurfingDialer 的免 Docker 直接运行版本 文件
+    - name: 下载 ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本 文件
       uses: actions/download-artifact@v4
       with:
-        name: ESurfingDialer 的 通用 免 Docker 直接运行版本
+        name: ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本
         path: ${{ github.workspace }}/ESurfingDialer/
 
-    - name: 修改 ESurfingDialer 的 通用 免 Docker 直接运行版本 文件名
+    - name: 修改 ESurfingDialer 的 Amd64 免 Docker 金丝雀 直接运行版本 文件名
+      run: |
+        mv ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64-Canary.zip
+
+    - name: 创建 ESurfingDialer 的 Amd64 免 Docker 直接运行版本 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 下载 ESurfingDialer 的 Amd64 免 Docker 直接运行版本 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的 Amd64 免 Docker 直接运行版本
+        path: ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 修改 ESurfingDialer 的 Amd64 免 Docker 直接运行版本 文件名
+      run: |
+        mv ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64.zip
+
+    - name: 创建 ESurfingDialer 的 Arm64 免 Docker 金丝雀 直接运行版本 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 下载 ESurfingDialer 的 Arm64 免 Docker 金丝雀 直接运行版本 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的 Arm64 免 Docker 金丝雀 直接运行版本
+        path: ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 修改 ESurfingDialer 的 Arm64 免 Docker 金丝雀 直接运行版本 文件名
+      run: |
+        mv ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64-Canary.zip
+
+    - name: 创建 ESurfingDialer 的 Arm64 免 Docker 直接运行版本 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 下载 ESurfingDialer 的 Arm64 免 Docker 直接运行版本 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的 Arm64 免 Docker 直接运行版本
+        path: ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 修改 ESurfingDialer 的 Arm64 免 Docker 直接运行版本 文件名
+      run: |
+        mv ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
+
+    - name: 创建 ESurfingDialer 的 通用 免 Docker 金丝雀 直接运行 版本 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 下载 ESurfingDialer 的 通用 免 Docker 金丝雀 直接运行 版本 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的 通用 免 Docker 金丝雀 直接运行 版本
+        path: ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 修改 ESurfingDialer 的 通用 免 Docker 金丝雀 直接运行 版本 文件名
+      run: |
+        mv ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General-Canary.zip
+
+    - name: 创建 ESurfingDialer 的 通用 免 Docker 直接运行 版本 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 下载 ESurfingDialer 的 通用 免 Docker 直接运行 版本 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialer 的 通用 免 Docker 直接运行 版本
+        path: ${{ github.workspace }}/ESurfingDialer/
+
+    - name: 修改 ESurfingDialer 的 通用 免 Docker 直接运行 版本 文件名
       run: |
         mv ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
 
@@ -1832,23 +3329,23 @@ jobs:
     #     #  ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
     #     #  ${{ github.workspace }}/ESurfingDockerPc.tar.gz
 
-    - name: 创建 ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest） 所需文件夹
-      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/PC/
+    - name: 创建 ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-canary） 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/Phone/
 
-    - name: 下载 ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest）
+    - name: 下载 ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-canary） 文件
       uses: actions/download-artifact@v4
       with:
-        name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest）
-        path: ${{ github.workspace }}/ESurfingDialer/PC/
+        name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-canary）
+        path: ${{ github.workspace }}/ESurfingDialer/Phone/
 
-    - name: 修改  ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest） 文件名
+    - name: 修改 ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-canary） 文件名
       run: |
-        mv ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc.tar.gz ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64.tar.gz
+        mv ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone.tar.gz ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64-Canary.tar.gz
 
     - name: 创建 ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest） 所需文件夹
       run: mkdir -p ${{ github.workspace }}/ESurfingDialer/Phone/
 
-    - name: 下载 ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest）
+    - name: 下载 ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest） 文件
       uses: actions/download-artifact@v4
       with:
         name: ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest）
@@ -1858,23 +3355,75 @@ jobs:
       run: |
         mv ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone.tar.gz ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64.tar.gz
 
-    - name: 创建 ESurfingDialer 的 Amd64 免 Docker 直接运行版本 所需文件夹
-      run: mkdir -p $${{ github.workspace }}/ESurfingDialer/Phone/
+    - name: 创建 ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-canary） 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/PC/
 
-    - name: 下载 ESurfingDialer 的 Amd64 免 Docker 直接运行版本 文件
+    - name: 下载 ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-canary） 文件
       uses: actions/download-artifact@v4
       with:
-        name: ESurfingDialer 的 Amd64 免 Docker 直接运行版本
+        name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-canary）
+        path: ${{ github.workspace }}/ESurfingDialer/PC/
+
+    - name: 修改 ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest-canary） 文件名
+      run: |
+        mv ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc.tar.gz ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64-Canary.tar.gz
+
+    - name: 创建 ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest） 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/PC/
+
+    - name: 下载 ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest） 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest）
+        path: ${{ github.workspace }}/ESurfingDialer/PC/
+
+    - name: 修改 ESurfingDialerPc 的 Amd64 Docker 镜像（标签为：latest） 文件名
+      run: |
+        mv ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc.tar.gz ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64.tar.gz
+
+    - name: 创建 ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest-canary） 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/Phone/
+
+    - name: 下载 ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest-canary） 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest-canary）
         path: ${{ github.workspace }}/ESurfingDialer/Phone/
 
-    - name: 修改 ESurfingDialer 的 Amd64 免 Docker 直接运行版本 文件名
+    - name: 修改 ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest-canary） 文件名
       run: |
-        mv ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDialer-Amd64.zip
+        mv ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone.tar.gz ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64-Canary.tar.gz
 
+    - name: 创建 ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest） 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/Phone/
+
+    - name: 下载 ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest） 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest）
+        path: ${{ github.workspace }}/ESurfingDialer/Phone/
+
+    - name: 修改 ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest） 文件名
+      run: |
+        mv ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone.tar.gz ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64.tar.gz
+  
+    - name: 创建 ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-canary） 所需文件夹
+      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/PC/
+
+    - name: 下载 ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-canary） 文件
+      uses: actions/download-artifact@v4
+      with:
+        name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-canary）
+        path: ${{ github.workspace }}/ESurfingDialer/PC/
+
+    - name: 修改 ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest-canary） 文件名
+      run: |
+        mv ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc.tar.gz ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64-Canary.tar.gz
+  
     - name: 创建 ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest） 所需文件夹
       run: mkdir -p ${{ github.workspace }}/ESurfingDialer/PC/
 
-    - name: 下载 ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest）
+    - name: 下载 ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest） 文件
       uses: actions/download-artifact@v4
       with:
         name: ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest）
@@ -1883,33 +3432,7 @@ jobs:
     - name: 修改 ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest） 文件名
       run: |
         mv ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc.tar.gz ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64.tar.gz
-
-    - name: 创建 ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest） 所需文件夹
-      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/Phone/
-
-    - name: 下载 ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest） 镜像
-      uses: actions/download-artifact@v4
-      with:
-        name: ESurfingDialerPhone 的 Arm64 Docker 镜像（标签为：latest）
-        path: ${{ github.workspace }}/ESurfingDialer/Phone/
-
-    - name: 修改 ESurfingDialerPc 的 Arm64 Docker 镜像（标签为：latest） 文件名
-      run: |
-        mv ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone.tar.gz ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64.tar.gz
-
-    - name: 创建 ESurfingDialer 的 Arm64 免 Docker 直接运行版本 所需文件夹
-      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/
-
-    - name: 下载 ESurfingDialer 的 Arm64 免 Docker 直接运行版本
-      uses: actions/download-artifact@v4
-      with:
-        name: ESurfingDialer 的 Arm64 免 Docker 直接运行版本
-        path: ${{ github.workspace }}/ESurfingDialer/
-
-    - name: 修改 ESurfingDialer 的 Arm64 免 Docker 直接运行版本 文件名
-      run: |
-        mv ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
-
+  
     - name: 生成时间菌
       run: |
         sed -i '/\## 这里是时间菌，我来告诉你我是什么时候点的Action/c\## 这里是时间菌，我来告诉你我是什么时候点的Action ☞ ${{ env.TIMESTAMP3 }}' ${{ github.workspace }}/ChangeLogTemplate.md
@@ -1946,18 +3469,20 @@ jobs:
         release_name: Release ${{ env.VERSION }}
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
-          ${{ github.workspace }}/ESurfingDialer/build/libs/*
-          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64.tar.gz
+          ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64-Canary.tar.gz
           ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64.tar.gz
-          ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDialer-Amd64.zip
-          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64.tar.gz
+          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64-Canary.tar.gz
+          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64.tar.gz
+          ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64-Canary.tar.gz
           ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64.tar.gz
+          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64-Canary.tar.gz
+          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64.tar.gz
+          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64-Canary.zip
+          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64.zip
+          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64-Canary.zip
           ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
+          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General-Canary.zip
           ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
-
-        # ${{ github.workspace }}/ESurfingDockerPhone.tar.gz
-        # ${{ github.workspace }}/ESurfingDockerPc.tar.gz
-        # ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip
 
     - name: 删除 时间戳和相关环境变量 缓存文件
       uses: geekyeggo/delete-artifact@v5
@@ -1973,3 +3498,8 @@ jobs:
     #   uses: geekyeggo/delete-artifact@v5
     #   with:
     #     name: Arm64-Release-UrlForGithubEnv
+
+    - name: 删除  Jar 缓存文件
+      uses: geekyeggo/delete-artifact@v5
+      with:
+        name: Download_Jar_Releae_Frome_Original_Author

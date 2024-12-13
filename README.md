@@ -60,6 +60,9 @@
 # 参考Action配置文件
 
 ###### 1. 删除过于陈旧的Action
+
+![rubbish](images/temp-2.png "rubbish")
+
 复制.github\workflows\Delete_old_workflow_runs.yaml到需要的项目，并在
 Settings->Actions->General->Actions permissions->Allow specified actions and reusable workflows
 填入`mattraks/delete-workflow-runs@*,`
