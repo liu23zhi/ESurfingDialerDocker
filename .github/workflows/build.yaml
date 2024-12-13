@@ -3469,7 +3469,7 @@ jobs:
       with:
         body_path: ${{ github.workspace }}/ChangeLogTemplate.md
         tag_name: ${{ env.VERSION }}
-        release_name: Release ${{ env.VERSION }}
+        name: Release ${{ env.VERSION }}
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
           ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64-Canary.tar.gz
