@@ -3468,7 +3468,7 @@ jobs:
     #   run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
     
     - name: 创建 Release
-      uses: softprops/action-gh-release@v2.2.0
+      uses: softprops/action-gh-release@v2
       with:
         # 更新日志文件路径
         body_path: ${{ github.workspace }}/ChangeLogTemplate.md
@@ -3477,23 +3477,23 @@ jobs:
         # 是否为预发布版本
         prerelease: false
         # 是否保留文件顺序
-        preserve_order: true
-        # 需要上传的文件
-        files: |
-          ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64-Canary.tar.gz
-          ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64.tar.gz
-          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64-Canary.tar.gz
-          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64.tar.gz
-          ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64-Canary.tar.gz
-          ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64.tar.gz
-          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64-Canary.tar.gz
-          ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64.tar.gz
-          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64-Canary.zip
-          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64.zip
-          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64-Canary.zip
-          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
-          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General-Canary.zip
-          ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
+        # preserve_order: true
+        # # 需要上传的文件
+        # files: |
+        #   ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64-Canary.tar.gz
+        #   ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64.tar.gz
+        #   ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64-Canary.tar.gz
+        #   ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64.tar.gz
+        #   ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64-Canary.tar.gz
+        #   ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64.tar.gz
+        #   ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64-Canary.tar.gz
+        #   ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64.tar.gz
+        #   ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64-Canary.zip
+        #   ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64.zip
+        #   ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64-Canary.zip
+        #   ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
+        #   ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General-Canary.zip
+        #   ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
         # Release名
         name: Release ${{ env.VERSION }}
         # 标签名
@@ -3509,10 +3509,433 @@ jobs:
         # 设置为最新版本
         make_latest : true
 
+
+    #在作者解决BUG之前只能单个文件上传
+
+    - name: 上传 ESurfingDockerPhone-Amd64-Canary.tar.gz 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64-Canary.tar.gz
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDockerPhone-Amd64.tar.gz 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64.tar.gz
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDockerPc-Amd64-Canary.tar.gz 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64-Canary.tar.gz
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDockerPc-Amd64.tar.gz 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Amd64.tar.gz
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDockerPhone-Arm64-Canary.tar.gz 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64-Canary.tar.gz
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDockerPhone-Arm64.tar.gz 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Arm64.tar.gz
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDockerPc-Arm64-Canary.tar.gz 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64-Canary.tar.gz
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDockerPc-Arm64.tar.gz 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/PC/ESurfingDockerPc-Arm64.tar.gz
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDialer-Amd64-Canary.zip 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64-Canary.zip
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDialer-Amd64.zip 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Amd64.zip
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDialer-Arm64-Canary.zip 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64-Canary.zip
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDialer-Arm64.zip 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
+    - name: 上传 ESurfingDialer-General-Canary.zip 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General-Canary.zip
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
+
     - name: 删除 时间戳和相关环境变量 缓存文件
       uses: geekyeggo/delete-artifact@v5
       with:
         name: TimeStampForGithubEnv
+
+    - name: 上传 ESurfingDialer-General.zip 到Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        # 需要上传的文件
+        file: ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
+        # 认证秘钥
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        # 需要上传到哪个TAG
+        tag: ${{ env.VERSION }}
+        # # 文件显示名称
+        # asset_name: mything    #直接显示文件名得了
+        # 是否允许覆盖
+        overwrite: false
+        # 如果已存在同tag的预发布版本，是否将其提升为发行
+        promote: false
+        # 是否设置成草稿，而不是发布
+        draft: false
+        # 设置成预发布版本
+        prerelease: false
+        # 设置成最新版本
+        make_latest: true
+        # Release名
+        release_name: Release ${{ env.VERSION }}
+        # # 基于什么分支提交请求
+        # target_commit: main
+        # # Release文本内容
+        # body: "This is my release text"
+        # 执行操作的仓库
+        repo_name: ${{ github.repository }}
 
     # - name: 删除 Amd64-Release-Url 等相关环境变量
     #   uses: geekyeggo/delete-artifact@v5
