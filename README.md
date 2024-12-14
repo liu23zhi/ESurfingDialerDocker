@@ -63,6 +63,9 @@
 
 # 参考Action配置文件
 
+根据 Github 帮助文档 https://docs.github.com/zh/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28#primary-rate-limit-for-github_token-in-github-actions
+Github Api速率限制为每个存储库每小时 1000 个请求
+
 ###### 1. 删除过于陈旧的Action
 
 注意，这不是翻译的效果，此Action的用户输入已经完成汉化
