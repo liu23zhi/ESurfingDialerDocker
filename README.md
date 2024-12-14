@@ -2,9 +2,9 @@
 
 ## 主要维护者
 
-[![GitHub stats](https://github-readme-stats.vercel.app/api?username=liu2-3zhi&count_private=true&show_icons=true)](/)
+[![GitHub stats](https://github-readme-stats.vercel.app/api?username=liu2-3zhi&count_private=true&show_icons=true)](https://github.com/liu2-3zhi)
 
-[![GitHub stats](https://github-readme-stats.vercel.app/api?username=BadGhost520&count_private=true&show_icons=true)](/)
+[![GitHub stats](https://github-readme-stats.vercel.app/api?username=BadGhost520&count_private=true&show_icons=true)](https://github.com/BadGhost520)
 
 **本项目并不提供任何反检测手段，如果需要，请移步至此[视频](https://b23.tv/XFgF5hd)**
 
