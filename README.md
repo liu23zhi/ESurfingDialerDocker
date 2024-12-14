@@ -1,5 +1,11 @@
 # 适用于广东天翼校园网的docker容器自动认证方案
 
+## 主要维护者
+
+[![GitHub stats](https://github-readme-stats.vercel.app/api?username=liu2-3zhi&count_private=true&show_icons=true)](/)
+
+[![GitHub stats](https://github-readme-stats.vercel.app/api?username=BadGhost520&count_private=true&show_icons=true)](/)
+
 **本项目并不提供任何反检测手段，如果需要，请移步至此[视频](https://b23.tv/XFgF5hd)**
 
 **经过验证 <mark><font color="red"><ins>"[电子科技大学中山学院](https://www.zsc.edu.cn/)"</ins></font></mark> 可用！（掌声祝贺👏）**
@@ -78,7 +84,7 @@ Settings->Actions->General->Actions permissions->Allow specified actions and reu
 
 ![rubbish](images/temp.png "rubbish")
 
-###### 1. 删除过于陈旧的Action
+###### 2. 删除过于陈旧的Release
 
 注意，这不是翻译的效果，此Action的用户输入已经完成汉化
 
