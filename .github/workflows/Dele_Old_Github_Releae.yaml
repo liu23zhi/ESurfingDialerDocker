@@ -176,7 +176,7 @@ jobs:
           chmod +x ${{ github.workspace }}/Change_Github_Enviroment.sh
           ${{ github.workspace }}/Change_Github_Enviroment.sh
 
-      - uses: sgpublic/delete-release-action@v1.1
+      - uses: sgpublic/delete-release-action@v1.2
         with:
           #操作仓库
           repo: ${{ github.repository }}
