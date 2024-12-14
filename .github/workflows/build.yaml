@@ -89,10 +89,13 @@ jobs:
         ${{ github.workspace }}/Change_Github_Enviroment_From_Action_Workflow_Dispatch_Inputs_And_Run_Change_Version.sh
 
     # 好家伙，非要进行git config
-    - name: 上传新的版本号存储文件
+    - name: 配置Git
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+
+    - name: 上传新的版本号存储文件
+      run: |
         git add ${{ github.workspace }}/version
         git commit -m "上传新的版本号到Github"
         git push --force
@@ -3465,7 +3468,7 @@ jobs:
     #   run: echo -e "ESurfingDialer.zip 此版本免Docker可运行。占用手机设备上网资格进行网络认证。（Java 不兼容 Arm64 的Windows） ~~[使用方法]~~（还没写） \n\n" >> ${{ github.workspace }}/CHANGELOG.txt
     
     - name: 创建 Release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v2.2.0
       with:
         body_path: ${{ github.workspace }}/ChangeLogTemplate.md
         tag_name: ${{ env.VERSION }}
