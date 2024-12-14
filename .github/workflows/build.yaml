@@ -3470,10 +3470,15 @@ jobs:
     - name: 创建 Release
       uses: softprops/action-gh-release@v2.2.0
       with:
+        # 更新日志文件路径
         body_path: ${{ github.workspace }}/ChangeLogTemplate.md
-        tag_name: ${{ env.VERSION }}
-        name: Release ${{ env.VERSION }}
-        token: ${{ secrets.GITHUB_TOKEN }}
+        # 是否为草稿
+        draft: false
+        # 是否为预发布版本
+        prerelease: false
+        # 是否保留文件顺序
+        preserve_order: true
+        # 需要上传的文件
         files: |
           ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64-Canary.tar.gz
           ${{ github.workspace }}/ESurfingDialer/Phone/ESurfingDockerPhone-Amd64.tar.gz
@@ -3489,6 +3494,20 @@ jobs:
           ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-Arm64.zip
           ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General-Canary.zip
           ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
+        # Release名
+        name: Release ${{ env.VERSION }}
+        # 标签名
+        tag_name: ${{ env.VERSION }}
+        # 没有任何文件被匹配时是否为失败
+        fail_on_unmatched_files: true
+        # 执行操作的仓库
+        repository: ${{ github.repository }}
+        # 认证秘钥
+        token: ${{ secrets.GITHUB_TOKEN }}
+        # # 是否只是附加而不是覆盖
+        # append_body: false
+        # 设置为最新版本
+        make_latest : true
 
     - name: 删除 时间戳和相关环境变量 缓存文件
       uses: geekyeggo/delete-artifact@v5
