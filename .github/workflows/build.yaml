@@ -861,9 +861,9 @@ jobs:
       run: |
         docker save ${{ vars.DOCKERHUB_USERNAME }}/esurfingdockerphonedocker:latest-canary -o ${{ github.workspace }}/Phone/ESurfingDockerPhone.tar.gz
 
-    - name: 查看 /Phone/ESurfingDockerPhone 目录
+    - name: 查看 /Phone/ 目录
       run: |
-        ls -l ${{ github.workspace }}/Phone/ESurfingDockerPhone
+        ls -l ${{ github.workspace }}/Phone
 
     - name: 获取 ESurfingDockerPhoneDocker:latest-canary 的 DockerHub 镜像的 sha256
       run: |
