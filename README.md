@@ -6,6 +6,8 @@
 
 [![GitHub stats](https://github-readme-stats.vercel.app/api?username=BadGhost520&count_private=true&show_icons=true)](https://github.com/BadGhost520)
 
+[![GitHub stats](https://github-readme-stats.vercel.app/api?username=huang2468&count_private=true&show_icons=true)](https://github.com/huang2468)
+
 **本项目并不提供任何反检测手段，如果需要，请移步至此[视频](https://b23.tv/XFgF5hd)**
 
 **经过验证 <mark><font color="red"><ins>"[电子科技大学中山学院](https://www.zsc.edu.cn/)"</ins></font></mark> 可用！（掌声祝贺👏）**
