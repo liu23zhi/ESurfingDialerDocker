@@ -3,6 +3,10 @@ name: Precaution
 on:
   pull_request:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'releases/*'
 
 jobs:
   analyze:
