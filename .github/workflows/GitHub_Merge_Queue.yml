@@ -1,0 +1,38 @@
+name: Check CodeQL Status
+
+on:
+  pull_request: # 触发条件为 pull_request 事件
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  analyze:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 这里添加CodeQL分析步骤
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+        with:
+          category: '/path/to/queries'
+          
+  check_codeql_status:
+    name: Check CodeQL Status
+    needs: analyze # 确保这个步骤在 'analyze' 之后运行
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: read
+      checks: read
+      pull-requests: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2 # 确保检查出代码
+
+      - name: Run CodeQL Analysis
+        uses: eldrick19/code-scanning-status-checker@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pr_number: ${{ github.event.pull_request.number }}
+          repo: ${{ github.repository }}
