@@ -63,9 +63,9 @@
 1. openwrt搭配docker运行认证程序报No route to host或Network unreachable错误
 >详细见[[解决方法](/No_route_to_host报错解决方法.md)]
 
-# 无解问题
+# 无解问题（正在解决）
 
-1. 运行大约十五小时后程序会出现timeout和socket_closed问题[[详情与曲线救国法](https://github.com/Rsplwe/ESurfingDialer/issues/40)]
+1. 小概率运行8或大概率16小时后程序会出现timeout和socket_closed问题[[详情与曲线救国法](https://github.com/Rsplwe/ESurfingDialer/issues/40)]
 
 # [[更新日志](/更新日志.md)]（24/11/25新增）
 
