@@ -9,7 +9,7 @@ on: # yamllint disable-line rule:truthy - false positive
   # Comment this line to trigger action only on pull-requests
   # (not recommended if you don't pay for GH Actions)
   push:
-
+  workflow_dispatch:
   pull_request:
     branches:
       - main
