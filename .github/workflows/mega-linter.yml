@@ -38,9 +38,12 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SARIF_REPORTER: true
+          SARIF_REPORTER_FILE_NAME: mega-linter-report.sarif.json
+          DISABLE_ERRORS: true
+          PRINT_ALL_FILES: true
+          SHOW_ELAPSED_TIME: true
 
       - name: Archive production artifacts
-        if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
           name: MegaLinter reports
@@ -49,8 +52,7 @@ jobs:
             mega-linter.log
 
       - name: Upload MegaLinter scan results to GitHub Security tab
-        if: success() || failure()
         uses: github/codeql-action/upload-sarif@v3
         with:
-            sarif_file: 'megalinter-reports/megalinter-report.sarif'
+            sarif_file: 'megalinter-reports/mega-linter-report.sarif.json'
 
