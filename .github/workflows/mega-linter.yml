@@ -9,10 +9,6 @@ on:
       - main
       - master
 
-concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
   megalinter:
     name: MegaLinter
@@ -44,7 +40,7 @@ jobs:
           SHOW_ELAPSED_TIME: true
 
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: MegaLinter reports
           path: |
