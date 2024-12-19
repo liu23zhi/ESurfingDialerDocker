@@ -78,19 +78,19 @@ Github Api速率限制为每个存储库每小时 1000 个请求
 
 注意，这不是翻译的效果，此Action的用户输入已经完成汉化
 
-![rubbish](images/temp-2.png "rubbish")
+![rubbish](assets/temp-2.png "rubbish")
 
 复制.github\workflows\Delete_old_workflow_runs.yaml到需要的项目，并在
 Settings->Actions->General->Actions permissions->Allow specified actions and reusable workflows
 填入`mattraks/delete-workflow-runs@*,`
 
-![rubbish](images/temp.png "rubbish")
+![rubbish](assets/temp.png "rubbish")
 
 ###### 2. 删除过于陈旧的Release
 
 注意，这不是翻译的效果，此Action的用户输入已经完成汉化
 
-![rubbish](images/temp-3.png "rubbish")
+![rubbish](assets/temp-3.png "rubbish")
 
 复制.github\workflows\Dele_Old_Github_Releae.yaml到需要的项目，并在
 Settings->Actions->General->Actions permissions->Allow specified actions and reusable workflows

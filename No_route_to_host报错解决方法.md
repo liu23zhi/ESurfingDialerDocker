@@ -35,7 +35,7 @@ docker logs dialer-client 2>&1 | grep Url
 
 可以摘取到以下信息
 
-![image](/images/Url.png)
+![image](/assets/Url.png)
 
 其中**enet.10000.gd.cn:10001**的**10001**端口
 
@@ -58,18 +58,18 @@ docker logs dialer-client 2>&1 | grep Url
 
 1. 按照途中序号顺序戳按钮
 
-![image](/images/Port1.png)
+![image](/assets/Port1.png)
 
 2. 在这个页面下滑找到 **"打开路由器端口"** 字样
 
-![image](/images/Port2.png)
+![image](/assets/Port2.png)
 
 3. 在 **"外部端口"** 处填入刚刚获取到的端口（要放行多少个端口就填多少次）并添加规则
 
 >[!TIP]
 >如下图所示即为添加成功（别忘了保存&应用）
 
-![image](/images/Port3.png)
+![image](/assets/Port3.png)
 
 >[!WARNING]
 >第三次强调，端口可能不一样，以实际情况为准
