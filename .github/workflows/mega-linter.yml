@@ -10,6 +10,7 @@ on: # yamllint disable-line rule:truthy - false positive
   # (not recommended if you don't pay for GH Actions)
   push:
   workflow_dispatch:
+
   pull_request:
     branches:
       - main
@@ -48,6 +49,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      security-events: write
 
     steps:
       # Git Checkout
@@ -91,6 +93,7 @@ jobs:
             }}
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SARIF_REPORTER: true
 
           # ADD YOUR CUSTOM ENV VARIABLES HERE OR DEFINE THEM IN A FILE
           # .mega-linter.yml AT THE ROOT OF YOUR REPOSITORY
@@ -173,3 +176,9 @@ jobs:
           commit_message: "[MegaLinter] Apply linters fixes"
           commit_user_name: megalinter-bot
           commit_user_email: nicolas.vuillamy@ox.security
+
+      - name: Upload MegaLinter scan results to GitHub Security tab
+        if: success() || failure()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'megalinter-reports/megalinter-report.sarif'
