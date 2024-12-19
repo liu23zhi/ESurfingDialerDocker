@@ -94,7 +94,7 @@
   
             APPLY_FIXES: ${{ env.APPLY_FIXES }}
 
-            DISABLE_ERRORS: true
+            # DISABLE_ERRORS: true
 
             # ADD YOUR CUSTOM ENV VARIABLES HERE OR DEFINE THEM IN A FILE
             # .mega-linter.yml AT THE ROOT OF YOUR REPOSITORY
