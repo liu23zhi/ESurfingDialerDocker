@@ -92,6 +92,8 @@
   
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
+            UPDATED_SOURCES_REPORTER: true
+            
             # Apply linter fixes configuration
             #
             # When active, APPLY_FIXES must also be defined as environment variable
