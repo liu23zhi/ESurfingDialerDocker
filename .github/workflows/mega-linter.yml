@@ -1,10 +1,9 @@
 name: MegaLinter
 
-
-on: 
-  push:       # 当有代码更新的时候运行
-  workflow_dispatch:    #运行手动执行
-  pull_request:    #当有拉取请求的时候执行
+on:
+  push:         # 当有代码更新时运行
+  workflow_dispatch:   # 手动运行
+  pull_request:  # 当有拉取请求时运行
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -22,30 +21,38 @@ jobs:
       security-events: write
 
     steps:
-
-      - name: Checkout Code
+      - name: 检查出代码
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      - name: 安装 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'  # 确保安装 Python
+
+      - name: 验证 Python 环境
+        run: |
+          python --version
+          python -c "import json; print(json.dumps({'status': 'success'}))"  # 验证 json 库导入
+
       - name: MegaLinter
         uses: oxsecurity/megalinter@v8
         id: ml
         env:
-          VALIDATE_ALL_CODEBASE: true         # 对整个代码库都进行验证
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   #认证秘钥
-          SARIF_REPORTER: true     #生成 Sarif 报告  (居然有BUG)
-          DISABLE_ERRORS: true     #有错误也别报红
-          APPLY_FIXES: all  #应用所有 Linter 的修复
-          APPLY_FIXES_EVENT: pull_request   #通过 拉取请求的方式 修复
-          APPLY_FIXES_MODE: pull_request   #通过创建新分支的方式修复
-          PRINT_ALL_FILES: true     #显示具体文件信息
-          REPORT_OUTPUT_FOLDER: ${{ github.workspace }}/megalinter-reports  #报告储存路径
-          SHOW_ELAPSED_TIME: true #显示已用时间
-          
-        #上传文件到附件
-      - name: Archive production artifacts
+          VALIDATE_ALL_CODEBASE: true         # 对整个代码库进行验证
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # 认证密钥
+          SARIF_REPORTER: true                # 生成 Sarif 报告
+          DISABLE_ERRORS: true                # 有错误也不报红
+          APPLY_FIXES: all                    # 应用所有 Linter 的修复
+          APPLY_FIXES_EVENT: pull_request     # 通过拉取请求的方式修复
+          APPLY_FIXES_MODE: pull_request      # 通过创建新分支的方式修复
+          PRINT_ALL_FILES: true               # 显示具体文件信息
+          REPORT_OUTPUT_FOLDER: ${{ github.workspace }}/megalinter-reports  # 报告存储路径
+          SHOW_ELAPSED_TIME: true             # 显示已用时间
+
+      - name: 上传文件到附件
         uses: actions/upload-artifact@v4
         with:
           name: MegaLinter reports
@@ -53,8 +60,7 @@ jobs:
             ${{ github.workspace }}/megalinter-reports
             mega-linter.log
 
-      # Set APPLY_FIXES_IF var for use in future steps
-      - name: Set APPLY_FIXES_IF var
+      - name: 设置 APPLY_FIXES_IF 变量
         run: |
           printf 'APPLY_FIXES_IF=%s\n' "${{
             steps.ml.outputs.has_updated_sources == 1 &&
@@ -68,8 +74,7 @@ jobs:
             )
           }}" >> "${GITHUB_ENV}"
 
-      # Set APPLY_FIXES_IF_* vars for use in future steps
-      - name: Set APPLY_FIXES_IF_* vars
+      - name: 设置 APPLY_FIXES_IF_* 变量
         run: |
           printf 'APPLY_FIXES_IF_PR=%s\n' "${{
             env.APPLY_FIXES_IF == 'true' &&
@@ -81,31 +86,27 @@ jobs:
             (!contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref))
           }}" >> "${GITHUB_ENV}"
 
-      # Create pull request if applicable
-      # (for now works only on PR from same repository, not from forks)
-      - name: Create Pull Request with applied fixes
+      - name: 创建应用修复的拉取请求
         uses: peter-evans/create-pull-request@v6
         id: cpr
         if: env.APPLY_FIXES_IF_PR == 'true'
         with:
-          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "[MegaLinter] Apply linters automatic fixes"
           title: "[MegaLinter] Apply linters automatic fixes"
           labels: bot
 
-      - name: Create PR output
+      - name: 输出拉取请求信息
         if: env.APPLY_FIXES_IF_PR == 'true'
         run: |
           echo "PR Number - ${{ steps.cpr.outputs.pull-request-number }}"
           echo "PR URL - ${{ steps.cpr.outputs.pull-request-url }}"
 
-      # Push new commit if applicable
-      # (for now works only on PR from same repository, not from forks)
-      - name: Prepare commit
+      - name: 准备提交
         if: env.APPLY_FIXES_IF_COMMIT == 'true'
         run: sudo chown -Rc $UID .git/
 
-      - name: Commit and push applied linter fixes
+      - name: 提交并推送应用 linter 修复
         uses: stefanzweifel/git-auto-commit-action@v4
         if: env.APPLY_FIXES_IF_COMMIT == 'true'
         with:
@@ -119,12 +120,12 @@ jobs:
           commit_user_name: megalinter-bot
           commit_user_email: nicolas.vuillamy@ox.security
 
-    - name: 修正 Sarif 报告文件
-      run: |
-        cp ${{ github.workspace }}/megalinter-reports/megalinter-report.sarif ${{ github.workspace }}/megalinter-report.sarif
-        python fixs-MegaLinter-sarif-json-file.py
+      - name: 修正 Sarif 报告文件
+        run: |
+          cp ${{ github.workspace }}/megalinter-reports/megalinter-report.sarif ${{ github.workspace }}/megalinter-report.sarif
+          python fixs-MegaLinter-sarif-json-file.py
 
-      - name: Upload MegaLinter scan results to GitHub Security tab
+      - name: 上传 MegaLinter 扫描结果到 GitHub 安全标签
         if: success() || failure()
         uses: github/codeql-action/upload-sarif@v2
         with:
