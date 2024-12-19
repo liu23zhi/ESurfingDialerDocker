@@ -38,7 +38,7 @@ jobs:
           python -c "import json; print(json.dumps({'status': 'success'}))"  # 验证 json 库导入
 
       - name: MegaLinter
-        uses: oxsecurity/megalinter
+        uses: oxsecurity/megalinter@main
         id: ml
         env:
           VALIDATE_ALL_CODEBASE: true         # 对整个代码库进行验证
