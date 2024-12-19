@@ -24,7 +24,7 @@ jobs:
       - name: 检查出代码
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          token: ${{  secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: 安装 Python
@@ -60,73 +60,27 @@ jobs:
             ${{ github.workspace }}/megalinter-reports
             mega-linter.log
 
-      - name: 设置 APPLY_FIXES_IF 变量
-        run: |
-          printf 'APPLY_FIXES_IF=%s\n' "${{
-            steps.ml.outputs.has_updated_sources == 1 &&
-            (
-              env.APPLY_FIXES_EVENT == 'all' ||
-              env.APPLY_FIXES_EVENT == github.event_name
-            ) &&
-            (
-              github.event_name == 'push' ||
-              github.event.pull_request.head.repo.full_name == github.repository
-            )
-          }}" >> "${GITHUB_ENV}"
-
-      - name: 设置 APPLY_FIXES_IF_* 变量
-        run: |
-          printf 'APPLY_FIXES_IF_PR=%s\n' "${{
-            env.APPLY_FIXES_IF == 'true' &&
-            env.APPLY_FIXES_MODE == 'pull_request'
-          }}" >> "${GITHUB_ENV}"
-          printf 'APPLY_FIXES_IF_COMMIT=%s\n' "${{
-            env.APPLY_FIXES_IF == 'true' &&
-            env.APPLY_FIXES_MODE == 'commit' &&
-            (!contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref))
-          }}" >> "${GITHUB_ENV}"
-
       - name: 创建应用修复的拉取请求
         uses: peter-evans/create-pull-request@v6
         id: cpr
-        if: env.APPLY_FIXES_IF_PR == 'true'
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{  secrets.GITHUB_TOKEN }}
           commit-message: "[MegaLinter] Apply linters automatic fixes"
           title: "[MegaLinter] Apply linters automatic fixes"
           labels: bot
 
       - name: 输出拉取请求信息
-        if: env.APPLY_FIXES_IF_PR == 'true'
         run: |
           echo "PR Number - ${{ steps.cpr.outputs.pull-request-number }}"
           echo "PR URL - ${{ steps.cpr.outputs.pull-request-url }}"
 
-      - name: 准备提交
-        if: env.APPLY_FIXES_IF_COMMIT == 'true'
-        run: sudo chown -Rc $UID .git/
-
-      - name: 提交并推送应用 linter 修复
-        uses: stefanzweifel/git-auto-commit-action@v4
-        if: env.APPLY_FIXES_IF_COMMIT == 'true'
-        with:
-          branch: >-
-            ${{
-              github.event.pull_request.head.ref ||
-              github.head_ref ||
-              github.ref
-            }}
-          commit_message: "[MegaLinter] Apply linters fixes"
-          commit_user_name: megalinter-bot
-          commit_user_email: nicolas.vuillamy@ox.security
-
-      - name: 修正 Sarif 报告文件
-        run: |
-          cp ${{ github.workspace }}/megalinter-reports/megalinter-report.sarif ${{ github.workspace }}/megalinter-report.sarif
-          python fixs-MegaLinter-sarif-json-file.py
+      # - name: 修正 Sarif 报告文件
+      #   run: |
+      #     cp ${{ github.workspace }}/megalinter-reports/megalinter-report.sarif ${{ github.workspace }}/megalinter-report.sarif
+      #     python fixs-MegaLinter-sarif-json-file.py
 
       - name: 上传 MegaLinter 扫描结果到 GitHub 安全标签
         if: success() || failure()
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'megalinter-report-sarif.json'
+          sarif_file: '${{ github.workspace }}/megalinter-report.sarif'
