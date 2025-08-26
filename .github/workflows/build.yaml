@@ -172,7 +172,7 @@ jobs:
     - name: 生成 ESurfingDialer 的 最新 JAR 通用 构建产物 证明
       uses: actions/attest-build-provenance@v1
       with:
-        subject-path: '${{ github.workspace }}/ESurfingDialer/build/libs/*'
+        subject-path: '${{ github.workspace }}/Phone/ESurfingDialer/build/libs/*'
 
     - name: 查找 ESurfingDialer 最新构建的 Jar 文件但不复制
       run: |
