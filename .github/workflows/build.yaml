@@ -156,6 +156,7 @@ jobs:
     - name: 进入 ESurfingDialer 目录并执行构建
       run: |
         cd ${{ github.workspace }}/Phone/ESurfingDialer
+        chmod +x ./gradlew
         ./gradlew shadowJar
 
     - name: 查看 ESurfingDialer 构建产物
