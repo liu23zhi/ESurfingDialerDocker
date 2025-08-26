@@ -29,7 +29,7 @@ find_latest_jar() {
     fi
 }
 
-project_dir="$SCRIPT_DIR/ESurfingDialer"
+project_dir="$SCRIPT_DIR/Phone/ESurfingDialer"
 jar_search_dir="$project_dir/build/libs"
 jar_search_pattern="*ESurfing*.jar"
 find_latest_jar "$jar_search_pattern" "$jar_search_dir"
