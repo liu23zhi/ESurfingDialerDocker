@@ -137,7 +137,7 @@ jobs:
 
     - name: 查看 src/main/kotlin/com/rsplwe/esurfing/Client.kt 文件内容
       run: |
-        cd ${{ github.workspace }}/ESurfingDialer
+        cd ${{ github.workspace }}/Phone/ESurfingDialer
         cd ./src/main/kotlin/com/rsplwe/esurfing/
         cat Constants.kt
 
