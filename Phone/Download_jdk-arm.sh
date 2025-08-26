@@ -1,8 +1,6 @@
 #!/bin/bash
 # 设置下载链接
-#URL_LINUX="https://download.oracle.com/java/21/latest/jdk-21_linux-aarch64_bin.tar.gz"
-URL_LINUX="https://download.oracle.com/java/23/latest/jdk-23_linux-aarch64_bin.tar.gz"
-# URL_WINDOWS="https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.zip"
+URL_LINUX="https://download.oracle.com/java/24/latest/jdk-24_linux-aarch64_bin.tar.gz"
 URL_WINDOWS="https://download.bell-sw.com/java/23.0.1+13/bellsoft-jdk23.0.1+13-windows-aarch64.zip"
 # 设置本地文件名
 FILE_NAME_LINUX="jdk-23_linux-aarch64_bin.tar.gz"
