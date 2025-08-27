@@ -50,6 +50,6 @@ RUN cd /app/ESurfingDialerClient/ && ./tyxy
 RUN apt-get update && apt-get install iproute2 -y
 RUN pip3 install netifaces
 RUN pip3 install psutil
-RUN apt install iputils-ping
+RUN apt install -y iputils-ping
 # 旧版参数
 CMD ["/app/run.sh"]
