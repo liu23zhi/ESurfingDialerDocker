@@ -1893,27 +1893,6 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}/ESurfingDialer/
 
-    - name: 创建 ESurfingDialer 的 通用 免 Docker 直接运行 版本 所需文件夹
-      run: mkdir -p ${{ github.workspace }}/ESurfingDialer/
-
-    - name: 下载 ESurfingDialer 的 通用 免 Docker 直接运行 版本 文件
-      uses: actions/download-artifact@v4
-      with:
-        name: ESurfingDialer 的 通用 免 Docker 直接运行 版本
-        path: ${{ github.workspace }}/ESurfingDialer/
-
-    - name: 查看 ESurfingDialer 的 通用 免 Docker 直接运行 版本 所在目录文件
-      run: |
-        ls -l ${{ github.workspace }}/ESurfingDialer/
-
-    - name: 修改 ESurfingDialer 的 通用 免 Docker 直接运行 版本 文件名
-      run: |
-        mv ${{ github.workspace }}/ESurfingDialer/ESurfingDialer.zip ${{ github.workspace }}/ESurfingDialer/ESurfingDialer-General.zip
-
-    - name: 查看 ESurfingDialer 的 通用 免 Docker 直接运行 版本 所在目录文件
-      run: |
-        ls -l ${{ github.workspace }}/ESurfingDialer/
-
     - name: 创建 ESurfingDialerPhone 的 Amd64 Docker 镜像（标签为：latest-canary） 所需文件夹
       run: mkdir -p ${{ github.workspace }}/ESurfingDialer/Phone/
 
